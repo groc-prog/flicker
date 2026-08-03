@@ -1,0 +1,30 @@
+{
+  "name": "@cinema-bot/database",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/db.ts",
+    "./schemas/*": "./src/schemas/*.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit",
+    "drizzle-kit:studio": "drizzle-kit studio",
+    "drizzle-kit:generate": "drizzle-kit generate",
+    "drizzle-kit:migrate": "drizzle-kit migrate"
+  },
+  "devDependencies": {
+    "@cinema-bot/eslint-config": "workspace:*",
+    "@cinema-bot/typescript-config": "workspace:*",
+    "@types/bun": "latest",
+    "@types/pg": "^8.20.3",
+    "drizzle-kit": "^1.0.0-rc.4",
+    "eslint": "^9.39.1",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "drizzle-orm": "^1.0.0-rc.4",
+    "pg": "^8.22.0"
+  }
+}

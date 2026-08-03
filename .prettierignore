@@ -3,3 +3,7 @@
 
 coverage/
 .vscode
+
+# Docker
+.postgres/
+.openobserve/

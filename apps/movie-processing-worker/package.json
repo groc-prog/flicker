@@ -1,0 +1,22 @@
+{
+  "name": "@cinema-bot/movie-processing-worker",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run ./src/index.ts",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@cinema-bot/database": "workspace:*",
+    "@cinema-bot/eslint-config": "workspace:*",
+    "@cinema-bot/typescript-config": "workspace:*",
+    "@types/bun": "latest",
+    "eslint": "^9.39.1",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "drizzle-orm": "^1.0.0-rc.4"
+  }
+}
