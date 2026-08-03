@@ -1,1 +1,1 @@
-echo test
+bun run format && bun run pre-commit

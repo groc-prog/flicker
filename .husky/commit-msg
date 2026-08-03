@@ -1,1 +1,1 @@
-echo test
+bun commitlint --edit "$1"
