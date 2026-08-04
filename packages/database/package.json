@@ -1,5 +1,5 @@
 {
-  "name": "@cinema-bot/database",
+  "name": "@flicker/database",
   "version": "0.0.0",
   "type": "module",
   "private": true,
@@ -15,8 +15,8 @@
     "drizzle-kit:migrate": "drizzle-kit migrate"
   },
   "devDependencies": {
-    "@cinema-bot/eslint-config": "workspace:*",
-    "@cinema-bot/typescript-config": "workspace:*",
+    "@flicker/eslint-config": "workspace:*",
+    "@flicker/typescript-config": "workspace:*",
     "@types/bun": "latest",
     "@types/pg": "^8.20.3",
     "drizzle-kit": "^1.0.0-rc.4",

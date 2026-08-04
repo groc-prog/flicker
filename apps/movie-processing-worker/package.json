@@ -1,5 +1,5 @@
 {
-  "name": "@cinema-bot/movie-processing-worker",
+  "name": "@flicker/movie-processing-worker",
   "version": "0.0.0",
   "type": "module",
   "private": true,
@@ -9,9 +9,9 @@
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@cinema-bot/database": "workspace:*",
-    "@cinema-bot/eslint-config": "workspace:*",
-    "@cinema-bot/typescript-config": "workspace:*",
+    "@flicker/database": "workspace:*",
+    "@flicker/eslint-config": "workspace:*",
+    "@flicker/typescript-config": "workspace:*",
     "@types/bun": "latest",
     "eslint": "^9.39.1",
     "typescript": "^5.9.2"

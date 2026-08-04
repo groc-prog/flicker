@@ -1,5 +1,5 @@
 {
-  "name": "@cinema-bot/eslint-config",
+  "name": "@flicker/eslint-config",
   "version": "0.0.0",
   "type": "module",
   "private": true,

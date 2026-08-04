@@ -1,5 +1,5 @@
 {
-  "extends": "@cinema-bot/typescript-config/base.json",
+  "extends": "@flicker/typescript-config/base.json",
   "compilerOptions": {
     "outDir": "dist"
   },
