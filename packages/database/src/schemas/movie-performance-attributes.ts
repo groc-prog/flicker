@@ -13,5 +13,5 @@ export const performancesToAttributes = snakeCase.table(
       .notNull()
       .references(() => attributesTable.id, { onDelete: 'cascade' }),
   },
-  (table) => [primaryKey({ columns: [table.performanceId, table.attributeId] })],
+  (table) => [primaryKey({ columns: [table.attributeId, table.performanceId] })],
 );

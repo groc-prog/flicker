@@ -1,4 +1,5 @@
-import { jsonb, pgEnum, snakeCase, text, unique, uuid } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { index, jsonb, pgEnum, snakeCase, text, unique, uuid } from 'drizzle-orm/pg-core';
 
 import { createdAtTimestamp } from '../utils/timestamp';
 import { uuidPk } from '../utils/uuid';
@@ -61,5 +62,13 @@ export const movieTranslationsTable = snakeCase.table(
     movieId: uuid().references(() => moviesTable.id, { onDelete: 'set null' }),
     ...createdAtTimestamp,
   },
-  (table) => [unique().on(table.language, table.movieId)],
+  (table) => [
+    unique().on(table.language, table.movieId),
+    index('idx_movie_translations_language_title').using('gin', sql`${table.language}, ${table.title} gin_trgm_ops`),
+  ],
 );
+
+// index('idx_products_name_trgm').using(
+//       'gin',
+//       sql`${table.name} gin_trgm_ops` // <--- Crucial: specifies the trigram operator class
+//     ),

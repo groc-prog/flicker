@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\" \"!./.(postgres|openobserve)/**\"",
     "type-check": "turbo run type-check",
     "drizzle-kit:studio": "bun run --env-file=.env.local turbo run drizzle-kit:studio",
     "drizzle-kit:generate": "bun run --env-file=.env.local turbo run drizzle-kit:generate --",

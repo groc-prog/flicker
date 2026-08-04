@@ -39,5 +39,5 @@ export const moviePerformancesTable = snakeCase.table(
     movieId: uuid().references(() => moviesTable.id, { onDelete: 'cascade' }),
     ...createdAtTimestamp,
   },
-  (table) => [index().on(table.scrapedPerformanceId)],
+  (table) => [index().on(table.showtime)],
 );
