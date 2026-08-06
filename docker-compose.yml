@@ -3,20 +3,51 @@ services:
     image: "postgres:latest"
     container_name: postgres
     restart: always
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
-    env_file:
-      - .env.local
     volumes:
       - ./.postgres:/var/lib/postgresql
+    networks:
+      - flicker
 
   open-observe:
-    image: public.ecr.aws/zinclabs/openobserve:latest
+    image: openobserve/openobserve:v0.91.5-debug
     container_name: open-observe
     restart: always
+    environment:
+      - ZO_ROOT_USER_EMAIL=${ZO_USER_EMAIL}
+      - ZO_ROOT_USER_PASSWORD=${ZO_USER_PASSWORD}
     ports:
       - "5080:5080"
-    env_file:
-      - .env.local
     volumes:
       - ./.openobserve:/data
+    networks:
+      - flicker
+    healthcheck:
+      test: ["CMD", "curl", "-s", "-f", "http://localhost:5080/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    environment:
+      - OPENOBSERVE_AUTH_TOKEN=${OPENOBSERVE_AUTH_TOKEN}
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "8888:8888"
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    networks:
+      - flicker
+    depends_on:
+      open-observe:
+        condition: service_healthy
+
+networks:
+  flicker:
