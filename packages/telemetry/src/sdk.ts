@@ -9,15 +9,25 @@ import { NodeSDK, type NodeSDKConfiguration } from '@opentelemetry/sdk-node';
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions';
 
+import { getLogger } from './logging';
+
 /**
  * Initializes a new instance of the {@link NodeSDK} with all service defaults.
- * By default, only {@link PinoInstrumentation} will be added as a instrumentation.
+ *
+ * By default, only {@link PinoInstrumentation} and {@link PgInstrumentation} will be added
+ * as a instrumentation.
  * @param instrumentations - Additional instrumentations to apply.
  * @returns A SDK ready to be started.
  */
 export function initializeSDK(instrumentations?: NodeSDKConfiguration['instrumentations']): NodeSDK {
+  const logger = getLogger();
   const metricsExportInterval = Number(process.env.OTEL_COLLECTOR_METRICS_EXPORT_INTERVAL);
 
+  if (!process.env.OTEL_COLLECTOR_URL) logger.warn(`OTEL_COLLECTOR_URL is not defined, falling back to default`);
+  if (isNaN(metricsExportInterval))
+    logger.warn(`OTEL_COLLECTOR_METRICS_EXPORT_INTERVAL is not set set to a valid number, falling back to default`);
+
+  logger.debug('Initializing OpenTelemetry SDK');
   const sdk = new NodeSDK({
     resource: resourceFromAttributes({
       [ATTR_SERVICE_NAME]: process.env.SERVICE_NAME,
@@ -54,7 +64,12 @@ export function initializeSDK(instrumentations?: NodeSDKConfiguration['instrumen
   });
 
   process.once('beforeExit', async () => {
-    await sdk.shutdown();
+    try {
+      logger.info('Shutting down OpenTelemetry SDK');
+      await sdk.shutdown();
+    } catch (err) {
+      logger.error(err, `Error while shutting down OpenTelemetry SDK: ${(err as Error).message}`);
+    }
   });
 
   return sdk;

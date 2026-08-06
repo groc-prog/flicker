@@ -10,6 +10,8 @@ import {
 import type { MaybePromise } from 'bun';
 import pino from 'pino';
 
+import 'dayjs/plugin/utc';
+
 const storage = new AsyncLocalStorage<pino.Logger>();
 
 const parentLogger = pino({
@@ -46,6 +48,9 @@ export function getLogger(bindings?: pino.Bindings, options?: pino.ChildLoggerOp
 /**
  * Attaches additional bindings to all log messages while in the scope of this
  * function's callback.
+ *
+ * This will either create a new child logger from a already existing scoped logger
+ * or from the root logger, if not currently in a scoped context already.
  * @param bindings - Additional bindings to apply.
  * @param callback - A callback in which the bindings are applied.
  * @returns The returned value from the callback.
