@@ -2,7 +2,12 @@
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
   "globalEnv": [
-    "POSTGRES_DATABASE_URL"
+    "POSTGRES_DATABASE_URL",
+    "SERVICE_NAME",
+    "SERVICE_VERSION",
+    "LOG_LEVEL",
+    "OTEL_COLLECTOR_URL",
+    "OTEL_COLLECTOR_METRICS_EXPORT_INTERVAL"
   ],
   "tasks": {
     "lint": {
