@@ -1,7 +1,6 @@
 import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-grpc';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc';
 import { PgInstrumentation } from '@opentelemetry/instrumentation-pg';
-import { PinoInstrumentation } from '@opentelemetry/instrumentation-pino';
 import { containerDetector } from '@opentelemetry/resource-detector-container';
 import { resourceFromAttributes } from '@opentelemetry/resources';
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics';
@@ -14,12 +13,11 @@ import { getLogger } from './logging';
 /**
  * Initializes a new instance of the {@link NodeSDK} with all service defaults.
  *
- * By default, only {@link PinoInstrumentation} and {@link PgInstrumentation} will be added
+ * By default, only {@link PgInstrumentation} will be added
  * as a instrumentation.
  * @param instrumentations - Additional instrumentations to apply.
- * @returns A SDK ready to be started.
  */
-export function initializeSDK(instrumentations?: NodeSDKConfiguration['instrumentations']): NodeSDK {
+export function initializeSDK(instrumentations?: NodeSDKConfiguration['instrumentations']): void {
   const logger = getLogger();
   const metricsExportInterval = Number(process.env.OTEL_COLLECTOR_METRICS_EXPORT_INTERVAL);
 
@@ -49,28 +47,18 @@ export function initializeSDK(instrumentations?: NodeSDKConfiguration['instrumen
         exportIntervalMillis: isNaN(metricsExportInterval) ? undefined : metricsExportInterval,
       }),
     ],
-    instrumentations: [
-      ...(instrumentations ?? []),
-      new PgInstrumentation(),
-      new PinoInstrumentation({
-        logKeys: {
-          traceId: 'myTraceId',
-          spanId: 'mySpanId',
-          traceFlags: 'myTraceFlags',
-        },
-        disableLogSending: true,
-      }),
-    ],
+    instrumentations: [...(instrumentations ?? []), new PgInstrumentation()],
   });
+
+  sdk.start();
+  logger.info('OpenTelemetry SDK initialized');
 
   process.once('beforeExit', async () => {
     try {
       logger.info('Shutting down OpenTelemetry SDK');
       await sdk.shutdown();
-    } catch (err) {
-      logger.error(err, `Error while shutting down OpenTelemetry SDK: ${(err as Error).message}`);
+    } catch (error) {
+      logger.error(error, 'Failed to gracefully shut down OpenTelemetry SDK');
     }
   });
-
-  return sdk;
 }

@@ -17,7 +17,7 @@ exporters:
     headers:
       Authorization: "Basic ${env:OPENOBSERVE_AUTH_TOKEN}"
       organization: "default"
-      stream-name: "test-stream"
+      stream-name: "${env:OPENOBSERVE_STREAM}"
     tls:
       insecure: true
   debug:

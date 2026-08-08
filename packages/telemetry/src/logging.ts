@@ -12,6 +12,8 @@ import pino from 'pino';
 
 import 'dayjs/plugin/utc';
 
+import { context, trace } from '@opentelemetry/api';
+
 const storage = new AsyncLocalStorage<pino.Logger>();
 
 const parentLogger = pino({
@@ -26,6 +28,20 @@ const parentLogger = pino({
       [ATTR_PROCESS_RUNTIME_NAME]: 'bun',
       [ATTR_PROCESS_RUNTIME_VERSION]: Bun.version,
     }),
+    level: (label) => ({
+      level: label.toUpperCase(),
+    }),
+  },
+  mixin() {
+    const currentSpan = trace.getSpan(context.active());
+    if (!currentSpan) return {};
+
+    const { traceId, spanId, traceFlags } = currentSpan.spanContext();
+    return {
+      'trace.id': traceId,
+      'trace.flags': traceFlags,
+      'span.id': spanId,
+    };
   },
 });
 const proxiedParentLogger = new Proxy(parentLogger, {

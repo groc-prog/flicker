@@ -5,4 +5,5 @@ export enum TelemetryIdentifier {
   WorkerJobAttempt = 'worker.job.attempt',
   WorkerJobDuration = 'worker.job.duration',
   WorkerJobReason = 'worker.job.reason',
+  MovieRefId = 'data.movie.ref_id',
 }

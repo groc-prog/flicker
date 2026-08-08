@@ -31,12 +31,14 @@ services:
       timeout: 5s
       retries: 3
       start_period: 15s
+
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
     container_name: otel-collector
     command: ["--config=/etc/otel-collector-config.yaml"]
     environment:
       - OPENOBSERVE_AUTH_TOKEN=${OPENOBSERVE_AUTH_TOKEN}
+      - OPENOBSERVE_STREAM=${SERVICE_VERSION}
     ports:
       - "4317:4317"
       - "4318:4318"
