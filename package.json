@@ -23,9 +23,9 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\" \"!./.(postgres|openobserve)/**\"",
     "type-check": "turbo run type-check",
-    "drizzle-kit:studio": "bun run --env-file=.env.local turbo run drizzle-kit:studio",
-    "drizzle-kit:generate": "bun run --env-file=.env.local turbo run drizzle-kit:generate --",
-    "drizzle-kit:migrate": "bun run --env-file=.env.local turbo run drizzle-kit:migrate",
+    "drizzle-kit:studio": "bun run --env-file=.env turbo run drizzle-kit:studio",
+    "drizzle-kit:generate": "bun run --env-file=.env turbo run drizzle-kit:generate --",
+    "drizzle-kit:migrate": "bun run --env-file=.env turbo run drizzle-kit:migrate",
     "pre-commit": "turbo run lint type-check --affected",
     "prepare": "husky"
   },
