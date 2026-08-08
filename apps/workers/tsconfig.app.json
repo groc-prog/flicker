@@ -1,13 +1,20 @@
 {
   "extends": "@flicker/typescript-config/base.json",
   "compilerOptions": {
-    "outDir": "dist"
+    "noEmit": true,
+    "outDir": "./dist",
+    "paths": {
+      "@app/*": [
+        "./src/*"
+      ]
+    }
   },
   "include": [
-    "src"
+    "src",
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "tests"
   ]
 }

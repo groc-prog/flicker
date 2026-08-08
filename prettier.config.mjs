@@ -7,7 +7,7 @@ const config = {
   trailingComma: 'all',
   singleAttributePerLine: true,
   printWidth: 120,
-  importOrder: ['^@flicker(/.*)$', '', '<BUILTIN_MODULES>', '', '<THIRD_PARTY_MODULES>', '', '^[.]'],
+  importOrder: ['<BUILTIN_MODULES>', '', '<THIRD_PARTY_MODULES>', '', '^@flicker(/.*)$', '', '^[.]'],
   plugins: ['@ianvs/prettier-plugin-sort-imports'],
 };
 
