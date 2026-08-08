@@ -1,6 +1,6 @@
 import { date, smallint, snakeCase, text } from 'drizzle-orm/pg-core';
 
-import { createdAtTimestamp } from '../utils/timestamp';
+import { createdAtTimestamp, updatedAtTimestamp } from '../utils/timestamp';
 import { uuidPk } from '../utils/uuid';
 
 export const scrapedMoviesTable = snakeCase.table('scraped_movies', {
@@ -35,4 +35,5 @@ export const scrapedMoviesTable = snakeCase.table('scraped_movies', {
     mode: 'date',
   }).notNull(),
   ...createdAtTimestamp,
+  ...updatedAtTimestamp,
 });

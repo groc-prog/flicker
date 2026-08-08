@@ -3,7 +3,7 @@ import { primaryKey, snakeCase, uuid } from 'drizzle-orm/pg-core';
 import { attributesTable } from './attributes';
 import { scrapedMoviesTable } from './scraped-movies';
 
-export const scrapedMoviesToAttributes = snakeCase.table(
+export const scrapedMoviesToAttributesTable = snakeCase.table(
   'scraped_movies_to_attributes',
   {
     scrapedMovieId: uuid()

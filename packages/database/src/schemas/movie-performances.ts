@@ -1,6 +1,6 @@
 import { index, snakeCase, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
-import { createdAtTimestamp } from '../utils/timestamp';
+import { createdAtTimestamp, updatedAtTimestamp } from '../utils/timestamp';
 import { uuidPk } from '../utils/uuid';
 import { moviesTable } from './movies';
 import { scrapedMoviesTable } from './scraped-movies';
@@ -38,6 +38,7 @@ export const moviePerformancesTable = snakeCase.table(
       .notNull(),
     movieId: uuid().references(() => moviesTable.id, { onDelete: 'cascade' }),
     ...createdAtTimestamp,
+    ...updatedAtTimestamp,
   },
   (table) => [index().on(table.showtime)],
 );

@@ -1,6 +1,6 @@
 import { index, pgEnum, snakeCase, text, unique } from 'drizzle-orm/pg-core';
 
-import { createdAtTimestamp } from '../utils/timestamp';
+import { createdAtTimestamp, updatedAtTimestamp } from '../utils/timestamp';
 import { uuidPk } from '../utils/uuid';
 
 export enum AttributeCategory {
@@ -33,6 +33,7 @@ export const attributesTable = snakeCase.table(
      */
     key: text().notNull(),
     ...createdAtTimestamp,
+    ...updatedAtTimestamp,
   },
   (table) => [unique().on(table.key, table.category), index().on(table.category, table.id)],
 );

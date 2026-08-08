@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import { timestamp } from 'drizzle-orm/pg-core';
 
 export const createdAtTimestamp = {
@@ -18,5 +19,5 @@ export const updatedAtTimestamp = {
   })
     .notNull()
     .defaultNow()
-    .$onUpdateFn(() => new Date()),
+    .$onUpdateFn(() => sql`NOW()`),
 };
