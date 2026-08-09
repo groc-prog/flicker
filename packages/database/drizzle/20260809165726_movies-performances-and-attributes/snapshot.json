@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "430bfa3c-e52f-4e2f-9564-18d2c25fc839",
+  "id": "54cd4175-7f08-49b7-9e23-0662b57ee18e",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -22,7 +22,7 @@
         "de",
         "en"
       ],
-      "name": "translation_locale",
+      "name": "movie_language",
       "entityType": "enums",
       "schema": "public"
     },
@@ -41,12 +41,6 @@
     {
       "isRlsEnabled": false,
       "name": "movie_performances",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "movie_translations",
       "entityType": "tables",
       "schema": "public"
     },
@@ -129,6 +123,19 @@
       "generated": null,
       "identity": null,
       "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "attributes"
+    },
+    {
+      "type": "timestamp(3) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
       "entityType": "columns",
       "schema": "public",
       "table": "attributes"
@@ -264,97 +271,6 @@
       "table": "movie_performances"
     },
     {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "gen_random_uuid()",
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "movie_translations"
-    },
-    {
-      "type": "translation_locale",
-      "typeSchema": "public",
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "language",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "movie_translations"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "title",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "movie_translations"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "description",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "movie_translations"
-    },
-    {
-      "type": "jsonb",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "videos",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "movie_translations"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "homepage",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "movie_translations"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "movie_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "movie_translations"
-    },
-    {
       "type": "timestamp(3) with time zone",
       "typeSchema": null,
       "notNull": true,
@@ -362,10 +278,10 @@
       "default": "now()",
       "generated": null,
       "identity": null,
-      "name": "created_at",
+      "name": "updated_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "movie_translations"
+      "table": "movie_performances"
     },
     {
       "type": "uuid",
@@ -394,6 +310,45 @@
       "table": "movies"
     },
     {
+      "type": "movie_language",
+      "typeSchema": "public",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "language",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "movies"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "title",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "movies"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "description",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "movies"
+    },
+    {
       "type": "text",
       "typeSchema": null,
       "notNull": false,
@@ -402,6 +357,32 @@
       "generated": null,
       "identity": null,
       "name": "poster_path",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "movies"
+    },
+    {
+      "type": "jsonb",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "videos",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "movies"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "homepage",
       "entityType": "columns",
       "schema": "public",
       "table": "movies"
@@ -693,6 +674,19 @@
       "table": "scraped_movies"
     },
     {
+      "type": "timestamp(3) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "scraped_movies"
+    },
+    {
       "nameExplicit": false,
       "columns": [
         {
@@ -742,27 +736,6 @@
       "table": "movie_performances"
     },
     {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "\"language\", \"title\" gin_trgm_ops",
-          "isExpression": true,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "gin",
-      "concurrently": false,
-      "name": "idx_movie_translations_language_title",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "movie_translations"
-    },
-    {
       "nameExplicit": false,
       "columns": [
         {
@@ -779,6 +752,27 @@
       "method": "btree",
       "concurrently": false,
       "name": "movies_available_at_index",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "movies"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "\"language\", \"title\" gin_trgm_ops",
+          "isExpression": true,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "gin",
+      "concurrently": false,
+      "name": "idx_movie_translations_language_title",
       "entityType": "indexes",
       "schema": "public",
       "table": "movies"
@@ -850,23 +844,6 @@
       "entityType": "fks",
       "schema": "public",
       "table": "movie_performances"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "movie_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "movies",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "SET NULL",
-      "name": "movie_translations_movie_id_movies_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "movie_translations"
     },
     {
       "nameExplicit": false,
@@ -966,16 +943,6 @@
         "id"
       ],
       "nameExplicit": false,
-      "name": "movie_translations_pkey",
-      "schema": "public",
-      "table": "movie_translations",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
       "name": "movies_pkey",
       "schema": "public",
       "table": "movies",
@@ -1007,13 +974,13 @@
       "nameExplicit": false,
       "columns": [
         "language",
-        "movie_id"
+        "scraped_movie_id"
       ],
       "nullsNotDistinct": false,
-      "name": "movie_translations_language_movie_id_unique",
+      "name": "movies_language_scraped_movie_id_unique",
       "entityType": "uniques",
       "schema": "public",
-      "table": "movie_translations"
+      "table": "movies"
     },
     {
       "nameExplicit": false,
@@ -1024,17 +991,6 @@
       "name": "movie_performances_scraped_performance_id_key",
       "schema": "public",
       "table": "movie_performances",
-      "entityType": "uniques"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "scraped_movie_id"
-      ],
-      "nullsNotDistinct": false,
-      "name": "movies_scraped_movie_id_key",
-      "schema": "public",
-      "table": "movies",
       "entityType": "uniques"
     },
     {

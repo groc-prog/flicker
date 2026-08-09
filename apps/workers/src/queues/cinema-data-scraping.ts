@@ -1,3 +1,9 @@
+import { SpanStatusCode, trace } from '@opentelemetry/api';
+import * as cheerio from 'cheerio';
+import dayjs from 'dayjs';
+import { and, eq, gt, inArray, not, sql, type InferInsertModel } from 'drizzle-orm';
+import { get, isArray, isPlainObject } from 'lodash';
+
 import db from '@flicker/database';
 import { AttributeCategory, attributeCategoryEnum, attributesTable } from '@flicker/database/schemas/attributes';
 import { moviePerformancesToAttributesTable } from '@flicker/database/schemas/movie-performance-attributes';
@@ -7,14 +13,9 @@ import { scrapedMoviesTable } from '@flicker/database/schemas/scraped-movies';
 import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
 import { withLogContext } from '@flicker/telemetry/logging';
 
-import { SpanStatusCode, trace } from '@opentelemetry/api';
-import * as cheerio from 'cheerio';
-import dayjs from 'dayjs';
-import { and, eq, gt, sql, type InferInsertModel } from 'drizzle-orm';
-import { get, isArray, isPlainObject } from 'lodash';
-
+import { movieProcessingQueueGroup } from '../queues/groups';
 import { attachWorkerEventLogging, logger } from '../telemetry/logging';
-import { movieProcessingQueueGroup } from './groups';
+import { queue as tmdbMetadataQueue } from './tmdb-metadata';
 
 interface ScrapedData {
   movies?: {
@@ -111,7 +112,10 @@ export const worker = movieProcessingQueueGroup.getWorker<void>(
           const [movieRelations, performanceRelations, extractedAttributes] = buildEntityMaps(data);
 
           const attributeIdMap = await storeAttributes(extractedAttributes);
-          await storeMovies(data, attributeIdMap, movieRelations, performanceRelations);
+          const storedMovieIds = await storeMovies(data, attributeIdMap, movieRelations, performanceRelations);
+
+          // scheduleFollowUpJobs([...movieRelations.keys()]);
+          scheduleFollowUpJobs(storedMovieIds);
         } catch (error) {
           span.recordException(error as Error);
           span.setStatus({
@@ -142,11 +146,7 @@ async function scrapeHtmlContent(): Promise<ScrapedData> {
       const response = await fetch(cinemaUrl);
 
       if (!response.ok) {
-        const error = new Error(
-          `Request to ${cinemaUrl} failed with status (${response.status}) ${response.statusText}`,
-        );
-        logger.error({ err: error });
-        throw error;
+        throw new Error(`Request to ${cinemaUrl} failed with status (${response.status}) ${response.statusText}`);
       }
 
       const content = await response.text();
@@ -266,79 +266,85 @@ function buildEntityMaps(
 
       logger.debug(`Adding ${Object.keys(performances).length} performances to map`);
       for (const [performanceRefId, performanceData] of Object.entries(performances)) {
-        const { moviePk } = performanceData;
-        if (!moviePk) {
-          logger.warn(`Performance ${performanceRefId} does not define a moviePk property, skipping`);
-          continue;
-        }
+        withLogContext({ [TelemetryIdentifier.PerformanceRefId]: performanceRefId }, () => {
+          const { moviePk } = performanceData;
+          if (!moviePk) {
+            logger.warn(`Performance ${performanceRefId} does not define a moviePk property, skipping`);
+            return;
+          }
 
-        // The scraped data can be funky at times, so we need to double check everything
-        if (!movieRelations.has(moviePk)) {
-          logger.warn(`Performance ${performanceRefId} defines unknown movie ref ID ${moviePk}, skipping`);
-          continue;
-        }
+          // The scraped data can be funky at times, so we need to double check everything
+          if (!movieRelations.has(moviePk)) {
+            logger.warn(`Performance ${performanceRefId} defines unknown movie ref ID ${moviePk}, skipping`);
+            return;
+          }
 
-        logger.debug(`Found matching movie ref ID for movie ${moviePk} and performance ${performanceRefId}`);
-        const relations = movieRelations.get(moviePk)!;
-        relations.performances.add(performanceRefId);
+          logger.debug(`Found matching movie ref ID for movie ${moviePk} and performance ${performanceRefId}`);
+          const relations = movieRelations.get(moviePk)!;
+          relations.performances.add(performanceRefId);
+        });
       }
 
       logger.debug('Adding attributes to map');
       for (const [attributeCategory, attributeCategoryValues] of Object.entries(attributes)) {
-        if (!attributeCategoryEnum.enumValues.includes(attributeCategory)) {
-          logger.debug(`Unknown attribute category ${attributeCategory}, skipping`);
-          continue;
-        }
-        if (!isPlainObject(attributeCategoryValues)) {
-          logger.warn(`Values for attribute category ${attributeCategory} is not a object, skipping`);
-          continue;
-        }
-
-        for (const [attributeKey, attributeData] of Object.entries(attributeCategoryValues)) {
-          if (!attributeData.name || typeof attributeData.name !== 'string') {
-            logger.warn(
-              `Attribute name for attribute ${attributeKey} in category ${attributeCategory} is not a string, skipping`,
-            );
-            continue;
+        withLogContext({ [TelemetryIdentifier.AttributeCategory]: attributeCategory }, () => {
+          if (!attributeCategoryEnum.enumValues.includes(attributeCategory)) {
+            logger.debug(`Unknown attribute category ${attributeCategory}, skipping`);
+            return;
+          }
+          if (!isPlainObject(attributeCategoryValues)) {
+            logger.warn(`Values for attribute category ${attributeCategory} is not a object, skipping`);
+            return;
           }
 
-          extractedAttributes.push({
-            name: attributeData.name,
-            category: attributeCategory as AttributeCategory,
-            key: attributeKey,
-          });
-
-          // Some attributes are only available for movies/performances
-          if (attributeData.movies && isArray(attributeData.movies)) {
-            for (const movieRefId of attributeData.movies) {
-              if (!movieRelations.has(movieRefId)) {
+          for (const [attributeKey, attributeData] of Object.entries(attributeCategoryValues)) {
+            withLogContext({ [TelemetryIdentifier.AttributeKey]: attributeKey }, () => {
+              if (!attributeData.name || typeof attributeData.name !== 'string') {
                 logger.warn(
-                  `Attribute ${attributeKey} in category ${attributeCategory} defines unknown movie ref ID ${movieRefId}, skipping`,
+                  `Attribute name for attribute ${attributeKey} in category ${attributeCategory} is not a string, skipping`,
                 );
-                continue;
+                return;
               }
 
-              const movieRelation = movieRelations.get(movieRefId)!;
-              movieRelation.attributes.add(`${attributeCategory}.${attributeKey}`);
-            }
-          } else {
-            logger.debug(`Attributes has no movies associated with it or movies key is not a array, skipping`);
-          }
+              extractedAttributes.push({
+                name: attributeData.name,
+                category: attributeCategory as AttributeCategory,
+                key: attributeKey,
+              });
 
-          if (attributeData.performances && isArray(attributeData.performances)) {
-            for (const performanceRefId of attributeData.performances) {
-              if (!performanceRelations.has(performanceRefId))
-                performanceRelations.set(performanceRefId, { attributes: new Set<string>() });
+              // Some attributes are only available for movies/performances
+              if (attributeData.movies && isArray(attributeData.movies)) {
+                for (const movieRefId of attributeData.movies) {
+                  if (!movieRelations.has(movieRefId)) {
+                    logger.warn(
+                      `Attribute ${attributeKey} in category ${attributeCategory} defines unknown movie ref ID ${movieRefId}, skipping`,
+                    );
+                    return;
+                  }
 
-              const performanceRelation = performanceRelations.get(performanceRefId)!;
-              performanceRelation.attributes.add(`${attributeCategory}.${attributeKey}`);
-            }
-          } else {
-            logger.debug(
-              `Attributes has no performances associated with it or performances key is not a array, skipping`,
-            );
+                  const movieRelation = movieRelations.get(movieRefId)!;
+                  movieRelation.attributes.add(`${attributeCategory}.${attributeKey}`);
+                }
+              } else {
+                logger.debug(`Attributes has no movies associated with it or movies key is not a array, skipping`);
+              }
+
+              if (attributeData.performances && isArray(attributeData.performances)) {
+                for (const performanceRefId of attributeData.performances) {
+                  if (!performanceRelations.has(performanceRefId))
+                    performanceRelations.set(performanceRefId, { attributes: new Set<string>() });
+
+                  const performanceRelation = performanceRelations.get(performanceRefId)!;
+                  performanceRelation.attributes.add(`${attributeCategory}.${attributeKey}`);
+                }
+              } else {
+                logger.debug(
+                  `Attributes has no performances associated with it or performances key is not a array, skipping`,
+                );
+              }
+            });
           }
-        }
+        });
       }
     } finally {
       span.end();
@@ -377,48 +383,46 @@ async function storeMovies(
   attributeIdMap: Map<string, string>,
   movieRelations: Map<string, MappedMovieRelations>,
   performanceRelations: Map<string, MappedPerformanceRelations>,
-): Promise<void> {
+): Promise<string[]> {
   logger.info(`Storing ${movieRelations.size} movies and their relations`);
+  const storedMovieIds: string[] = [];
+
   for (const [movieRefId, movieRelation] of movieRelations.entries()) {
     await tracer.startActiveSpan(
       `storeMovie`,
       { attributes: { [TelemetryIdentifier.MovieRefId]: movieRefId } },
       async (span) => {
-        await withLogContext({ [TelemetryIdentifier.MovieRefId]: movieRefId }, async (scopedLogger) => {
-          scopedLogger.info(`Storing movie ${movieRefId} and it's relations`);
+        await withLogContext({ [TelemetryIdentifier.MovieRefId]: movieRefId }, async () => {
+          logger.info(`Storing movie ${movieRefId} and it's relations`);
 
           try {
             const movieMetadata = get(data, `movies.items.${movieRefId}`);
             if (!movieMetadata) {
-              scopedLogger.warn(`Movie ${movieRefId} not found in scraped data, skipping`);
+              logger.warn(`Movie ${movieRefId} not found in scraped data, skipping`);
               return;
             }
 
             if (!movieMetadata.title || typeof movieMetadata.title !== 'string') {
-              scopedLogger.warn(`Movie ${movieRefId} does not have a valid title, skipping`);
+              logger.warn(`Movie ${movieRefId} does not have a valid title, skipping`);
               return;
             }
             if (!movieMetadata.startingDate || typeof movieMetadata.startingDate !== 'string') {
-              scopedLogger.warn(`Movie ${movieRefId} does not have a valid starting date, skipping`);
+              logger.warn(`Movie ${movieRefId} does not have a valid starting date, skipping`);
               return;
             }
             if (!movieMetadata.origTitle || typeof movieMetadata.origTitle !== 'string') {
-              scopedLogger.warn(
+              logger.warn(
                 `Movie ${movieRefId} does not have a valid original title. Original title will not be stored`,
               );
             }
             if (!movieMetadata.description || typeof movieMetadata.description !== 'string') {
-              scopedLogger.warn(
-                `Movie ${movieRefId} does not have a valid description. Description will not be stored`,
-              );
+              logger.warn(`Movie ${movieRefId} does not have a valid description. Description will not be stored`);
             }
             if (!movieMetadata.length || typeof movieMetadata.length !== 'number') {
-              scopedLogger.warn(`Movie ${movieRefId} does not have a valid runtime. Runtime will not be stored`);
+              logger.warn(`Movie ${movieRefId} does not have a valid runtime. Runtime will not be stored`);
             }
             if (!movieMetadata.images?.poster?.url || typeof movieMetadata.images?.poster?.url !== 'string') {
-              scopedLogger.warn(
-                `Movie ${movieRefId} does not have a valid poster path. Poster path will not be stored`,
-              );
+              logger.warn(`Movie ${movieRefId} does not have a valid poster path. Poster path will not be stored`);
             }
 
             const moviePerformances: Omit<
@@ -444,11 +448,11 @@ async function storeMovies(
             };
 
             if (movieRelation.attributes.size !== 0) {
-              scopedLogger.debug(`Preparing ${movieRelation.attributes.size} attribute relations for movies`);
+              logger.debug(`Preparing ${movieRelation.attributes.size} attribute relations for movies`);
               for (const attributePath of movieRelation.attributes.keys()) {
                 const attributeId = attributeIdMap.get(attributePath);
                 if (!attributeId) {
-                  scopedLogger.warn(`No attribute ID for path ${attributePath} found, skipping relation`);
+                  logger.warn(`No attribute ID for path ${attributePath} found, skipping relation`);
                   continue;
                 }
 
@@ -459,24 +463,24 @@ async function storeMovies(
             }
 
             if (movieRelation.performances.size !== 0) {
-              scopedLogger.debug(`Preparing ${movieRelation.performances.size} performance relations`);
+              logger.debug(`Preparing ${movieRelation.performances.size} performance relations`);
               for (const performanceRefId of movieRelation.performances.keys()) {
                 const performanceMetadata = get(data, `performances.items.${performanceRefId}`);
                 if (!performanceMetadata) {
-                  scopedLogger.warn(`Performance ${performanceRefId} not found in scraped data, skipping`);
+                  logger.warn(`Performance ${performanceRefId} not found in scraped data, skipping`);
                   continue;
                 }
 
                 if (!performanceMetadata.theatreName || typeof performanceMetadata.theatreName !== 'string') {
-                  scopedLogger.warn(`Performance ${performanceRefId} does not have a valid theatre name, skipping`);
+                  logger.warn(`Performance ${performanceRefId} does not have a valid theatre name, skipping`);
                   continue;
                 }
                 if (!performanceMetadata.deeplinkURL || typeof performanceMetadata.deeplinkURL !== 'string') {
-                  scopedLogger.warn(`Performance ${performanceRefId} does not have a valid deeplink URL, skipping`);
+                  logger.warn(`Performance ${performanceRefId} does not have a valid deeplink URL, skipping`);
                   continue;
                 }
                 if (!performanceMetadata.timeUtc || typeof performanceMetadata.timeUtc !== 'number') {
-                  scopedLogger.warn(`Performance ${performanceRefId} does not have a valid showtime, skipping`);
+                  logger.warn(`Performance ${performanceRefId} does not have a valid showtime, skipping`);
                   continue;
                 }
 
@@ -490,17 +494,17 @@ async function storeMovies(
             }
 
             if (performanceRelations.size !== 0) {
-              scopedLogger.debug(`Preparing ${performanceRelations.size} attribute relations for performances`);
+              logger.debug(`Preparing ${performanceRelations.size} attribute relations for performances`);
               for (const [performanceRefId, performanceRelation] of performanceRelations.entries()) {
                 if (performanceRelation.attributes.size === 0) {
-                  scopedLogger.debug(`Performance ${performanceRefId} does not have any attribute relations, skipping`);
+                  logger.debug(`Performance ${performanceRefId} does not have any attribute relations, skipping`);
                   continue;
                 }
 
                 for (const attributePath of performanceRelation.attributes.keys()) {
                   const attributeId = attributeIdMap.get(attributePath);
                   if (!attributeId) {
-                    scopedLogger.warn(`No attribute ID for path ${attributePath} found, skipping relation`);
+                    logger.warn(`No attribute ID for path ${attributePath} found, skipping relation`);
                     continue;
                   }
 
@@ -512,9 +516,9 @@ async function storeMovies(
               }
             }
 
-            scopedLogger.debug(`Opening transaction to store movie ${movieRefId} and relations`);
-            await db.transaction(async (tx) => {
-              const insertedOrUpdatedMovie = await tx
+            logger.debug(`Opening transaction to store movie ${movieRefId} and relations`);
+            const scrapedMovieId = await db.transaction(async (tx) => {
+              const [insertedOrUpdatedMovie] = await tx
                 .insert(scrapedMoviesTable)
                 .values(movie)
                 .onConflictDoUpdate({
@@ -530,48 +534,34 @@ async function storeMovies(
                 })
                 .returning({ id: scrapedMoviesTable.id });
 
-              const insertedOrUpdatedMovieId = insertedOrUpdatedMovie[0]?.id;
-              if (!insertedOrUpdatedMovieId) throw new Error('Query did not return inserted or updated movie');
+              if (!insertedOrUpdatedMovie?.id)
+                throw new Error('Query did not return inserted or updated scraped movie');
 
               // Remove any previously inserted attribute relations so only the newest ones are stored
               await tx
                 .delete(scrapedMoviesToAttributesTable)
-                .where(eq(scrapedMoviesToAttributesTable.scrapedMovieId, insertedOrUpdatedMovieId));
+                .where(eq(scrapedMoviesToAttributesTable.scrapedMovieId, insertedOrUpdatedMovie.id));
               if (movieAttributeRelations.length > 0) {
-                scopedLogger.debug(
-                  `Found ${movieAttributeRelations.length} attribute relations for movie ${movieRefId}`,
-                );
+                logger.debug(`Found ${movieAttributeRelations.length} attribute relations for movie ${movieRefId}`);
                 await tx
                   .insert(scrapedMoviesToAttributesTable)
                   .values(
                     movieAttributeRelations.map((relation) => ({
                       ...relation,
-                      scrapedMovieId: insertedOrUpdatedMovieId,
+                      scrapedMovieId: insertedOrUpdatedMovie.id,
                     })),
                   )
                   .onConflictDoNothing();
               }
 
-              // Delete all performances prior to inserting the new ones so that we do not
-              // accidentally persist any outdated ones
-              // We exclude any performances which have been in the past to persist historical data
-              await tx
-                .delete(moviePerformancesTable)
-                .where(
-                  and(
-                    eq(moviePerformancesTable.scrapedMovieId, insertedOrUpdatedMovieId),
-                    gt(moviePerformancesTable.showtime, sql`NOW()`),
-                  ),
-                );
-
               if (moviePerformances.length > 0) {
-                scopedLogger.debug(`Found ${moviePerformances.length} performances relations for movie ${movieRefId}`);
+                logger.debug(`Found ${moviePerformances.length} performances relations for movie ${movieRefId}`);
                 const insertedOrUpdatedPerformances = await tx
                   .insert(moviePerformancesTable)
                   .values(
                     moviePerformances.map((performance) => ({
                       ...performance,
-                      scrapedMovieId: insertedOrUpdatedMovieId,
+                      scrapedMovieId: insertedOrUpdatedMovie.id,
                     })),
                   )
                   .onConflictDoUpdate({
@@ -586,6 +576,22 @@ async function storeMovies(
                     id: moviePerformancesTable.id,
                     scrapedPerformanceId: moviePerformancesTable.scrapedPerformanceId,
                   });
+
+                // Delete all performances which are not up-to-date
+                // These are not deleted prior to prevent any links or references in messages containing the id
+                // of a performance from breaking while the performance still is valid
+                // We exclude any performances which have been in the past to persist historical data
+                await tx.delete(moviePerformancesTable).where(
+                  and(
+                    not(
+                      inArray(
+                        moviePerformancesTable.id,
+                        insertedOrUpdatedPerformances.map(({ id }) => id),
+                      ),
+                    ),
+                    gt(moviePerformancesTable.showtime, sql`NOW()`),
+                  ),
+                );
 
                 const performanceAttributeRelationsToInsert = moviePerformancesAttributeRelations.reduce(
                   (collected, relation) => {
@@ -608,7 +614,7 @@ async function storeMovies(
                 );
 
                 if (performanceAttributeRelationsToInsert.length > 0) {
-                  scopedLogger.debug(
+                  logger.debug(
                     `Found ${performanceAttributeRelationsToInsert.length} attribute relations for one or more performances`,
                   );
                   await tx
@@ -617,11 +623,14 @@ async function storeMovies(
                     .onConflictDoNothing();
                 }
               }
+
+              return insertedOrUpdatedMovie.id;
             });
 
-            scopedLogger.info(`Movie ${movieRefId} and relations stored`);
+            storedMovieIds.push(scrapedMovieId);
+            logger.info(`Movie ${movieRefId} and relations stored`);
           } catch (error) {
-            scopedLogger.error(error, `Failed to collect and insert movie ${movieRefId} and relations`);
+            logger.error(error, `Failed to collect and insert movie ${movieRefId} and relations`);
 
             span.recordException(error as Error);
             span.setStatus({
@@ -634,4 +643,19 @@ async function storeMovies(
       },
     );
   }
+
+  return storedMovieIds;
+}
+
+function scheduleFollowUpJobs(scrapedMovieIds: string[]): void {
+  logger.info(`Enqueuing ${scrapedMovieIds.length} follow-up jobs for TMDB metadata`);
+  const jobs: Parameters<typeof tmdbMetadataQueue.addBulk>[0] = scrapedMovieIds.map((id) => ({
+    name: `fetch-tmdb-metadata-${id}`,
+    data: {
+      id,
+    },
+  }));
+
+  tmdbMetadataQueue.addBulk(jobs);
+  logger.info(`${scrapedMovieIds.length} job enqueued successfully`);
 }

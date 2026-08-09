@@ -1,0 +1,23 @@
+{
+  "name": "@flicker/services",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@flicker/eslint-config": "workspace:*",
+    "@flicker/typescript-config": "workspace:*",
+    "@types/bun": "latest",
+    "eslint": "^9.39.1",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@flicker/telemetry": "workspace:*"
+  }
+}

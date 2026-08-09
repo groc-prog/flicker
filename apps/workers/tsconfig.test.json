@@ -1,12 +1,5 @@
 {
   "extends": "@flicker/typescript-config/tests.json",
-  "compilerOptions": {
-    "paths": {
-      "@app/*": [
-        "./src/*"
-      ]
-    }
-  },
   "include": [
     "src",
     "tests"

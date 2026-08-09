@@ -1,8 +1,8 @@
-import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
-import { getLogger } from '@flicker/telemetry/logging';
-
 import type { Worker } from 'bunqueue/client';
 import dayjs from 'dayjs';
+
+import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
+import { getLogger } from '@flicker/telemetry/logging';
 
 import 'dayjs/plugin/utc';
 

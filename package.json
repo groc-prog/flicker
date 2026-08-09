@@ -3,6 +3,7 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.1",
     "@commitlint/config-conventional": "^21.2.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
     "husky": "^9.1.7",
     "prettier": "^3.7.4",
     "turbo": "^2.10.8",
@@ -19,7 +20,7 @@
   },
   "private": true,
   "scripts": {
-    "dev": "turbo run dev",
+    "dev": "bun run --env-file=.env turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\" \"!./.(postgres|openobserve)/**\"",
     "type-check": "turbo run type-check",

@@ -16,7 +16,7 @@ import { context, trace } from '@opentelemetry/api';
 
 const storage = new AsyncLocalStorage<pino.Logger>();
 
-const parentLogger = pino({
+const baseLogger = pino({
   level: process.env.LOG_LEVEL || 'info',
   timestamp: pino.stdTimeFunctions.isoTime,
   formatters: {
@@ -44,10 +44,13 @@ const parentLogger = pino({
     };
   },
 });
-const proxiedParentLogger = new Proxy(parentLogger, {
-  get(target, property, receiver) {
-    const activeLogger = storage.getStore() || target;
-    return Reflect.get(activeLogger, property, receiver);
+
+const loggerProxy = new Proxy(baseLogger, {
+  get(target, prop, receiver) {
+    const activeLogger = storage.getStore() ?? target;
+    const value = Reflect.get(activeLogger, prop, receiver);
+
+    return typeof value === 'function' ? value.bind(activeLogger) : value;
   },
 });
 
@@ -58,7 +61,12 @@ const proxiedParentLogger = new Proxy(parentLogger, {
  * @returns A logger instance ready to be used.
  */
 export function getLogger(bindings?: pino.Bindings, options?: pino.ChildLoggerOptions): pino.Logger {
-  return proxiedParentLogger.child(bindings ?? {}, options);
+  if (bindings && Object.keys(bindings).length > 0) {
+    const activeLogger = storage.getStore() ?? baseLogger;
+    return activeLogger.child(bindings, options);
+  }
+
+  return loggerProxy;
 }
 
 /**
@@ -71,12 +79,9 @@ export function getLogger(bindings?: pino.Bindings, options?: pino.ChildLoggerOp
  * @param callback - A callback in which the bindings are applied.
  * @returns The returned value from the callback.
  */
-export function withLogContext<T>(
-  bindings: pino.Bindings,
-  callback: (logger: pino.Logger) => MaybePromise<T>,
-): MaybePromise<T> {
-  const currentLogger = storage.getStore() ?? getLogger();
-  const scopedLogger = currentLogger.child(bindings);
+export function withLogContext<T>(bindings: pino.Bindings, callback: () => MaybePromise<T>): MaybePromise<T> {
+  const parent = storage.getStore() ?? baseLogger;
+  const childLogger = parent.child(bindings);
 
-  return callback(scopedLogger);
+  return storage.run(childLogger, callback);
 }

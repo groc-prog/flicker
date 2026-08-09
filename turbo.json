@@ -8,7 +8,8 @@
     "LOG_LEVEL",
     "OTEL_COLLECTOR_URL",
     "OTEL_COLLECTOR_METRICS_EXPORT_INTERVAL",
-    "BUNQUEUE_DATA_PATH"
+    "BUNQUEUE_DATA_PATH",
+    "TMDB_API_TOKEN"
   ],
   "tasks": {
     "lint": {

@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun run --hot ./src/index.ts",
+    "dev": "bun run --preload ./src/telemetry/instrumentation.ts --hot ./src/index.ts",
     "test": "bun test --coverage",
     "test:watch": "bun test --watch",
     "lint": "eslint .",
@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@flicker/database": "workspace:*",
+    "@flicker/services": "workspace:*",
     "@flicker/telemetry": "workspace:*",
     "@opentelemetry/api": "^1.9.1",
     "@opentelemetry/instrumentation-fetch": "^0.221.0",
