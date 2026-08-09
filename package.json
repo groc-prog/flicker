@@ -20,6 +20,7 @@
   },
   "private": true,
   "scripts": {
+    "build": "bun run --env-file=.env turbo run build",
     "dev": "bun run --env-file=.env turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\" \"!./.(postgres|openobserve)/**\"",

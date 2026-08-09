@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 
+import { context, trace } from '@opentelemetry/api';
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions';
 import {
   ATTR_HOST_NAME,
@@ -9,10 +10,6 @@ import {
 } from '@opentelemetry/semantic-conventions/incubating';
 import type { MaybePromise } from 'bun';
 import pino from 'pino';
-
-import 'dayjs/plugin/utc';
-
-import { context, trace } from '@opentelemetry/api';
 
 const storage = new AsyncLocalStorage<pino.Logger>();
 

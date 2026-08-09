@@ -18,7 +18,15 @@ export default async function startWorkers(): Promise<void> {
   await tmdbMetadataQueue.waitUntilReady();
   await tmdbMetadataWorker.waitUntilReady();
 
-  cinemaDataScrapingQueue.add('scrape-data');
+  cinemaDataScrapingQueue.upsertJobScheduler(
+    'scheduled-cinema-data-scraping',
+    {
+      pattern: process.env.JOB_CINEMA_DATA_SCRAPING_SCHEDULE ?? '@daily',
+    },
+    {
+      name: 'scrape-cinema-data',
+    },
+  );
 
   process.on('SIGINT', async () => {
     await cinemaDataScrapingWorker.close();
