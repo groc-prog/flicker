@@ -1,0 +1,32 @@
+{
+  "apiData": {
+    "movies": {
+      "items": {}
+    },
+    "attributes": {
+      "genres": {
+        "Komödie": {
+          "name": "Komödie"
+        }
+      },
+      "fsk": {
+        "0": {
+          "name": "0"
+        }
+      },
+      "seatClasses": {
+        "2": {
+          "name": "Kategorie 2"
+        }
+      },
+      "technical": {
+        "_pm_preview": {
+          "name": "Vorschau"
+        }
+      }
+    },
+    "performances": {
+      "items": {}
+    }
+  }
+}

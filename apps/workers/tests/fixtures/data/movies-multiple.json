@@ -1,0 +1,398 @@
+{
+  "apiData": {
+    "movies": {
+      "items": {
+        "f3e754ef-5e4c-4b0a-9f64-014e9a96af45": {
+          "pk": "f3e754ef-5e4c-4b0a-9f64-014e9a96af45",
+          "id": "8297",
+          "title": "Practical Magic 2 - Zauberhafte Schwestern",
+          "titleDisplay": null,
+          "origTitle": "Practical Magic 2",
+          "subTitle": null,
+          "genres": [
+            "Fantasy",
+            "Drama",
+            "Komödie"
+          ],
+          "technologyAttributes": [
+            {
+              "id": "2d",
+              "name": "2D"
+            },
+            {
+              "id": "_pm_preview",
+              "name": "Vorschau"
+            }
+          ],
+          "description": "Mit Sandra Bullock und Nicole Kidman in den Hauptrollen kehrt „Practical Magic 2 – Zauberhafte Schwestern“ in eine Welt zurück, die von schelmischem Zauber im Mondlicht und mächtiger Ahnenmagie geprägt ist. Die Owens-Schwestern müssen sich dem dunklen Fluch stellen, der ihre Familie ein für alle Mal zu zerreißen droht.",
+          "descriptionShort": "Mit Sandra Bullock und Nicole Kidman in den Hauptrollen kehrt „Practical Magic 2 – Zauberhafte Schwestern“ in eine Welt zurück, die von schelmischem Zauber im Mondlicht und mächtiger Ahnenmagie geprägt ist. ",
+          "length": 100,
+          "fsk": null,
+          "order": 1.3658536585365857,
+          "ratingSummaries": [],
+          "startingDate": "2026-09-11",
+          "posterAttribute": null,
+          "productionYear": null,
+          "productionCountry": null,
+          "trailerURL": "https://www.youtube.com/watch?v=GjnbjYYuNOY",
+          "images": {
+            "poster": {
+              "id": null,
+              "format": null,
+              "alt": "Practical Magic 2 - Zauberhafte Schwestern - Poster",
+              "url": "https://mcs.planetmutlu.com/tmdb/image/uA8ytJv17alSiREcUthbYAdiPCX.jpg",
+              "position": null
+            },
+            "ambient": {
+              "id": null,
+              "format": null,
+              "alt": "Practical Magic 2 - Zauberhafte Schwestern - Ambient",
+              "url": "https://mcs.planetmutlu.com/tmdb/image/yDgYYuz8jDQCRJbHC3XM7IIGoeR.jpg",
+              "position": null
+            },
+            "backgrounds": [
+              {
+                "id": null,
+                "format": null,
+                "alt": "Practical Magic 2 - Zauberhafte Schwestern - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/4PfWwT2ebFNVFCjLcr158YFAt7z.jpg",
+                "position": null
+              }
+            ]
+          },
+          "logo": null,
+          "limitations": {
+            "visibleFrom": null,
+            "purchaseFrom": null,
+            "showCountdown": false
+          },
+          "alternativeIds": [
+            "10141"
+          ],
+          "alternativeLinks": null,
+          "preanouncements": {},
+          "actors": [
+            {
+              "character": "Sally Owens",
+              "id": "18277",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/hPHGKPAWZ8gArYXMk225rrYPoyJ.jpg",
+              "name": "Sandra Bullock"
+            },
+            {
+              "character": "Gillian Owens",
+              "id": "2227",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/4KSQDodyBtTDMaREYgMdWD1LbH1.jpg",
+              "name": "Nicole Kidman"
+            },
+            {
+              "character": "",
+              "id": "72095",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/eeTc0d2AX1vFYVxZ6Qw7qZpg4Tz.jpg",
+              "name": "Lee Pace"
+            },
+            {
+              "character": "Aunt Jet",
+              "id": "1902",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/p9mfzY68FtEbedOMNB5X4eBShhx.jpg",
+              "name": "Dianne Wiest"
+            },
+            {
+              "character": "Aunt Frances",
+              "id": "8893",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/qAYBGvapAnnhpoZuYFyoqetncs5.jpg",
+              "name": "Stockard Channing"
+            },
+            {
+              "character": "",
+              "id": "1181313",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/5RjD4dDpRDAhalFtvcUj7zdLWYB.jpg",
+              "name": "Maisie Williams"
+            },
+            {
+              "character": "",
+              "id": "125025",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/94c69mPYSK9jFsAEu0OKB7Qs684.jpg",
+              "name": "Joey King"
+            },
+            {
+              "character": "",
+              "id": "1185997",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/tJMI7BpjlhHSMpzSz9e1XxygnKd.jpg",
+              "name": "Xolo Maridueña"
+            },
+            {
+              "character": "",
+              "id": "3060978",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/6aMA4kUV1ji4uu3zzBzQ9fwgUDO.jpg",
+              "name": "Solly McLeod"
+            }
+          ],
+          "directors": null,
+          "elbenwaldArticles": null,
+          "performances": []
+        },
+        "f3214991-cc8a-40f8-9f4f-0200714dbcd9": {
+          "pk": "f3214991-cc8a-40f8-9f4f-0200714dbcd9",
+          "id": "8345",
+          "title": "Clayface",
+          "titleDisplay": null,
+          "origTitle": "Clayface",
+          "subTitle": null,
+          "genres": [
+            "Horror",
+            "Thriller",
+            "Science Fiction"
+          ],
+          "technologyAttributes": [
+            {
+              "id": "2d",
+              "name": "2D"
+            },
+            {
+              "id": "_pm_preview",
+              "name": "Vorschau"
+            }
+          ],
+          "description": "„Clayface“ schildert den erschütternden Niedergang eines Mannes vom aufstrebenden Hollywood-Star zum von Rachegelüsten getriebenen Monster. Die Geschichte erzählt vom Verlust der eigenen Identität und Menschlichkeit, von der zerstörerischen Kraft der Liebe und von der Schattenseite wissenschaftlichen Ehrgeizes.",
+          "descriptionShort": "„Clayface“ schildert den erschütternden Niedergang eines Mannes vom aufstrebenden Hollywood-Star zum von Rachegelüsten getriebenen Monster. Die Geschichte erzählt vom Verlust der eigenen Identität und Menschlichkeit,...",
+          "length": 90,
+          "fsk": null,
+          "order": 2.6666666666666665,
+          "ratingSummaries": [],
+          "startingDate": "2026-10-23",
+          "posterAttribute": null,
+          "productionYear": null,
+          "productionCountry": null,
+          "trailerURL": "https://www.youtube.com/watch?v=Phtsm8cn_A4",
+          "images": {
+            "poster": {
+              "id": null,
+              "format": null,
+              "alt": "Clayface - Poster",
+              "url": "https://mcs.planetmutlu.com/tmdb/image/5jCpQnWPikggmQZoDp1eAi6BI6w.jpg",
+              "position": null
+            },
+            "ambient": {
+              "id": null,
+              "format": null,
+              "alt": "Clayface - Ambient",
+              "url": "https://mcs.planetmutlu.com/tmdb/image/1A7s8zG4PF6YoJrncrTO6N4r0Sx.jpg",
+              "position": null
+            },
+            "backgrounds": [
+              {
+                "id": null,
+                "format": null,
+                "alt": "Clayface - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/1A7s8zG4PF6YoJrncrTO6N4r0Sx.jpg",
+                "position": null
+              },
+              {
+                "id": null,
+                "format": null,
+                "alt": "Clayface - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/pwWR1DRjoFxwdH0jI2elBdXTF1F.jpg",
+                "position": null
+              },
+              {
+                "id": null,
+                "format": null,
+                "alt": "Clayface - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/3AO85pPyxW2nu0FLDWYTtNmPGzd.jpg",
+                "position": null
+              },
+              {
+                "id": null,
+                "format": null,
+                "alt": "Clayface - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/6rf6LGpJODbxo36WSCHqbC5CAKO.jpg",
+                "position": null
+              },
+              {
+                "id": null,
+                "format": null,
+                "alt": "Clayface - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/kVtOcoUJ68chBD2tmERkdWz7lK5.jpg",
+                "position": null
+              },
+              {
+                "id": null,
+                "format": null,
+                "alt": "Clayface - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/m5QjOdBBIKZoMCJ1bfm97A1BhLH.jpg",
+                "position": null
+              },
+              {
+                "id": null,
+                "format": null,
+                "alt": "Clayface - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/xwdGfFO5TsVaRiiiAdatFrbh7bT.jpg",
+                "position": null
+              },
+              {
+                "id": null,
+                "format": null,
+                "alt": "Clayface - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/wAES08OKL0C9d1hkkNRhQrmpxY5.jpg",
+                "position": null
+              },
+              {
+                "id": null,
+                "format": null,
+                "alt": "Clayface - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/phNzZHKgUOP9y5RbtzCEwtF6UtT.jpg",
+                "position": null
+              },
+              {
+                "id": null,
+                "format": null,
+                "alt": "Clayface - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/e1iAjnhQsM6Z9bYTOxNFxFY6CfG.jpg",
+                "position": null
+              },
+              {
+                "id": null,
+                "format": null,
+                "alt": "Clayface - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/vOkvAu6DJMxoN3bzts1gMOa3a0k.jpg",
+                "position": null
+              },
+              {
+                "id": null,
+                "format": null,
+                "alt": "Clayface - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/zyTh2lOrL7gGrFi5fitmZjH1ZEB.jpg",
+                "position": null
+              },
+              {
+                "id": null,
+                "format": null,
+                "alt": "Clayface - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/lfoaVNeqHEleuDkvzcYj0pjJWK5.jpg",
+                "position": null
+              },
+              {
+                "id": null,
+                "format": null,
+                "alt": "Clayface - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/yn2NSROyvVwOui3zYKBwBbcAQbk.jpg",
+                "position": null
+              },
+              {
+                "id": null,
+                "format": null,
+                "alt": "Clayface - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/lmLG3QCyz5ttlt7Ffp5QBpax6ts.jpg",
+                "position": null
+              }
+            ]
+          },
+          "logo": null,
+          "limitations": {
+            "visibleFrom": null,
+            "purchaseFrom": null,
+            "showCountdown": false
+          },
+          "alternativeIds": [
+            "10189"
+          ],
+          "alternativeLinks": null,
+          "preanouncements": {},
+          "actors": [
+            {
+              "character": "Matt Hagen / Clayface",
+              "id": "1327945",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/rSmdo0YnGHUL5sua6jg3YlWWGL4.jpg",
+              "name": "Tom Rhys Harries"
+            },
+            {
+              "character": "Caitlyn Corr",
+              "id": "1537686",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/dijwuTAEZUzQtoJfK49S4X80fQw.jpg",
+              "name": "Naomi Ackie"
+            },
+            {
+              "character": "",
+              "id": "1665",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/9atfOgIxhfOKvv2be8HEp6SzOct.jpg",
+              "name": "Eddie Marsan"
+            },
+            {
+              "character": "John",
+              "id": "2978",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/AhVDxsOOoAnwwVBL7ZY8W0mGsYJ.jpg",
+              "name": "Max Minghella"
+            },
+            {
+              "character": "",
+              "id": "93236",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/2BPsGhw8lGhe6HNs1aLu4Q1XeVn.jpg",
+              "name": "David Dencik"
+            },
+            {
+              "character": "",
+              "id": "3286781",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/p2B2dYAvl0TMUtbrZxzOdNgBbSE.jpg",
+              "name": "Francesca Corney"
+            },
+            {
+              "character": "Theresa",
+              "id": "4577931",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/hNlLm6NaHPjakDJhPEY1suGcxKi.jpg",
+              "name": "Ruby Sear"
+            },
+            {
+              "character": "Bones",
+              "id": "1815694",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/73REwJckTBMNJoiGIrrGhcCdTqf.jpg",
+              "name": "Wil Coban"
+            },
+            {
+              "character": "Corey Bowery",
+              "id": "1344715",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/jw1n2Pzi2LJvyu6OkXTHMXPV7Q4.jpg",
+              "name": "Joshua James"
+            },
+            {
+              "character": "Patches",
+              "id": "3551",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/pC6ozticiOmovaPpwqKVOMhn0b9.jpg",
+              "name": "Jake Curran"
+            },
+            {
+              "character": "",
+              "id": "983749",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/lXTNopDRBsDLTlXTREvuBT3KMIt.jpg",
+              "name": "Nancy Carroll"
+            },
+            {
+              "character": "",
+              "id": "2723390",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/gWZRzvOnUxZmvdzHuxBvIS0BEJP.jpg",
+              "name": "Olivia-Mai Barrett"
+            },
+            {
+              "character": "",
+              "id": "963257",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/oIBILFSVqHT2warKlXSPDML3llI.jpg",
+              "name": "Sonita Henry"
+            },
+            {
+              "character": "",
+              "id": "84497",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/8Ac9uuoYwZoYVAIJfRLzzLsGGJn.jpg",
+              "name": "Aaron Paul"
+            }
+          ],
+          "directors": null,
+          "elbenwaldArticles": null,
+          "performances": []
+        }
+      }
+    },
+    "performances": {
+      "items": {}
+    },
+    "attributes": {}
+  }
+}

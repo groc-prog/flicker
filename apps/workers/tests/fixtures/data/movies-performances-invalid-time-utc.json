@@ -1,0 +1,192 @@
+{
+  "apiData": {
+    "movies": {
+      "items": {
+        "f3e754ef-5e4c-4b0a-9f64-014e9a96af45": {
+          "pk": "f3e754ef-5e4c-4b0a-9f64-014e9a96af45",
+          "id": "8297",
+          "title": "Practical Magic 2 - Zauberhafte Schwestern",
+          "titleDisplay": null,
+          "origTitle": "Practical Magic 2",
+          "subTitle": null,
+          "genres": [
+            "Fantasy",
+            "Drama",
+            "Komödie"
+          ],
+          "technologyAttributes": [
+            {
+              "id": "2d",
+              "name": "2D"
+            },
+            {
+              "id": "_pm_preview",
+              "name": "Vorschau"
+            }
+          ],
+          "description": "Mit Sandra Bullock und Nicole Kidman in den Hauptrollen kehrt „Practical Magic 2 – Zauberhafte Schwestern“ in eine Welt zurück, die von schelmischem Zauber im Mondlicht und mächtiger Ahnenmagie geprägt ist. Die Owens-Schwestern müssen sich dem dunklen Fluch stellen, der ihre Familie ein für alle Mal zu zerreißen droht.",
+          "descriptionShort": "Mit Sandra Bullock und Nicole Kidman in den Hauptrollen kehrt „Practical Magic 2 – Zauberhafte Schwestern“ in eine Welt zurück, die von schelmischem Zauber im Mondlicht und mächtiger Ahnenmagie geprägt ist. ",
+          "length": 0,
+          "fsk": null,
+          "order": 1.3658536585365857,
+          "ratingSummaries": [],
+          "startingDate": "2026-09-11",
+          "posterAttribute": null,
+          "productionYear": null,
+          "productionCountry": null,
+          "trailerURL": "https://www.youtube.com/watch?v=GjnbjYYuNOY",
+          "images": {
+            "poster": {
+              "id": null,
+              "format": null,
+              "alt": "Practical Magic 2 - Zauberhafte Schwestern - Poster",
+              "url": "https://mcs.planetmutlu.com/tmdb/image/uA8ytJv17alSiREcUthbYAdiPCX.jpg",
+              "position": null
+            },
+            "ambient": {
+              "id": null,
+              "format": null,
+              "alt": "Practical Magic 2 - Zauberhafte Schwestern - Ambient",
+              "url": "https://mcs.planetmutlu.com/tmdb/image/yDgYYuz8jDQCRJbHC3XM7IIGoeR.jpg",
+              "position": null
+            },
+            "backgrounds": [
+              {
+                "id": null,
+                "format": null,
+                "alt": "Practical Magic 2 - Zauberhafte Schwestern - Background",
+                "url": "https://mcs.planetmutlu.com/tmdb/image/4PfWwT2ebFNVFCjLcr158YFAt7z.jpg",
+                "position": null
+              }
+            ]
+          },
+          "logo": null,
+          "limitations": {
+            "visibleFrom": null,
+            "purchaseFrom": null,
+            "showCountdown": false
+          },
+          "alternativeIds": [
+            "10141"
+          ],
+          "alternativeLinks": null,
+          "preanouncements": {},
+          "actors": [
+            {
+              "character": "Sally Owens",
+              "id": "18277",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/hPHGKPAWZ8gArYXMk225rrYPoyJ.jpg",
+              "name": "Sandra Bullock"
+            },
+            {
+              "character": "Gillian Owens",
+              "id": "2227",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/4KSQDodyBtTDMaREYgMdWD1LbH1.jpg",
+              "name": "Nicole Kidman"
+            },
+            {
+              "character": "",
+              "id": "72095",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/eeTc0d2AX1vFYVxZ6Qw7qZpg4Tz.jpg",
+              "name": "Lee Pace"
+            },
+            {
+              "character": "Aunt Jet",
+              "id": "1902",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/p9mfzY68FtEbedOMNB5X4eBShhx.jpg",
+              "name": "Dianne Wiest"
+            },
+            {
+              "character": "Aunt Frances",
+              "id": "8893",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/qAYBGvapAnnhpoZuYFyoqetncs5.jpg",
+              "name": "Stockard Channing"
+            },
+            {
+              "character": "",
+              "id": "1181313",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/5RjD4dDpRDAhalFtvcUj7zdLWYB.jpg",
+              "name": "Maisie Williams"
+            },
+            {
+              "character": "",
+              "id": "125025",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/94c69mPYSK9jFsAEu0OKB7Qs684.jpg",
+              "name": "Joey King"
+            },
+            {
+              "character": "",
+              "id": "1185997",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/tJMI7BpjlhHSMpzSz9e1XxygnKd.jpg",
+              "name": "Xolo Maridueña"
+            },
+            {
+              "character": "",
+              "id": "3060978",
+              "imageURL": "https://mcs.planetmutlu.com/tmdb/image/6aMA4kUV1ji4uu3zzBzQ9fwgUDO.jpg",
+              "name": "Solly McLeod"
+            }
+          ],
+          "directors": null,
+          "elbenwaldArticles": null,
+          "performances": [
+            "4c339fe8-e78c-4dbc-b90e-2136ecaa8df2-959582"
+          ]
+        }
+      }
+    },
+    "performances": {
+      "items": {
+        "4c339fe8-e78c-4dbc-b90e-2136ecaa8df2-959582": {
+          "refPk": "4c339fe8-e78c-4dbc-b90e-2136ecaa8df2-959582",
+          "moviePk": "f3e754ef-5e4c-4b0a-9f64-014e9a96af45",
+          "attributes": [
+            {
+              "id": "2d",
+              "name": "2D"
+            }
+          ],
+          "concessionOptions": null,
+          "date": null,
+          "deeplinkURL": "https://kinoapi.dieselkino.at/?performanceId=959582d&cinemaNumber=04",
+          "id": "959582",
+          "showtime": null,
+          "theatreID": "gleisdorf_3",
+          "theatreName": "Saal 3",
+          "timeUtc": null,
+          "type": null,
+          "supplementaryProductList": [],
+          "cinema": "5a8b27d9-c3f2-42fb-a6ba-d4e2960fd47e",
+          "limitations": {
+            "visibleFrom": null,
+            "purchaseFrom": null,
+            "purchaseUntil": null
+          },
+          "priceInfo": {
+            "lowestCustomerCardPrice": null
+          },
+          "seatClasses": [
+            {
+              "id": "5",
+              "name": "VIP Plus"
+            },
+            {
+              "id": "6",
+              "name": "VIP Loge"
+            },
+            {
+              "id": "7",
+              "name": "Rollstuhl"
+            },
+            {
+              "id": "8",
+              "name": "VIP Komfort+"
+            }
+          ],
+          "occupationPercent": null
+        }
+      }
+    },
+    "attributes": {}
+  }
+}

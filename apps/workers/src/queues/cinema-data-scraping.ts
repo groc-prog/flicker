@@ -177,11 +177,6 @@ async function scrapeHtmlContent(): Promise<ScrapedData> {
             logger.info('Stringified JSON data extracted successfully, attempting to parse data into JSON object');
             const parsedData = JSON.parse(jsonSerializedData);
 
-            if (!isPlainObject(parsedData))
-              throw new Error(
-                'Extracted JSON data is not an object. This might indicate that the embedded data has changed',
-              );
-
             if (!('apiData' in parsedData))
               throw new Error(
                 'apiData key not found in parsed data. This might indicate that the embedded data has changed',
@@ -327,7 +322,7 @@ function buildEntityMaps(
                   movieRelation.attributes.add(`${attributeCategory}.${attributeKey}`);
                 }
               } else {
-                logger.debug(`Attributes has no movies associated with it or movies key is not a array, skipping`);
+                logger.debug(`Attribute has no movies associated with it or movies key is not a array, skipping`);
               }
 
               if (attributeData.performances && isArray(attributeData.performances)) {
@@ -340,7 +335,7 @@ function buildEntityMaps(
                 }
               } else {
                 logger.debug(
-                  `Attributes has no performances associated with it or performances key is not a array, skipping`,
+                  `Attribute has no performances associated with it or performances key is not a array, skipping`,
                 );
               }
             });
@@ -446,10 +441,11 @@ async function storeMovies(
             const movie: Omit<InferInsertModel<typeof scrapedMoviesTable>, 'id' | 'createdAt'> = {
               scrapedMovieId: movieRefId,
               title: movieMetadata.title,
-              originalTitle: movieMetadata.origTitle,
-              description: movieMetadata.description,
-              runtime: movieMetadata.length,
-              posterPath: movieMetadata.images?.poster?.url,
+              originalTitle: typeof movieMetadata.origTitle === 'string' ? movieMetadata.origTitle : null,
+              description: typeof movieMetadata.description === 'string' ? movieMetadata.description : null,
+              runtime: typeof movieMetadata.length === 'number' ? movieMetadata.length : null,
+              posterPath:
+                typeof movieMetadata.images?.poster?.url === 'string' ? movieMetadata.images?.poster?.url : null,
               availableAt: dayjs(movieMetadata.startingDate).add(1, 'day').toDate(),
             };
 

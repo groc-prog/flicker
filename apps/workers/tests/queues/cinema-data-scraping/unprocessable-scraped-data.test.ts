@@ -1,8 +1,5 @@
-import path from 'node:path';
-
-import { afterEach, beforeAll, describe, expect, it, spyOn } from 'bun:test';
+import { afterEach, describe, expect, it, spyOn } from 'bun:test';
 import { count } from 'drizzle-orm';
-import { migrate } from 'drizzle-orm/node-postgres/migrator';
 
 import db from '@flicker/database';
 import { attributesTable } from '@flicker/database/schemas/attributes';
@@ -11,16 +8,6 @@ import { scrapedMoviesTable } from '@flicker/database/schemas/scraped-movies';
 
 import { queue, worker } from '../../../src/queues/cinema-data-scraping';
 import { getScrapedDataResponse, waitForJobFailure } from '../../fixtures/queue';
-
-beforeAll(async () => {
-  const migrationsFolder = path.join(import.meta.dir, '../../../../../packages/database/drizzle');
-  await migrate(db, {
-    migrationsFolder,
-  });
-
-  await queue.waitUntilReady();
-  await worker.waitUntilReady();
-});
 
 afterEach(async () => {
   await queue.obliterateAsync();
@@ -31,16 +18,16 @@ afterEach(async () => {
 
 async function assertDataScrapingError(jobId: string) {
   const dlqEntries = queue.getDlq();
-  expect(dlqEntries, 'Job was not added to DLQ').toHaveLength(1);
-  expect(dlqEntries[0]?.job.id, 'Job ID in DLQ does not match enqueued job ID').toBe(jobId);
+  expect(dlqEntries).toHaveLength(1);
+  expect(dlqEntries[0]?.job.id).toBe(jobId);
 
   const scrapedMovies = await db.select({ count: count() }).from(scrapedMoviesTable);
   const attributes = await db.select({ count: count() }).from(attributesTable);
   const performances = await db.select({ count: count() }).from(moviePerformancesTable);
 
-  expect(scrapedMovies[0]?.count, 'Scraped movies table is not empty').toBe(0);
-  expect(attributes[0]?.count, 'Attributes table is not empty').toBe(0);
-  expect(performances[0]?.count, 'Performances table is not empty').toBe(0);
+  expect(scrapedMovies[0]?.count).toBe(0);
+  expect(attributes[0]?.count).toBe(0);
+  expect(performances[0]?.count).toBe(0);
 }
 
 describe('cinema-data-scraping worker', () => {
@@ -59,7 +46,7 @@ describe('cinema-data-scraping worker', () => {
 
       await waitForJobFailure(worker, job.id);
 
-      expect(spy, '.fetch() has not been called').toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
+      expect(spy).toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
       await assertDataScrapingError(job.id);
     });
   });
@@ -92,7 +79,7 @@ describe('cinema-data-scraping worker', () => {
       const error = await waitForJobFailure(worker, job.id);
       expect(error.message).toBe('JSON data not found in unparsed data');
 
-      expect(spy, '.fetch() has not been called').toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
+      expect(spy).toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
       await assertDataScrapingError(job.id);
     });
 
@@ -123,7 +110,7 @@ describe('cinema-data-scraping worker', () => {
       const error = await waitForJobFailure(worker, job.id);
       expect(error.message).toBe('JSON data not found in unparsed data');
 
-      expect(spy, '.fetch() has not been called').toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
+      expect(spy).toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
       await assertDataScrapingError(job.id);
     });
 
@@ -139,7 +126,7 @@ describe('cinema-data-scraping worker', () => {
         'apiData key not found in parsed data. This might indicate that the embedded data has changed',
       );
 
-      expect(spy, '.fetch() has not been called').toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
+      expect(spy).toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
       await assertDataScrapingError(job.id);
     });
 
@@ -155,7 +142,7 @@ describe('cinema-data-scraping worker', () => {
         'Value for apiData key is not an object. This might indicate that the embedded data has changed',
       );
 
-      expect(spy, '.fetch() has not been called').toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
+      expect(spy).toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
       await assertDataScrapingError(job.id);
     });
 
@@ -171,7 +158,7 @@ describe('cinema-data-scraping worker', () => {
         'movies key not found in parsed data. This might indicate that the embedded data has changed',
       );
 
-      expect(spy, '.fetch() has not been called').toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
+      expect(spy).toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
       await assertDataScrapingError(job.id);
     });
 
@@ -187,7 +174,7 @@ describe('cinema-data-scraping worker', () => {
         'performances key not found in parsed data. This might indicate that the embedded data has changed',
       );
 
-      expect(spy, '.fetch() has not been called').toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
+      expect(spy).toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
       await assertDataScrapingError(job.id);
     });
 
@@ -205,7 +192,7 @@ describe('cinema-data-scraping worker', () => {
         'attributes key not found in parsed data. This might indicate that the embedded data has changed',
       );
 
-      expect(spy, '.fetch() has not been called').toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
+      expect(spy).toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
       await assertDataScrapingError(job.id);
     });
 
@@ -223,7 +210,7 @@ describe('cinema-data-scraping worker', () => {
         'Value for movies key is not an object. This might indicate that the embedded data has changed',
       );
 
-      expect(spy, '.fetch() has not been called').toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
+      expect(spy).toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
       await assertDataScrapingError(job.id);
     });
 
@@ -241,7 +228,7 @@ describe('cinema-data-scraping worker', () => {
         'Value for performances key is not an object. This might indicate that the embedded data has changed',
       );
 
-      expect(spy, '.fetch() has not been called').toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
+      expect(spy).toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
       await assertDataScrapingError(job.id);
     });
 
@@ -259,7 +246,7 @@ describe('cinema-data-scraping worker', () => {
         'Value for attributes key is not an object. This might indicate that the embedded data has changed',
       );
 
-      expect(spy, '.fetch() has not been called').toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
+      expect(spy).toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
       await assertDataScrapingError(job.id);
     });
   });
