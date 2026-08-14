@@ -1,0 +1,29 @@
+{
+  "apiData": {
+    "movies": {
+      "items": {}
+    },
+    "attributes": {
+      "genres": {
+        "Komödie": {
+          "name": "Komödie",
+          "movies": []
+        },
+        "Dokumentarfilm": {
+          "name": "Dokumentarfilm",
+          "movies": []
+        }
+      },
+      "theatres": {
+        "gleisdorf_1": {
+          "name": "Saal 1",
+          "movies": [],
+          "performances": []
+        }
+      }
+    },
+    "performances": {
+      "items": {}
+    }
+  }
+}

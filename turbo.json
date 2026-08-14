@@ -1,19 +1,23 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
-  "globalEnv": [
-    "POSTGRES_DATABASE_URL",
-    "SERVICE_NAME",
-    "SERVICE_VERSION",
-    "LOG_LEVEL",
-    "OTEL_COLLECTOR_URL",
-    "OTEL_COLLECTOR_METRICS_EXPORT_INTERVAL",
-    "BUNQUEUE_DATA_PATH",
-    "TMDB_API_TOKEN",
-    "JOB_CINEMA_DATA_SCRAPING_SCHEDULE"
-  ],
   "tasks": {
     "build": {
+      "env": [
+        "POSTGRES_DATABASE_URL",
+        "SERVICE_NAME",
+        "SERVICE_VERSION",
+        "LOG_LEVEL",
+        "OTEL_COLLECTOR_URL",
+        "OTEL_COLLECTOR_METRICS_EXPORT_INTERVAL",
+        "BUNQUEUE_DATA_PATH",
+        "TMDB_API_TOKEN",
+        "JOB_CINEMA_DATA_SCRAPING_SCHEDULE"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env.test.local"
+      ],
       "dependsOn": [
         "^build"
       ],
@@ -32,6 +36,14 @@
       ]
     },
     "test": {
+      "env": [
+        "POSTGRES_DATABASE_URL",
+        "BUNQUEUE_DATA_PATH"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env.test.local"
+      ],
       "dependsOn": [
         "^test"
       ]

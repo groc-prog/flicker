@@ -1,0 +1,13 @@
+{
+  "apiData": {
+    "movies": {
+      "items": {}
+    },
+    "attributes": {
+      "genres": "no-a-object"
+    },
+    "performances": {
+      "items": {}
+    }
+  }
+}

@@ -10,9 +10,9 @@
   "scripts": {
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
-    "drizzle-kit:studio": "drizzle-kit studio",
-    "drizzle-kit:generate": "drizzle-kit generate",
-    "drizzle-kit:migrate": "drizzle-kit migrate"
+    "drizzle-kit:studio": "NODE_ENV=development drizzle-kit studio",
+    "drizzle-kit:generate": "NODE_ENV=development drizzle-kit generate",
+    "drizzle-kit:migrate": "NODE_ENV=development drizzle-kit migrate"
   },
   "devDependencies": {
     "@flicker/eslint-config": "workspace:*",

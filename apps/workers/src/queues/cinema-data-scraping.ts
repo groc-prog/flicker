@@ -114,7 +114,6 @@ export const worker = movieProcessingQueueGroup.getWorker<void>(
           const attributeIdMap = await storeAttributes(extractedAttributes);
           const storedMovieIds = await storeMovies(data, attributeIdMap, movieRelations, performanceRelations);
 
-          // scheduleFollowUpJobs([...movieRelations.keys()]);
           scheduleFollowUpJobs(storedMovieIds);
         } catch (error) {
           span.recordException(error as Error);
@@ -168,13 +167,15 @@ async function scrapeHtmlContent(): Promise<ScrapedData> {
             const jsonDataStart = unparsedData.indexOf('{');
             const jsonDataEnd = unparsedData.lastIndexOf('}');
 
+            if (jsonDataStart === -1 || jsonDataEnd === -1) throw new Error('JSON data not found in unparsed data');
+
             const payloadLength = jsonDataEnd + 1 - jsonDataStart;
             span.setAttribute('data.extracted_length', payloadLength);
 
             const jsonSerializedData = unparsedData.slice(jsonDataStart, jsonDataEnd + 1);
             logger.debug(`Content string parsed from indexes ${jsonDataStart} to ${jsonDataStart}`);
-            const parsedData = JSON.parse(jsonSerializedData);
             logger.info('Stringified JSON data extracted successfully, attempting to parse data into JSON object');
+            const parsedData = JSON.parse(jsonSerializedData);
 
             if (!isPlainObject(parsedData))
               throw new Error(
@@ -358,6 +359,11 @@ function buildEntityMaps(
 }
 
 async function storeAttributes(extractedAttributes: ExtractedAttributes): Promise<Map<string, string>> {
+  if (extractedAttributes.length === 0) {
+    logger.info('No attributes found, skipping');
+    return new Map<string, string>();
+  }
+
   logger.info(`Storing ${extractedAttributes.length} attributes`);
   const insertedOrUpdated = await db
     .insert(attributesTable)
