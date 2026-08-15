@@ -7,12 +7,12 @@ import { moviePerformancesTable } from '@flicker/database/schemas/movie-performa
 import { scrapedMoviesToAttributesTable } from '@flicker/database/schemas/scraped-movie-attributes';
 import { scrapedMoviesTable } from '@flicker/database/schemas/scraped-movies';
 
-import { queue, worker } from '../../../src/queues/cinema-data-scraping';
-import moviesMultiple from '../../fixtures/data/movies-multiple.json';
+import { queue, worker } from '../../../src/queues/scrape-cinema-data';
 import { getScrapedDataResponse, waitForJobCompletion } from '../../fixtures/queue';
+import moviesMultipleMockData from './__fixtures__/movies-multiple.json';
 
 const mockAddBulk = vi.fn();
-vi.mock('../../../src/queues/tmdb-metadata', () => ({
+vi.mock('../../../src/queues/get-tmdb-metadata', () => ({
   queue: {
     addBulk: mockAddBulk,
   },
@@ -31,14 +31,18 @@ afterEach(async () => {
   await db.delete(attributesTable);
 });
 
-describe('cinema-data-scraping worker', () => {
+describe('scrape-cinema-data worker', () => {
   describe('when a movie is saved', () => {
     it('enqueues follow-up-jobs for each movie', async () => {
-      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(moviesMultiple));
+      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(moviesMultipleMockData));
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -52,11 +56,11 @@ describe('cinema-data-scraping worker', () => {
       expect(scrapedMovies).toHaveLength(2);
       expect(mockAddBulk).toHaveBeenNthCalledWith(1, [
         {
-          name: `fetch-tmdb-metadata-${scrapedMovies[0]!.id}`,
+          name: `get-tmdb-metadata-${scrapedMovies[0]!.id}`,
           data: { id: scrapedMovies[0]!.id },
         },
         {
-          name: `fetch-tmdb-metadata-${scrapedMovies[1]!.id}`,
+          name: `get-tmdb-metadata-${scrapedMovies[1]!.id}`,
           data: { id: scrapedMovies[1]!.id },
         },
       ]);

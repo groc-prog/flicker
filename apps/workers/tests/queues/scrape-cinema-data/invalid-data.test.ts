@@ -8,24 +8,24 @@ import { moviePerformancesTable } from '@flicker/database/schemas/movie-performa
 import { scrapedMoviesToAttributesTable } from '@flicker/database/schemas/scraped-movie-attributes';
 import { scrapedMoviesTable } from '@flicker/database/schemas/scraped-movies';
 
-import { queue, worker } from '../../../src/queues/cinema-data-scraping';
-import attributesWithUnknownCategory from '../../fixtures/data/attributes-with-unknown-category.json';
-import attributesWithUnknownMovies from '../../fixtures/data/attributes-with-unknown-movies.json';
-import moviesPerformancesInvalidDeeplinkUrl from '../../fixtures/data/movies-performances-invalid-deeplink-url.json';
-import moviesPerformancesInvalidTheatreName from '../../fixtures/data/movies-performances-invalid-theatre-name.json';
-import moviesPerformancesInvalidTimeUtc from '../../fixtures/data/movies-performances-invalid-time-utc.json';
-import moviesPerformancesMissingDeeplinkUrl from '../../fixtures/data/movies-performances-missing-deeplink-url.json';
-import moviesPerformancesMissingTheatreName from '../../fixtures/data/movies-performances-missing-theatre-name.json';
-import moviesPerformancesMissingTimeUtc from '../../fixtures/data/movies-performances-missing-time-utc.json';
-import moviesWithInvalidStartingDate from '../../fixtures/data/movies-with-invalid-starting-date.json';
-import moviesWithInvalidTitle from '../../fixtures/data/movies-with-invalid-title.json';
-import moviesWithMissingStartingDate from '../../fixtures/data/movies-with-missing-starting-date.json';
-import moviesWithMissingTitle from '../../fixtures/data/movies-with-missing-title.json';
-import performanceWithMissingMoviePk from '../../fixtures/data/performance-with-missing-movie-pk.json';
-import performanceWithUnknownMoviePk from '../../fixtures/data/performance-with-unknown-movie-pk.json';
+import { queue, worker } from '../../../src/queues/scrape-cinema-data';
 import { getScrapedDataResponse, waitForJobCompletion } from '../../fixtures/queue';
+import attributesWithUnknownCategoryMockData from './__fixtures__/attributes-with-unknown-category.json';
+import attributesWithUnknownMoviesMockData from './__fixtures__/attributes-with-unknown-movies.json';
+import moviesWithInvalidStartingDateMockData from './__fixtures__/movies-with-invalid-starting-date.json';
+import moviesWithInvalidTitleMockData from './__fixtures__/movies-with-invalid-title.json';
+import moviesWithMissingStartingDateMockData from './__fixtures__/movies-with-missing-starting-date.json';
+import moviesWithMissingTitleMockData from './__fixtures__/movies-with-missing-title.json';
+import performanceWithMissingMoviePkMockData from './__fixtures__/performance-with-missing-movie-pk.json';
+import performanceWithUnknownMoviePkMockData from './__fixtures__/performance-with-unknown-movie-pk.json';
+import performancesInvalidDeeplinkUrlMockData from './__fixtures__/performances-invalid-deeplink-url.json';
+import performancesInvalidTheatreNameMockData from './__fixtures__/performances-invalid-theatre-name.json';
+import InvalidTimeUtcMockData from './__fixtures__/performances-invalid-time-utc.json';
+import MissingDeeplinkUrlMockData from './__fixtures__/performances-missing-deeplink-url.json';
+import MissingTheatreNameMockData from './__fixtures__/performances-missing-theatre-name.json';
+import MissingTimeUtcMockData from './__fixtures__/performances-missing-time-utc.json';
 
-vi.mock('../../../src/queues/tmdb-metadata', () => ({
+vi.mock('../../../src/queues/get-tmdb-metadata', () => ({
   queue: {
     addBulk: vi.fn(),
   },
@@ -40,16 +40,20 @@ afterEach(async () => {
   await db.delete(attributesTable);
 });
 
-describe('cinema-data-scraping worker', () => {
+describe('scrape-cinema-data worker', () => {
   describe('when the scraped attributes contain unused data', () => {
     it('skips attributes of unknown categories', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-        getScrapedDataResponse(attributesWithUnknownCategory),
+        getScrapedDataResponse(attributesWithUnknownCategoryMockData),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -88,9 +92,13 @@ describe('cinema-data-scraping worker', () => {
         }),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -119,9 +127,13 @@ describe('cinema-data-scraping worker', () => {
         }),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -154,9 +166,13 @@ describe('cinema-data-scraping worker', () => {
         }),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -189,9 +205,13 @@ describe('cinema-data-scraping worker', () => {
         }),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -214,11 +234,17 @@ describe('cinema-data-scraping worker', () => {
     });
 
     it('skips when the `apiData.attributes.<attribute-category>.<attribute-key>.movies` array contains unknown movies', async () => {
-      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(attributesWithUnknownMovies));
+      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+        getScrapedDataResponse(attributesWithUnknownMoviesMockData),
+      );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -251,12 +277,16 @@ describe('cinema-data-scraping worker', () => {
   describe('when the scraped performances are invalid or missing required properties', () => {
     it('skips performances which are missing the `moviePk` property', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-        getScrapedDataResponse(performanceWithMissingMoviePk),
+        getScrapedDataResponse(performanceWithMissingMoviePkMockData),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -275,7 +305,7 @@ describe('cinema-data-scraping worker', () => {
 
       expect(scrapedMovies).toHaveLength(1);
       expect(scrapedMovies[0]?.scrapedMovieId).toBe(
-        performanceWithMissingMoviePk.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
+        performanceWithMissingMoviePkMockData.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
       );
       expect(scrapedMovieAttributes[0]?.count).toBe(0);
       expect(attributes[0]?.count).toBe(0);
@@ -285,12 +315,16 @@ describe('cinema-data-scraping worker', () => {
 
     it('skips performances which reference unknown movies in the `moviePk` property', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-        getScrapedDataResponse(performanceWithUnknownMoviePk),
+        getScrapedDataResponse(performanceWithUnknownMoviePkMockData),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -309,7 +343,7 @@ describe('cinema-data-scraping worker', () => {
 
       expect(scrapedMovies).toHaveLength(1);
       expect(scrapedMovies[0]?.scrapedMovieId).toBe(
-        performanceWithMissingMoviePk.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
+        performanceWithMissingMoviePkMockData.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
       );
       expect(scrapedMovieAttributes[0]?.count).toBe(0);
       expect(attributes[0]?.count).toBe(0);
@@ -318,13 +352,15 @@ describe('cinema-data-scraping worker', () => {
     });
 
     it('skips performances which do not have the `theatreName` property defined', async () => {
-      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-        getScrapedDataResponse(moviesPerformancesMissingTheatreName),
-      );
+      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(MissingTheatreNameMockData));
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -343,7 +379,7 @@ describe('cinema-data-scraping worker', () => {
 
       expect(scrapedMovies).toHaveLength(1);
       expect(scrapedMovies[0]?.scrapedMovieId).toBe(
-        performanceWithMissingMoviePk.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
+        performanceWithMissingMoviePkMockData.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
       );
       expect(scrapedMovieAttributes[0]?.count).toBe(0);
       expect(attributes[0]?.count).toBe(0);
@@ -353,12 +389,16 @@ describe('cinema-data-scraping worker', () => {
 
     it('skips performances where the `theatreName` property has a invalid value', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-        getScrapedDataResponse(moviesPerformancesInvalidTheatreName),
+        getScrapedDataResponse(performancesInvalidTheatreNameMockData),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -377,7 +417,7 @@ describe('cinema-data-scraping worker', () => {
 
       expect(scrapedMovies).toHaveLength(1);
       expect(scrapedMovies[0]?.scrapedMovieId).toBe(
-        performanceWithMissingMoviePk.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
+        performanceWithMissingMoviePkMockData.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
       );
       expect(scrapedMovieAttributes[0]?.count).toBe(0);
       expect(attributes[0]?.count).toBe(0);
@@ -386,13 +426,15 @@ describe('cinema-data-scraping worker', () => {
     });
 
     it('skips performances which do not have the `deeplinkURL` property defined', async () => {
-      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-        getScrapedDataResponse(moviesPerformancesMissingDeeplinkUrl),
-      );
+      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(MissingDeeplinkUrlMockData));
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -411,7 +453,7 @@ describe('cinema-data-scraping worker', () => {
 
       expect(scrapedMovies).toHaveLength(1);
       expect(scrapedMovies[0]?.scrapedMovieId).toBe(
-        performanceWithMissingMoviePk.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
+        performanceWithMissingMoviePkMockData.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
       );
       expect(scrapedMovieAttributes[0]?.count).toBe(0);
       expect(attributes[0]?.count).toBe(0);
@@ -421,12 +463,16 @@ describe('cinema-data-scraping worker', () => {
 
     it('skips performances where the `deeplinkURL` property has a invalid value', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-        getScrapedDataResponse(moviesPerformancesInvalidDeeplinkUrl),
+        getScrapedDataResponse(performancesInvalidDeeplinkUrlMockData),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -445,7 +491,7 @@ describe('cinema-data-scraping worker', () => {
 
       expect(scrapedMovies).toHaveLength(1);
       expect(scrapedMovies[0]?.scrapedMovieId).toBe(
-        performanceWithMissingMoviePk.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
+        performanceWithMissingMoviePkMockData.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
       );
       expect(scrapedMovieAttributes[0]?.count).toBe(0);
       expect(attributes[0]?.count).toBe(0);
@@ -454,13 +500,15 @@ describe('cinema-data-scraping worker', () => {
     });
 
     it('skips performances which do not have the `timeUtc` property defined', async () => {
-      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-        getScrapedDataResponse(moviesPerformancesMissingTimeUtc),
-      );
+      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(MissingTimeUtcMockData));
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -479,7 +527,7 @@ describe('cinema-data-scraping worker', () => {
 
       expect(scrapedMovies).toHaveLength(1);
       expect(scrapedMovies[0]?.scrapedMovieId).toBe(
-        performanceWithMissingMoviePk.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
+        performanceWithMissingMoviePkMockData.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
       );
       expect(scrapedMovieAttributes[0]?.count).toBe(0);
       expect(attributes[0]?.count).toBe(0);
@@ -488,13 +536,15 @@ describe('cinema-data-scraping worker', () => {
     });
 
     it('skips performances where the `timeUtc` property has a invalid value', async () => {
-      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-        getScrapedDataResponse(moviesPerformancesInvalidTimeUtc),
-      );
+      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(InvalidTimeUtcMockData));
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -513,7 +563,7 @@ describe('cinema-data-scraping worker', () => {
 
       expect(scrapedMovies).toHaveLength(1);
       expect(scrapedMovies[0]?.scrapedMovieId).toBe(
-        performanceWithMissingMoviePk.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
+        performanceWithMissingMoviePkMockData.apiData.movies.items['f3e754ef-5e4c-4b0a-9f64-014e9a96af45'].pk,
       );
       expect(scrapedMovieAttributes[0]?.count).toBe(0);
       expect(attributes[0]?.count).toBe(0);
@@ -524,11 +574,17 @@ describe('cinema-data-scraping worker', () => {
 
   describe('when the scraped movies are invalid or missing required properties', () => {
     it('skips movies which do not have the `title` property defined', async () => {
-      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(moviesWithMissingTitle));
+      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+        getScrapedDataResponse(moviesWithMissingTitleMockData),
+      );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -551,11 +607,17 @@ describe('cinema-data-scraping worker', () => {
     });
 
     it('skips movies where the `title` property has a invalid value', async () => {
-      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(moviesWithInvalidTitle));
+      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+        getScrapedDataResponse(moviesWithInvalidTitleMockData),
+      );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -579,12 +641,16 @@ describe('cinema-data-scraping worker', () => {
 
     it('skips movies which do not have the `startingDate` property defined', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-        getScrapedDataResponse(moviesWithMissingStartingDate),
+        getScrapedDataResponse(moviesWithMissingStartingDateMockData),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -608,12 +674,16 @@ describe('cinema-data-scraping worker', () => {
 
     it('skips movies where the `startingDate` property has a invalid value', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-        getScrapedDataResponse(moviesWithInvalidStartingDate),
+        getScrapedDataResponse(moviesWithInvalidStartingDateMockData),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 

@@ -1,4 +1,5 @@
 import { SpanStatusCode, trace } from '@opentelemetry/api';
+import { Queue, Worker } from 'bunqueue/client';
 import * as cheerio from 'cheerio';
 import dayjs from 'dayjs';
 import { and, eq, gt, inArray, not, sql, type InferInsertModel } from 'drizzle-orm';
@@ -13,9 +14,8 @@ import { scrapedMoviesTable } from '@flicker/database/schemas/scraped-movies';
 import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
 import { withLogContext } from '@flicker/telemetry/logging';
 
-import { movieProcessingQueueGroup } from '../queues/groups';
 import { attachWorkerEventLogging, logger } from '../telemetry/logging';
-import { queue as tmdbMetadataQueue } from './tmdb-metadata';
+import { queue as tmdbMetadataQueue } from './get-tmdb-metadata';
 
 interface ScrapedData {
   movies?: {
@@ -87,15 +87,15 @@ interface MappedPerformanceRelations {
 
 type ExtractedAttributes = Omit<InferInsertModel<typeof attributesTable>, 'id' | 'createdAt'>[];
 
-const identifier = 'cinema-data-scraping';
+const identifier = 'scrape-cinema-data';
 const tracer = trace.getTracer(`worker.${identifier}`);
 
-export const queue = movieProcessingQueueGroup.getQueue<void>(identifier, {
+export const queue = new Queue(identifier, {
   embedded: true,
   dataPath: process.env.BUNQUEUE_DATA_PATH,
 });
 
-export const worker = movieProcessingQueueGroup.getWorker<void>(
+export const worker = new Worker(
   identifier,
   async (job) => {
     await tracer.startActiveSpan(
@@ -652,7 +652,7 @@ async function storeMovies(
 function scheduleFollowUpJobs(scrapedMovieIds: string[]): void {
   logger.info(`Enqueuing ${scrapedMovieIds.length} follow-up jobs for TMDB metadata`);
   const jobs: Parameters<typeof tmdbMetadataQueue.addBulk>[0] = scrapedMovieIds.map((id) => ({
-    name: `fetch-tmdb-metadata-${id}`,
+    name: `get-tmdb-metadata-${id}`,
     data: {
       id,
     },

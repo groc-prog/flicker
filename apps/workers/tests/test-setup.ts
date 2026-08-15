@@ -8,7 +8,7 @@ import { migrate } from 'drizzle-orm/node-postgres/migrator';
 
 import db from '@flicker/database';
 
-import { queue, worker } from '../src/queues/cinema-data-scraping';
+import { queue, worker } from '../src/queues/scrape-cinema-data';
 
 dayjs.extend(utcPlugin);
 

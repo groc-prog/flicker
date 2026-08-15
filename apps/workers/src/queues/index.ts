@@ -10,8 +10,8 @@ if (!(await sqliteFile.exists())) {
 }
 
 export default async function startWorkers(): Promise<void> {
-  const { queue: cinemaDataScrapingQueue, worker: cinemaDataScrapingWorker } = await import('./cinema-data-scraping');
-  const { queue: tmdbMetadataQueue, worker: tmdbMetadataWorker } = await import('./tmdb-metadata');
+  const { queue: cinemaDataScrapingQueue, worker: cinemaDataScrapingWorker } = await import('./scrape-cinema-data');
+  const { queue: tmdbMetadataQueue, worker: tmdbMetadataWorker } = await import('./get-tmdb-metadata');
 
   await cinemaDataScrapingQueue.waitUntilReady();
   await cinemaDataScrapingWorker.waitUntilReady();
@@ -19,7 +19,7 @@ export default async function startWorkers(): Promise<void> {
   await tmdbMetadataWorker.waitUntilReady();
 
   cinemaDataScrapingQueue.upsertJobScheduler(
-    'scheduled-cinema-data-scraping',
+    'scheduled-scrape-cinema-data',
     {
       pattern: process.env.JOB_CINEMA_DATA_SCRAPING_SCHEDULE ?? '@daily',
     },

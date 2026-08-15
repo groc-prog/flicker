@@ -6,10 +6,10 @@ import { attributesTable } from '@flicker/database/schemas/attributes';
 import { moviePerformancesTable } from '@flicker/database/schemas/movie-performances';
 import { scrapedMoviesTable } from '@flicker/database/schemas/scraped-movies';
 
-import { queue, worker } from '../../../src/queues/cinema-data-scraping';
+import { queue, worker } from '../../../src/queues/scrape-cinema-data';
 import { getScrapedDataResponse, waitForJobFailure } from '../../fixtures/queue';
 
-vi.mock('../../../src/queues/tmdb-metadata', () => ({
+vi.mock('../../../src/queues/get-tmdb-metadata', () => ({
   queue: {
     addBulk: vi.fn(),
   },
@@ -36,7 +36,7 @@ async function assertDataScrapingError(jobId: string) {
   expect(performances[0]?.count).toBe(0);
 }
 
-describe('cinema-data-scraping worker', () => {
+describe('scrape-cinema-data worker', () => {
   describe('when the network is unavailable', () => {
     it('it fails the job and moves it to the DLQ', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
@@ -46,9 +46,13 @@ describe('cinema-data-scraping worker', () => {
         }),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobFailure(worker, job.id);
 
@@ -78,9 +82,13 @@ describe('cinema-data-scraping worker', () => {
         ),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       const error = await waitForJobFailure(worker, job.id);
       expect(error.message).toBe('JSON data not found in unparsed data');
@@ -109,9 +117,13 @@ describe('cinema-data-scraping worker', () => {
         ),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       const error = await waitForJobFailure(worker, job.id);
       expect(error.message).toBe('JSON data not found in unparsed data');
@@ -123,9 +135,13 @@ describe('cinema-data-scraping worker', () => {
     it('throws when the extracted data does not contain a `apiData` property', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse({ foo: 'foo-value' }));
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       const error = await waitForJobFailure(worker, job.id);
       expect(error.message).toBe(
@@ -139,9 +155,13 @@ describe('cinema-data-scraping worker', () => {
     it('throws when the `apiData` property is not a object', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse({ apiData: 'not-a-object' }));
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       const error = await waitForJobFailure(worker, job.id);
       expect(error.message).toBe(
@@ -155,9 +175,13 @@ describe('cinema-data-scraping worker', () => {
     it('throws when the `apiData` object does not have a `movies` property', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse({ apiData: {} }));
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       const error = await waitForJobFailure(worker, job.id);
       expect(error.message).toBe(
@@ -171,9 +195,13 @@ describe('cinema-data-scraping worker', () => {
     it('throws when the `apiData` object does not have a `performances` property', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse({ apiData: { movies: {} } }));
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       const error = await waitForJobFailure(worker, job.id);
       expect(error.message).toBe(
@@ -189,9 +217,13 @@ describe('cinema-data-scraping worker', () => {
         getScrapedDataResponse({ apiData: { movies: {}, performances: {} } }),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       const error = await waitForJobFailure(worker, job.id);
       expect(error.message).toBe(
@@ -207,9 +239,13 @@ describe('cinema-data-scraping worker', () => {
         getScrapedDataResponse({ apiData: { movies: {}, performances: {}, attributes: {} } }),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       const error = await waitForJobFailure(worker, job.id);
       expect(error.message).toBe(
@@ -225,9 +261,13 @@ describe('cinema-data-scraping worker', () => {
         getScrapedDataResponse({ apiData: { movies: { items: {} }, performances: {}, attributes: {} } }),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       const error = await waitForJobFailure(worker, job.id);
       expect(error.message).toBe(
@@ -243,9 +283,13 @@ describe('cinema-data-scraping worker', () => {
         getScrapedDataResponse({ apiData: { movies: { items: {} }, performances: { items: {} }, attributes: 2 } }),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       const error = await waitForJobFailure(worker, job.id);
       expect(error.message).toBe(

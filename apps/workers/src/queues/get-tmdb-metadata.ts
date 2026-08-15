@@ -1,4 +1,5 @@
 import { SpanStatusCode, trace } from '@opentelemetry/api';
+import { Queue, Worker } from 'bunqueue/client';
 import dayjs from 'dayjs';
 import { eq, sql, type InferSelectModel } from 'drizzle-orm';
 
@@ -15,7 +16,6 @@ import { withLogContext } from '@flicker/telemetry/logging';
 
 import { attachWorkerEventLogging, logger } from '../telemetry/logging';
 import type { operations } from '../types/tmdb-api';
-import { movieProcessingQueueGroup } from './groups';
 
 export interface TmdbMetadataJob {
   id: InferSelectModel<typeof scrapedMoviesTable>['id'];
@@ -33,18 +33,18 @@ type MovieDetailsResponseBody = operations['movie-details']['responses']['200'][
   videos?: operations['movie-videos']['responses']['200']['content']['application/json'];
 };
 
-const identifier = 'tmdb-metadata';
+const identifier = 'get-tmdb-metadata';
 const tracer = trace.getTracer(`worker.${identifier}`);
 const tmdbApiBaseUrl = 'https://api.themoviedb.org/3';
 
-export const queue = movieProcessingQueueGroup.getQueue<TmdbMetadataJob>(identifier, {
+export const queue = new Queue<TmdbMetadataJob>(identifier, {
   embedded: true,
   dataPath: process.env.BUNQUEUE_DATA_PATH,
 });
 queue.setGlobalRateLimit(10, 1000);
 queue.setGlobalConcurrency(10);
 
-export const worker = movieProcessingQueueGroup.getWorker<TmdbMetadataJob>(
+export const worker = new Worker<TmdbMetadataJob>(
   identifier,
   async (job) => {
     await tracer.startActiveSpan(

@@ -9,18 +9,19 @@ import { moviePerformancesTable } from '@flicker/database/schemas/movie-performa
 import { scrapedMoviesToAttributesTable } from '@flicker/database/schemas/scraped-movie-attributes';
 import { scrapedMoviesTable } from '@flicker/database/schemas/scraped-movies';
 
-import { queue, worker } from '../../../src/queues/cinema-data-scraping';
-import attributesAllCategories from '../../fixtures/data/attributes-all-categories.json';
-import moviesMultiple from '../../fixtures/data/movies-multiple.json';
-import moviesOptionalPropertiesInvalid from '../../fixtures/data/movies-optional-properties-invalid.json';
-import moviesOptionalPropertiesMissing from '../../fixtures/data/movies-optional-properties-missing.json';
-import moviesWithAttributes from '../../fixtures/data/movies-with-attributes.json';
-import moviesWithPerformancesAndPerformanceAttributes from '../../fixtures/data/movies-with-performances-and-performance-attributes.json';
-import moviesWithPerformances from '../../fixtures/data/movies-with-performances.json';
-import moviesWithoutRelations from '../../fixtures/data/movies-without-relations.json';
+import { queue, worker } from '../../../src/queues/scrape-cinema-data';
 import { getScrapedDataResponse, waitForJobCompletion } from '../../fixtures/queue';
+import attributesAllCategories from './__fixtures__/attributes-all-categories.json';
+import fullDatasetMockData from './__fixtures__/full-dataset.json';
+import moviesMultipleMockData from './__fixtures__/movies-multiple.json';
+import moviesOptionalPropertiesInvalidMockData from './__fixtures__/movies-optional-properties-invalid.json';
+import moviesOptionalPropertiesMissingMockData from './__fixtures__/movies-optional-properties-missing.json';
+import moviesWithAttributesMockData from './__fixtures__/movies-with-attributes.json';
+import moviesWithPerformancesAndPerformanceAttributesMockData from './__fixtures__/movies-with-performances-and-performance-attributes.json';
+import moviesWithPerformancesMockData from './__fixtures__/movies-with-performances.json';
+import moviesWithoutRelationsMockData from './__fixtures__/movies-without-relations.json';
 
-vi.mock('../../../src/queues/tmdb-metadata', () => ({
+vi.mock('../../../src/queues/get-tmdb-metadata', () => ({
   queue: {
     addBulk: vi.fn(),
   },
@@ -35,14 +36,18 @@ afterEach(async () => {
   await db.delete(attributesTable);
 });
 
-describe('cinema-data-scraping worker', () => {
+describe('scrape-cinema-data worker', () => {
   describe('when the scraped attributes contain valid data', () => {
     it('inserts attributes from all tracked categories', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(attributesAllCategories));
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -87,12 +92,16 @@ describe('cinema-data-scraping worker', () => {
 
     it('inserts movies with optional properties missing', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-        getScrapedDataResponse(moviesOptionalPropertiesMissing),
+        getScrapedDataResponse(moviesOptionalPropertiesMissingMockData),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -125,12 +134,16 @@ describe('cinema-data-scraping worker', () => {
 
     it('inserts movies with optional properties invalid', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-        getScrapedDataResponse(moviesOptionalPropertiesInvalid),
+        getScrapedDataResponse(moviesOptionalPropertiesInvalidMockData),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -162,11 +175,17 @@ describe('cinema-data-scraping worker', () => {
     });
 
     it('inserts movies without any performances or attributes', async () => {
-      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(moviesWithoutRelations));
+      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+        getScrapedDataResponse(moviesWithoutRelationsMockData),
+      );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -200,11 +219,17 @@ describe('cinema-data-scraping worker', () => {
     });
 
     it('inserts movies with attributes', async () => {
-      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(moviesWithAttributes));
+      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+        getScrapedDataResponse(moviesWithAttributesMockData),
+      );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -249,11 +274,17 @@ describe('cinema-data-scraping worker', () => {
     });
 
     it('inserts movies with performances', async () => {
-      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(moviesWithPerformances));
+      const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+        getScrapedDataResponse(moviesWithPerformancesMockData),
+      );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -298,12 +329,16 @@ describe('cinema-data-scraping worker', () => {
 
     it('inserts movies with performances and performance attributes', async () => {
       const spy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-        getScrapedDataResponse(moviesWithPerformancesAndPerformanceAttributes),
+        getScrapedDataResponse(moviesWithPerformancesAndPerformanceAttributesMockData),
       );
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -365,12 +400,16 @@ describe('cinema-data-scraping worker', () => {
 
   describe('when a insert for a movie fails', () => {
     it('does not affect other movies', async () => {
-      const fetchSpy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(moviesMultiple));
+      const fetchSpy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(moviesMultipleMockData));
       const transactionSpy = spyOn(db, 'transaction').mockRejectedValueOnce(Error('Mocked error'));
 
-      const job = await queue.add(crypto.randomUUID(), undefined, {
-        attempts: 1,
-      });
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
 
       await waitForJobCompletion(worker, job.id);
 
@@ -402,6 +441,163 @@ describe('cinema-data-scraping worker', () => {
       expect(scrapedMovie.runtime).toBe(90);
       expect(scrapedMovie.posterPath).toBe('https://mcs.planetmutlu.com/tmdb/image/5jCpQnWPikggmQZoDp1eAi6BI6w.jpg');
       expect(scrapedMovie.availableAt).toEqual(new Date('2026-10-24'));
+    });
+
+    it('only updates non-ID properties if the same data is scraped multiple times', async () => {
+      const mockedUpdatedAtTimestamp = dayjs.utc('2026-08-15 13:03:41.662+00').toDate();
+      const mockedAvailableAtTimestamp = dayjs.utc('2020-09-12').toDate();
+      const mockedShowtimeTimestamp = dayjs.utc('2020-07-01 16:20:00+00').toDate();
+
+      await db.insert(scrapedMoviesTable).values([
+        {
+          id: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          scrapedMovieId: 'f3e754ef-5e4c-4b0a-9f64-014e9a96af45',
+          title: 'mocked',
+          originalTitle: 'mocked',
+          description: 'mocked',
+          runtime: 20,
+          posterPath: 'mocked',
+          availableAt: mockedAvailableAtTimestamp,
+          createdAt: dayjs.utc('2026-08-15 13:03:41.662+00').toDate(),
+          updatedAt: mockedUpdatedAtTimestamp,
+        },
+      ]);
+      await db.insert(attributesTable).values([
+        {
+          id: 'f18c77a9-630e-41de-86e7-900122be9ffc',
+          category: AttributeCategory.Genres,
+          name: 'mocked',
+          key: 'Fantasy',
+          createdAt: dayjs.utc('2026-08-15 13:03:41.657+00').toDate(),
+          updatedAt: mockedUpdatedAtTimestamp,
+        },
+        {
+          id: 'd169ee35-aefa-4c63-8519-f8ea2a2a128a',
+          category: AttributeCategory.Genres,
+          name: 'mocked',
+          key: 'Drama',
+          createdAt: dayjs.utc('2026-08-15 13:03:41.657+00').toDate(),
+          updatedAt: mockedUpdatedAtTimestamp,
+        },
+        {
+          id: '2ddd2bb1-42a6-40c2-9691-01ef73c5b236',
+          category: AttributeCategory.Genres,
+          name: 'mocked',
+          key: 'Komödie',
+          createdAt: dayjs.utc('2026-08-15 13:03:41.657+00').toDate(),
+          updatedAt: mockedUpdatedAtTimestamp,
+        },
+        {
+          id: '7dea6b6a-e553-4dea-8448-4ef1e753e196',
+          category: AttributeCategory.SeatClass,
+          name: 'mocked',
+          key: '5',
+          createdAt: dayjs.utc('2026-08-15 13:03:41.657+00').toDate(),
+          updatedAt: mockedUpdatedAtTimestamp,
+        },
+        {
+          id: '0f7e599d-cac8-4fb8-aab8-1c7cc69ce3fd',
+          category: AttributeCategory.Technical,
+          name: 'mocked',
+          key: '2d',
+          createdAt: dayjs.utc('2026-08-15 13:03:41.657+00').toDate(),
+          updatedAt: mockedUpdatedAtTimestamp,
+        },
+        {
+          id: '3cce3d6e-ce4d-4faf-9e16-4c59628b702e',
+          category: AttributeCategory.Technical,
+          name: 'mocked',
+          key: '_pm_preview',
+          createdAt: dayjs.utc('2026-08-15 13:03:41.657+00').toDate(),
+          updatedAt: mockedUpdatedAtTimestamp,
+        },
+      ]);
+      await db.insert(moviePerformancesTable).values([
+        {
+          id: '7778f692-3e42-4e70-993f-c4b0abdbd2aa',
+          scrapedPerformanceId: '4c339fe8-e78c-4dbc-b90e-2136ecaa8df2-959582',
+          theatre: 'mocked',
+          seatingDeepLink: 'mocked',
+          showtime: mockedShowtimeTimestamp,
+          scrapedMovieId: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          movieId: null,
+          createdAt: dayjs.utc('2026-08-15 13:03:41.659+00').toDate(),
+          updatedAt: mockedUpdatedAtTimestamp,
+        },
+      ]);
+      await db.insert(moviePerformancesToAttributesTable).values([
+        { performanceId: '7778f692-3e42-4e70-993f-c4b0abdbd2aa', attributeId: '7dea6b6a-e553-4dea-8448-4ef1e753e196' },
+        { performanceId: '7778f692-3e42-4e70-993f-c4b0abdbd2aa', attributeId: '0f7e599d-cac8-4fb8-aab8-1c7cc69ce3fd' },
+      ]);
+      await db.insert(scrapedMoviesToAttributesTable).values([
+        {
+          scrapedMovieId: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          attributeId: 'f18c77a9-630e-41de-86e7-900122be9ffc',
+        },
+        {
+          scrapedMovieId: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          attributeId: 'd169ee35-aefa-4c63-8519-f8ea2a2a128a',
+        },
+        {
+          scrapedMovieId: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          attributeId: '2ddd2bb1-42a6-40c2-9691-01ef73c5b236',
+        },
+        {
+          scrapedMovieId: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          attributeId: '0f7e599d-cac8-4fb8-aab8-1c7cc69ce3fd',
+        },
+        {
+          scrapedMovieId: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          attributeId: '3cce3d6e-ce4d-4faf-9e16-4c59628b702e',
+        },
+      ]);
+
+      const spy = spyOn(globalThis, 'fetch').mockResolvedValue(getScrapedDataResponse(fullDatasetMockData));
+
+      const job = await queue.add(
+        crypto.randomUUID(),
+        {},
+        {
+          attempts: 1,
+        },
+      );
+
+      await waitForJobCompletion(worker, job.id);
+
+      expect(spy).toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
+
+      const dlqEntries = queue.getDlq();
+      expect(dlqEntries).toBeEmpty();
+
+      const scrapedMovies = await db.select().from(scrapedMoviesTable);
+      const scrapedMovieAttributes = await db.select().from(scrapedMoviesToAttributesTable);
+      const attributes = await db.select().from(attributesTable);
+      const performances = await db.select().from(moviePerformancesTable);
+      const performancesAttributes = await db.select().from(moviePerformancesToAttributesTable);
+
+      expect(scrapedMovies).toHaveLength(1);
+      expect(scrapedMovieAttributes).toHaveLength(5);
+      expect(performances).toHaveLength(1);
+      expect(performancesAttributes).toHaveLength(2);
+      expect(attributes).toHaveLength(6);
+
+      for (const attribute of attributes) {
+        expect(attribute.name).not.toBe('mocked');
+        expect(attribute.updatedAt).not.toBe(mockedUpdatedAtTimestamp);
+      }
+
+      expect(scrapedMovies[0]?.title).not.toBe('mocked');
+      expect(scrapedMovies[0]?.originalTitle).not.toBe('mocked');
+      expect(scrapedMovies[0]?.description).not.toBe('mocked');
+      expect(scrapedMovies[0]?.runtime).not.toBe(20);
+      expect(scrapedMovies[0]?.posterPath).not.toBe('mocked');
+      expect(scrapedMovies[0]?.availableAt).not.toBe(mockedAvailableAtTimestamp);
+      expect(scrapedMovies[0]?.updatedAt).not.toBe(mockedUpdatedAtTimestamp);
+
+      expect(performances[0]?.theatre).not.toBe('mocked');
+      expect(performances[0]?.seatingDeepLink).not.toBe('mocked');
+      expect(performances[0]?.showtime).not.toBe(mockedShowtimeTimestamp);
+      expect(performances[0]?.updatedAt).not.toBe(mockedUpdatedAtTimestamp);
     });
   });
 });
