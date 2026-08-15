@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, spyOn } from 'bun:test';
+import { afterEach, describe, expect, it, spyOn, vi } from 'bun:test';
 import { count } from 'drizzle-orm';
 
 import db from '@flicker/database';
@@ -24,6 +24,12 @@ import moviesWithMissingTitle from '../../fixtures/data/movies-with-missing-titl
 import performanceWithMissingMoviePk from '../../fixtures/data/performance-with-missing-movie-pk.json';
 import performanceWithUnknownMoviePk from '../../fixtures/data/performance-with-unknown-movie-pk.json';
 import { getScrapedDataResponse, waitForJobCompletion } from '../../fixtures/queue';
+
+vi.mock('../../../src/queues/tmdb-metadata', () => ({
+  queue: {
+    addBulk: vi.fn(),
+  },
+}));
 
 afterEach(async () => {
   await queue.obliterateAsync();

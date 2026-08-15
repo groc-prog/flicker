@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, spyOn } from 'bun:test';
+import { afterEach, describe, expect, it, spyOn, vi } from 'bun:test';
 import { count } from 'drizzle-orm';
 
 import db from '@flicker/database';
@@ -8,6 +8,12 @@ import { scrapedMoviesTable } from '@flicker/database/schemas/scraped-movies';
 
 import { queue, worker } from '../../../src/queues/cinema-data-scraping';
 import { getScrapedDataResponse, waitForJobFailure } from '../../fixtures/queue';
+
+vi.mock('../../../src/queues/tmdb-metadata', () => ({
+  queue: {
+    addBulk: vi.fn(),
+  },
+}));
 
 afterEach(async () => {
   await queue.obliterateAsync();

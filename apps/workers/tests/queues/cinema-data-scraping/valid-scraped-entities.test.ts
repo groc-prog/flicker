@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, spyOn } from 'bun:test';
+import { afterEach, describe, expect, it, spyOn, vi } from 'bun:test';
 import dayjs from 'dayjs';
 import { count } from 'drizzle-orm';
 
@@ -19,6 +19,12 @@ import moviesWithPerformancesAndPerformanceAttributes from '../../fixtures/data/
 import moviesWithPerformances from '../../fixtures/data/movies-with-performances.json';
 import moviesWithoutRelations from '../../fixtures/data/movies-without-relations.json';
 import { getScrapedDataResponse, waitForJobCompletion } from '../../fixtures/queue';
+
+vi.mock('../../../src/queues/tmdb-metadata', () => ({
+  queue: {
+    addBulk: vi.fn(),
+  },
+}));
 
 afterEach(async () => {
   await queue.obliterateAsync();
