@@ -1,3 +1,6 @@
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+CREATE EXTENSION IF NOT EXISTS btree_gin;
+
 CREATE TYPE "attribute_category" AS ENUM('fsk', 'seatClasses', 'technical', 'genres');--> statement-breakpoint
 CREATE TYPE "movie_language" AS ENUM('de', 'en');--> statement-breakpoint
 CREATE TABLE "attributes" (
