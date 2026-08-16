@@ -1,0 +1,167 @@
+name: code-quality
+run-name: Code Quality
+
+on:
+  push:
+    branches:
+      - "develop"
+    paths:
+      - "apps/**"
+      - "packages/**"
+  pull_request:
+    types: [opened]
+    branches:
+      - main
+    paths:
+      - "apps/**"
+      - "packages/**"
+
+jobs:
+  install-dependencies:
+    name: Setup & Cache Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Cache bun dependencies
+        uses: actions/cache@v4
+        id: bun-cache
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: modules-cache
+        with:
+          path: |
+            node_modules
+            apps/*/node_modules
+            packages/*/node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-modules-
+
+      - name: Install dependencies
+        # Only run if node_modules cache miss
+        if: steps.modules-cache.outputs.cache-hit != 'true'
+        run: bun install
+
+  lint:
+    needs: install-dependencies
+    name: Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Restore bun cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun
+
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            apps/*/node_modules
+            packages/*/node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-modules-
+
+      - name: Run linter
+        run: bun run lint
+
+  type-check:
+    needs: install-dependencies
+    name: Type-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Restore bun cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun
+
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            apps/*/node_modules
+            packages/*/node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-modules-
+
+      - name: Run type checker
+        run: bun run type-check
+
+  test:
+    needs: install-dependencies
+    name: Test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Restore bun cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun
+
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            apps/*/node_modules
+            packages/*/node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-modules-
+
+      - name: Run tests
+        env:
+          LOG_LEVEL: fatal
+          POSTGRES_DATABASE_URL: postgresql://postgres:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/test
+        run: bun run test
