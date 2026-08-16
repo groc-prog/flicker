@@ -96,7 +96,7 @@ export const moviesTable = snakeCase.table(
     /** Movie runtime in minutes. */
     runtime: integer(),
     /** TMDB rating average. */
-    voteAverage: decimal({ precision: 3, scale: 1 }).$type<number>(),
+    voteAverage: decimal({ precision: 3, scale: 1, mode: 'number' }).$type<number>(),
     /** TMDB vote count. */
     voteCount: integer(),
     /**
@@ -108,7 +108,7 @@ export const moviesTable = snakeCase.table(
     }).notNull(),
     scrapedMovieId: uuid()
       .notNull()
-      .references(() => scrapedMoviesTable.id, { onDelete: 'set null' }),
+      .references(() => scrapedMoviesTable.id),
     ...createdAtTimestamp,
   },
   (table) => [

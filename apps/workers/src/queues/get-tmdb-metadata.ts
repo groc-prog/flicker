@@ -190,7 +190,7 @@ async function storeMovieDetailsForLanguage(
         try {
           const queryParams: MovieDetailsQueryParameters = {
             append_to_response: 'videos',
-            language: language.slice(0, 2),
+            language: language,
           };
           const url = `${tmdbApiBaseUrl}/movie/${tmdbId}?${toUrlSearchParams(queryParams)}`;
 
@@ -231,7 +231,7 @@ async function storeMovieDetailsForLanguage(
                   !video.site ||
                   !video.size ||
                   !video.type ||
-                  !video.official
+                  video.official == undefined
                 )
                   return collected;
 

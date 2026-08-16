@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, spyOn, vi } from 'bun:test';
+import { describe, expect, it, spyOn } from 'bun:test';
 import { count } from 'drizzle-orm';
 
 import db from '@flicker/database';
@@ -8,19 +8,6 @@ import { scrapedMoviesTable } from '@flicker/database/schemas/scraped-movies';
 
 import { queue, worker } from '../../../src/queues/scrape-cinema-data';
 import { getScrapedDataResponse, waitForJobFailure } from '../../fixtures/queue';
-
-vi.mock('../../../src/queues/get-tmdb-metadata', () => ({
-  queue: {
-    addBulk: vi.fn(),
-  },
-}));
-
-afterEach(async () => {
-  await queue.obliterateAsync();
-  await db.delete(scrapedMoviesTable);
-  await db.delete(moviePerformancesTable);
-  await db.delete(attributesTable);
-});
 
 async function assertDataScrapingError(jobId: string) {
   const dlqEntries = queue.getDlq();

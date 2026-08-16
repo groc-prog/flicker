@@ -1,5 +1,3 @@
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
-CREATE EXTENSION IF NOT EXISTS btree_gin;
 CREATE TYPE "attribute_category" AS ENUM('fsk', 'seatClasses', 'technical', 'genres');--> statement-breakpoint
 CREATE TYPE "movie_language" AS ENUM('de', 'en');--> statement-breakpoint
 CREATE TABLE "attributes" (
@@ -80,6 +78,6 @@ ALTER TABLE "movie_performances_to_attributes" ADD CONSTRAINT "movie_performance
 ALTER TABLE "movie_performances_to_attributes" ADD CONSTRAINT "movie_performances_to_attributes_C1r1YcUhgpNh_fkey" FOREIGN KEY ("attribute_id") REFERENCES "attributes"("id") ON DELETE CASCADE;--> statement-breakpoint
 ALTER TABLE "movie_performances" ADD CONSTRAINT "movie_performances_scraped_movie_id_scraped_movies_id_fkey" FOREIGN KEY ("scraped_movie_id") REFERENCES "scraped_movies"("id") ON DELETE CASCADE;--> statement-breakpoint
 ALTER TABLE "movie_performances" ADD CONSTRAINT "movie_performances_movie_id_movies_id_fkey" FOREIGN KEY ("movie_id") REFERENCES "movies"("id") ON DELETE CASCADE;--> statement-breakpoint
-ALTER TABLE "movies" ADD CONSTRAINT "movies_scraped_movie_id_scraped_movies_id_fkey" FOREIGN KEY ("scraped_movie_id") REFERENCES "scraped_movies"("id") ON DELETE SET NULL;--> statement-breakpoint
+ALTER TABLE "movies" ADD CONSTRAINT "movies_scraped_movie_id_scraped_movies_id_fkey" FOREIGN KEY ("scraped_movie_id") REFERENCES "scraped_movies"("id");--> statement-breakpoint
 ALTER TABLE "scraped_movies_to_attributes" ADD CONSTRAINT "scraped_movies_to_attributes_dqlxIqVByInf_fkey" FOREIGN KEY ("scraped_movie_id") REFERENCES "scraped_movies"("id") ON DELETE CASCADE;--> statement-breakpoint
 ALTER TABLE "scraped_movies_to_attributes" ADD CONSTRAINT "scraped_movies_to_attributes_attribute_id_attributes_id_fkey" FOREIGN KEY ("attribute_id") REFERENCES "attributes"("id") ON DELETE CASCADE;

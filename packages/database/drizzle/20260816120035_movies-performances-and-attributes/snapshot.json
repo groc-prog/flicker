@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "54cd4175-7f08-49b7-9e23-0662b57ee18e",
+  "id": "f6660f0e-4c3d-4fba-8b99-40f559679e21",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -856,7 +856,7 @@
         "id"
       ],
       "onUpdate": "NO ACTION",
-      "onDelete": "SET NULL",
+      "onDelete": "NO ACTION",
       "name": "movies_scraped_movie_id_scraped_movies_id_fkey",
       "entityType": "fks",
       "schema": "public",

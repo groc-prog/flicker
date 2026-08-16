@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, spyOn, vi } from 'bun:test';
+import { describe, expect, it, spyOn } from 'bun:test';
 import dayjs from 'dayjs';
 import { count } from 'drizzle-orm';
 
@@ -20,21 +20,6 @@ import moviesWithAttributesMockData from './__fixtures__/movies-with-attributes.
 import moviesWithPerformancesAndPerformanceAttributesMockData from './__fixtures__/movies-with-performances-and-performance-attributes.json';
 import moviesWithPerformancesMockData from './__fixtures__/movies-with-performances.json';
 import moviesWithoutRelationsMockData from './__fixtures__/movies-without-relations.json';
-
-vi.mock('../../../src/queues/get-tmdb-metadata', () => ({
-  queue: {
-    addBulk: vi.fn(),
-  },
-}));
-
-afterEach(async () => {
-  await queue.obliterateAsync();
-  await db.delete(scrapedMoviesTable);
-  await db.delete(scrapedMoviesToAttributesTable);
-  await db.delete(moviePerformancesTable);
-  await db.delete(moviePerformancesToAttributesTable);
-  await db.delete(attributesTable);
-});
 
 describe('scrape-cinema-data worker', () => {
   describe('when the scraped attributes contain valid data', () => {

@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, spyOn, vi } from 'bun:test';
+import { describe, expect, it, spyOn } from 'bun:test';
 import { count } from 'drizzle-orm';
 
 import db from '@flicker/database';
@@ -24,21 +24,6 @@ import InvalidTimeUtcMockData from './__fixtures__/performances-invalid-time-utc
 import MissingDeeplinkUrlMockData from './__fixtures__/performances-missing-deeplink-url.json';
 import MissingTheatreNameMockData from './__fixtures__/performances-missing-theatre-name.json';
 import MissingTimeUtcMockData from './__fixtures__/performances-missing-time-utc.json';
-
-vi.mock('../../../src/queues/get-tmdb-metadata', () => ({
-  queue: {
-    addBulk: vi.fn(),
-  },
-}));
-
-afterEach(async () => {
-  await queue.obliterateAsync();
-  await db.delete(scrapedMoviesTable);
-  await db.delete(scrapedMoviesToAttributesTable);
-  await db.delete(moviePerformancesTable);
-  await db.delete(moviePerformancesToAttributesTable);
-  await db.delete(attributesTable);
-});
 
 describe('scrape-cinema-data worker', () => {
   describe('when the scraped attributes contain unused data', () => {
