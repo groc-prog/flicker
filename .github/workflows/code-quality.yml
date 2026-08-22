@@ -9,7 +9,7 @@ on:
       - "apps/**"
       - "packages/**"
   pull_request:
-    types: [opened]
+    types: [opened, synchronize]
     branches:
       - main
     paths:
@@ -24,7 +24,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - uses: oven-sh/setup-bun@v2
 
@@ -50,7 +50,6 @@ jobs:
             ${{ runner.os }}-modules-
 
       - name: Install dependencies
-        # Only run if node_modules cache miss
         if: steps.modules-cache.outputs.cache-hit != 'true'
         run: bun install
 
@@ -61,16 +60,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: oven-sh/setup-bun@v2
-
-      - name: Restore bun cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-bun
 
       - name: Restore node_modules
         uses: actions/cache@v4
@@ -80,11 +73,27 @@ jobs:
             apps/*/node_modules
             packages/*/node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('**/bun.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-modules-
 
-      - name: Run linter
-        run: bun run lint
+      - name: Cache & Restore Turbo Task Cache
+        uses: actions/cache@v4
+        with:
+          path: .turbo/cache
+          key: ${{ runner.os }}-turbo-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-${{ github.ref_name }}-
+            ${{ runner.os }}-turbo-
+
+      - name: Set Turbo Base Ref
+        id: turbo-base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "BASE=origin/${{ github.base_ref }}" >> $GITHUB_OUTPUT
+          else
+            echo "BASE=HEAD~1" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run linter on affected packages
+        run: bunx turbo run lint --filter="...[${{ steps.turbo-base.outputs.BASE }}]"
 
   type-check:
     needs: install-dependencies
@@ -93,16 +102,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: oven-sh/setup-bun@v2
-
-      - name: Restore bun cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-bun
 
       - name: Restore node_modules
         uses: actions/cache@v4
@@ -112,11 +115,27 @@ jobs:
             apps/*/node_modules
             packages/*/node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('**/bun.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-modules-
 
-      - name: Run type checker
-        run: bun run type-check
+      - name: Cache & Restore Turbo Task Cache
+        uses: actions/cache@v4
+        with:
+          path: .turbo/cache
+          key: ${{ runner.os }}-turbo-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-${{ github.ref_name }}-
+            ${{ runner.os }}-turbo-
+
+      - name: Set Turbo Base Ref
+        id: turbo-base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "BASE=origin/${{ github.base_ref }}" >> $GITHUB_OUTPUT
+          else
+            echo "BASE=HEAD~1" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run type checker on affected packages
+        run: bunx turbo run type-check --filter="...[${{ steps.turbo-base.outputs.BASE }}]"
 
   test:
     needs: install-dependencies
@@ -138,16 +157,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: oven-sh/setup-bun@v2
-
-      - name: Restore bun cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-bun
 
       - name: Restore node_modules
         uses: actions/cache@v4
@@ -157,11 +170,27 @@ jobs:
             apps/*/node_modules
             packages/*/node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('**/bun.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-modules-
 
-      - name: Run tests
+      - name: Cache & Restore Turbo Task Cache
+        uses: actions/cache@v4
+        with:
+          path: .turbo/cache
+          key: ${{ runner.os }}-turbo-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-${{ github.ref_name }}-
+            ${{ runner.os }}-turbo-
+
+      - name: Set Turbo Base Ref
+        id: turbo-base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "BASE=origin/${{ github.base_ref }}" >> $GITHUB_OUTPUT
+          else
+            echo "BASE=HEAD~1" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run tests on affected packages
         env:
           LOG_LEVEL: fatal
           POSTGRES_DATABASE_URL: postgresql://postgres:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/test
-        run: bun run test
+        run: bunx turbo run test --filter="...[${{ steps.turbo-base.outputs.BASE }}]"
