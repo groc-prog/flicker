@@ -1,4 +1,7 @@
 export enum TelemetryIdentifier {
+  TraceId = 'trace.id',
+  TraceFlags = 'trace.flags',
+  SpanId = 'span.id',
   WorkerEvent = 'worker.event',
   WorkerJobId = 'worker.job.id',
   WorkerJobName = 'worker.job.name',
@@ -11,4 +14,7 @@ export enum TelemetryIdentifier {
   PerformanceRefId = 'performance.ref_id',
   AttributeCategory = 'attribute.category',
   AttributeKey = 'attribute.key',
+  UserId = 'user.id',
+  NotificationId = 'notification.id',
+  ServiceModuleName = 'service_module.name',
 }

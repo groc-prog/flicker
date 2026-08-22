@@ -11,6 +11,8 @@ import {
 import type { MaybePromise } from 'bun';
 import pino from 'pino';
 
+import { TelemetryIdentifier } from './identifiers';
+
 const storage = new AsyncLocalStorage<pino.Logger>();
 
 const baseLogger = pino({
@@ -35,9 +37,9 @@ const baseLogger = pino({
 
     const { traceId, spanId, traceFlags } = currentSpan.spanContext();
     return {
-      'trace.id': traceId,
-      'trace.flags': traceFlags,
-      'span.id': spanId,
+      [TelemetryIdentifier.TraceId]: traceId,
+      [TelemetryIdentifier.TraceFlags]: traceFlags,
+      [TelemetryIdentifier.SpanId]: spanId,
     };
   },
 });

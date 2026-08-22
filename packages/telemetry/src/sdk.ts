@@ -23,7 +23,7 @@ export function initializeSDK(instrumentations?: NodeSDKConfiguration['instrumen
 
   if (!process.env.OTEL_COLLECTOR_URL) logger.warn(`OTEL_COLLECTOR_URL is not defined, falling back to default`);
   if (isNaN(metricsExportInterval))
-    logger.warn(`OTEL_COLLECTOR_METRICS_EXPORT_INTERVAL is not set set to a valid number, falling back to default`);
+    logger.warn(`OTEL_COLLECTOR_METRICS_EXPORT_INTERVAL is not set to a valid number, falling back to default`);
 
   logger.debug('Initializing OpenTelemetry SDK');
   const sdk = new NodeSDK({
