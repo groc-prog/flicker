@@ -18,4 +18,9 @@ export enum TelemetryIdentifier {
   UserId = 'user.id',
   NotificationId = 'notification.id',
   ServiceModuleName = 'service_module.name',
+  CommandId = 'command.id',
+  CommandName = 'command.name',
+  CommandType = 'command.type',
+  InteractionUserId = 'interaction.user_id',
+  InteractionGuildId = 'interaction.guild_id',
 }

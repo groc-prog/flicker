@@ -1,0 +1,33 @@
+{
+  "name": "@flicker/discord-bot",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "bun build ./src/index.ts --minify --production --sourcemap=linked --target bun --outdir=./dist",
+    "dev": "NODE_ENV=development bun run --preload ./src/preload.ts --hot ./src/index.ts",
+    "test": "bun test --coverage",
+    "test:watch": "bun test --watch",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@flicker/eslint-config": "workspace:*",
+    "@flicker/typescript-config": "workspace:*",
+    "@types/bun": "latest",
+    "eslint": "^9.39.1",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@flicker/database": "workspace:*",
+    "@flicker/service-modules": "workspace:*",
+    "@flicker/telemetry": "workspace:*",
+    "@flicker/test-utils": "workspace:*",
+    "@opentelemetry/api": "^1.9.1",
+    "@opentelemetry/instrumentation-fetch": "^0.221.0",
+    "dayjs": "^1.11.21",
+    "discord.js": "^14.27.0",
+    "drizzle-orm": "^1.0.0-rc.4",
+    "i18next": "^26.4.0"
+  }
+}

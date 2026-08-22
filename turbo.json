@@ -1,6 +1,9 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
+  "globalEnv": [
+    "NODE_ENV"
+  ],
   "tasks": {
     "build": {
       "env": [
@@ -12,7 +15,10 @@
         "OTEL_COLLECTOR_METRICS_EXPORT_INTERVAL",
         "BUNQUEUE_DATA_PATH",
         "TMDB_API_TOKEN",
-        "JOB_SCRAPE_CINEMA_DATA_CRON"
+        "JOB_SCRAPE_CINEMA_DATA_CRON",
+        "DISCORD_BOT_TOKEN",
+        "DISCORD_APP_ID",
+        "DISCORD_DEVELOPMENT_GUILD_ID"
       ],
       "dependsOn": [
         "^build"
