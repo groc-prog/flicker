@@ -9,6 +9,9 @@ import { waitForJobFailure } from '../../fixtures/queue';
 describe('get-tmdb-metadata worker', () => {
   describe('when the job is missing required environment configuration', () => {
     it('throws when the TMDB_API_TOKEN environment variable is missing', async () => {
+      const originalEnv = process.env.TMDB_API_TOKEN;
+      delete process.env.TMDB_API_TOKEN;
+
       const job = await queue.add(
         crypto.randomUUID(),
         {
@@ -29,6 +32,8 @@ describe('get-tmdb-metadata worker', () => {
       const movies = await db.select().from(moviesTable);
 
       expect(movies).toHaveLength(0);
+
+      process.env.TMDB_API_TOKEN = originalEnv;
     });
   });
 
