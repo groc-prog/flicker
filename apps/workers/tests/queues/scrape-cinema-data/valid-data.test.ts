@@ -3,7 +3,8 @@ import dayjs from 'dayjs';
 import { count } from 'drizzle-orm';
 
 import db from '@flicker/database';
-import { AttributeCategory, attributesTable } from '@flicker/database/schemas/attributes';
+import { attributesTable } from '@flicker/database/schemas/attributes';
+import { AttributeCategory } from '@flicker/database/schemas/enums';
 import { moviePerformancesToAttributesTable } from '@flicker/database/schemas/movie-performance-attributes';
 import { moviePerformancesTable } from '@flicker/database/schemas/movie-performances';
 import { scrapedMoviesToAttributesTable } from '@flicker/database/schemas/scraped-movie-attributes';

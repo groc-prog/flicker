@@ -2,7 +2,8 @@ import { afterAll, beforeAll, describe, expect, it, spyOn } from 'bun:test';
 import dayjs from 'dayjs';
 
 import db from '@flicker/database';
-import { MovieLanguage, moviesTable } from '@flicker/database/schemas/movies';
+import { MovieLanguage } from '@flicker/database/schemas/enums';
+import { moviesTable } from '@flicker/database/schemas/movies';
 import { scrapedMoviesTable } from '@flicker/database/schemas/scraped-movies';
 
 import { queue, worker } from '../../../src/queues/get-tmdb-metadata';
