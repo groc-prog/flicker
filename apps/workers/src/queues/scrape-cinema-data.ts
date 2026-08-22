@@ -1,4 +1,4 @@
-import { SpanStatusCode, trace } from '@opentelemetry/api';
+import { SpanStatusCode } from '@opentelemetry/api';
 import * as cheerio from 'cheerio';
 import dayjs from 'dayjs';
 import { and, eq, gt, inArray, not, sql, type InferInsertModel } from 'drizzle-orm';
@@ -14,6 +14,7 @@ import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
 import { withLogContext } from '@flicker/telemetry/logging';
 
 import { attachWorkerEventLogging, logger } from '../telemetry/logging';
+import { movieProcessingTracer } from '../telemetry/tracing';
 import { queue as tmdbMetadataQueue } from './get-tmdb-metadata';
 import { movieProcessingGroup } from './groups';
 
@@ -88,7 +89,6 @@ interface MappedPerformanceRelations {
 type ExtractedAttributes = Omit<InferInsertModel<typeof attributesTable>, 'id' | 'createdAt'>[];
 
 const identifier = 'scrape-cinema-data';
-const tracer = trace.getTracer(`worker.${identifier}`);
 
 export const queue = movieProcessingGroup.getQueue(identifier, {
   embedded: true,
@@ -98,7 +98,7 @@ export const queue = movieProcessingGroup.getQueue(identifier, {
 export const worker = movieProcessingGroup.getWorker(
   identifier,
   async (job) => {
-    await tracer.startActiveSpan(
+    await movieProcessingTracer.startActiveSpan(
       `${identifier} process`,
       {
         attributes: {
@@ -139,7 +139,7 @@ attachWorkerEventLogging(worker);
 async function scrapeHtmlContent(): Promise<ScrapedData> {
   const cinemaUrl = 'https://gleisdorf.dieselkino.at';
 
-  return await tracer.startActiveSpan('scrapeHtmlContent', async (span) => {
+  return await movieProcessingTracer.startActiveSpan('scrapeHtmlContent', async (span) => {
     try {
       logger.info(`Fetching HTML content from ${cinemaUrl}`);
       const response = await fetch(cinemaUrl);
@@ -152,7 +152,7 @@ async function scrapeHtmlContent(): Promise<ScrapedData> {
       logger.info('HTML content fetched successfully');
 
       const dataElementIdentifier = '#pmkino-frontpage-script-js-extra';
-      return tracer.startActiveSpan(
+      return movieProcessingTracer.startActiveSpan(
         'extractDataObjects',
         { attributes: { 'data.content_length': content.length, 'element.identifier': dataElementIdentifier } },
         (span) => {
@@ -218,7 +218,7 @@ function buildEntityMaps(
   const performanceRelations = new Map<string, MappedPerformanceRelations>();
   const extractedAttributes: ExtractedAttributes = [];
 
-  tracer.startActiveSpan('buildRelationMaps', (span) => {
+  movieProcessingTracer.startActiveSpan('buildRelationMaps', (span) => {
     try {
       logger.debug('Validating object structure for relevant properties');
       if (!('movies' in data))
@@ -389,7 +389,7 @@ async function storeMovies(
   const storedMovieIds: string[] = [];
 
   for (const [movieRefId, movieRelation] of movieRelations.entries()) {
-    await tracer.startActiveSpan(
+    await movieProcessingTracer.startActiveSpan(
       `storeMovie`,
       { attributes: { [TelemetryIdentifier.MovieRefId]: movieRefId } },
       async (span) => {

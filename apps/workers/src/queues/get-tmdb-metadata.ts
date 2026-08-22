@@ -1,4 +1,4 @@
-import { SpanStatusCode, trace } from '@opentelemetry/api';
+import { SpanStatusCode } from '@opentelemetry/api';
 import dayjs from 'dayjs';
 import { eq, sql, type InferSelectModel } from 'drizzle-orm';
 
@@ -10,6 +10,7 @@ import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
 import { withLogContext } from '@flicker/telemetry/logging';
 
 import { attachWorkerEventLogging, logger } from '../telemetry/logging';
+import { movieProcessingTracer } from '../telemetry/tracing';
 import type { operations } from '../types/tmdb-api';
 import { movieProcessingGroup } from './groups';
 
@@ -30,7 +31,6 @@ type MovieDetailsResponseBody = operations['movie-details']['responses']['200'][
 };
 
 const identifier = 'get-tmdb-metadata';
-const tracer = trace.getTracer(`worker.${identifier}`);
 const tmdbApiBaseUrl = 'https://api.themoviedb.org/3';
 
 export const queue = movieProcessingGroup.getQueue<TmdbMetadataJob>(identifier, {
@@ -43,7 +43,7 @@ queue.setGlobalConcurrency(10);
 export const worker = movieProcessingGroup.getWorker<TmdbMetadataJob>(
   identifier,
   async (job) => {
-    await tracer.startActiveSpan(
+    await movieProcessingTracer.startActiveSpan(
       `${identifier} process`,
       {
         attributes: {
@@ -174,7 +174,7 @@ async function storeMovieDetailsForLanguage(
   language: MovieLanguage,
   scrapedMovie: ScrapedMovie,
 ): Promise<void> {
-  await tracer.startActiveSpan(
+  await movieProcessingTracer.startActiveSpan(
     'getTranslationMetadata',
     {
       attributes: {

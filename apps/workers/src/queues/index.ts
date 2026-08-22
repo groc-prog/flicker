@@ -1,18 +1,10 @@
 import { shutdownManager } from 'bunqueue/client';
 
 import { logger } from '../telemetry/logging';
-
-logger.info(`Ensuring SQLite DB exists at ${process.env.BUNQUEUE_DATA_PATH}`);
-const sqliteFile = Bun.file(process.env.BUNQUEUE_DATA_PATH);
-if (!(await sqliteFile.exists())) {
-  logger.info(`Creating new SQLite DB at ${process.env.BUNQUEUE_DATA_PATH}`);
-  await Bun.write(process.env.BUNQUEUE_DATA_PATH, '');
-}
+import { queue as tmdbMetadataQueue, worker as tmdbMetadataWorker } from './get-tmdb-metadata';
+import { queue as cinemaDataScrapingQueue, worker as cinemaDataScrapingWorker } from './scrape-cinema-data';
 
 export default async function startWorkers(): Promise<void> {
-  const { queue: cinemaDataScrapingQueue, worker: cinemaDataScrapingWorker } = await import('./scrape-cinema-data');
-  const { queue: tmdbMetadataQueue, worker: tmdbMetadataWorker } = await import('./get-tmdb-metadata');
-
   await cinemaDataScrapingQueue.waitUntilReady();
   await cinemaDataScrapingWorker.waitUntilReady();
   await tmdbMetadataQueue.waitUntilReady();
@@ -28,10 +20,29 @@ export default async function startWorkers(): Promise<void> {
     },
   );
 
-  process.on('SIGINT', async () => {
+  process.on('SIGINT', shutdown);
+  process.on('SIGTERM', shutdown);
+  process.on('uncaughtException', (error) => {
+    logger.error(error, 'Uncaught exception');
+    shutdown('uncaughtException', 1);
+  });
+  process.on('unhandledRejection', (error) => {
+    logger.error(error, 'Unhandled rejected promise');
+    shutdown('unhandledRejection', 1);
+  });
+}
+
+async function shutdown(signal: string, exitCode: number): Promise<void> {
+  logger.info(`Shutdown signal ${signal} received. Starting graceful teardown`);
+
+  try {
     await cinemaDataScrapingWorker.close();
     await tmdbMetadataWorker.close();
     shutdownManager();
-    process.exit(0);
-  });
+    logger.info('Teardown completed successfully');
+    process.exit(exitCode);
+  } catch (error) {
+    logger.error(error, 'Error during graceful teardown');
+    process.exit(1);
+  }
 }

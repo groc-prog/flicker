@@ -2,6 +2,7 @@ export enum TelemetryIdentifier {
   TraceId = 'trace.id',
   TraceFlags = 'trace.flags',
   SpanId = 'span.id',
+  WorkerName = 'worker.name',
   WorkerEvent = 'worker.event',
   WorkerJobId = 'worker.job.id',
   WorkerJobName = 'worker.job.name',

@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "build": "bun build ./src/index.ts --minify --production --sourcemap=linked --target bun --outdir=./dist",
-    "dev": "NODE_ENV=development bun run --preload ./src/telemetry/instrumentation.ts --hot ./src/index.ts",
+    "dev": "NODE_ENV=development bun run --preload ./src/preload.ts --hot ./src/index.ts",
     "test": "bun test --coverage",
     "test:watch": "bun test --watch",
     "lint": "eslint .",

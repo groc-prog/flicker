@@ -14,7 +14,10 @@ export const logger = getLogger();
  */
 export function attachWorkerEventLogging<T, R>(worker: Worker<T, R>): void {
   worker.on('ready', () => {
-    logger.info({ [TelemetryIdentifier.WorkerEvent]: 'ready' }, 'Worker initialized and started polling for jobs');
+    logger.info(
+      { [TelemetryIdentifier.WorkerEvent]: 'ready', [TelemetryIdentifier.WorkerName]: worker.name },
+      'Worker initialized and started polling for jobs',
+    );
   });
   worker.on('active', (job) => {
     logger.info(
@@ -23,6 +26,7 @@ export function attachWorkerEventLogging<T, R>(worker: Worker<T, R>): void {
         [TelemetryIdentifier.WorkerJobId]: job.id,
         [TelemetryIdentifier.WorkerJobName]: job.name,
         [TelemetryIdentifier.WorkerJobAttempt]: job.attemptsMade,
+        [TelemetryIdentifier.WorkerName]: worker.name,
       },
       `Job ${job.id} [${job.name}] started processing`,
     );
@@ -35,6 +39,7 @@ export function attachWorkerEventLogging<T, R>(worker: Worker<T, R>): void {
         [TelemetryIdentifier.WorkerJobName]: job.name,
         [TelemetryIdentifier.WorkerJobDuration]:
           job.finishedOn && job.processedOn ? dayjs.utc(job.finishedOn - job.processedOn).format() : null,
+        [TelemetryIdentifier.WorkerName]: worker.name,
       },
       `Job ${job.id} [${job.name}] completed successfully`,
     );
@@ -45,6 +50,7 @@ export function attachWorkerEventLogging<T, R>(worker: Worker<T, R>): void {
         [TelemetryIdentifier.WorkerEvent]: 'failed',
         [TelemetryIdentifier.WorkerJobId]: job.id,
         [TelemetryIdentifier.WorkerJobName]: job.name,
+        [TelemetryIdentifier.WorkerName]: worker.name,
         err: error,
       },
       `Job ${job.id} [${job.name}] failed: ${error.message}`,
@@ -58,6 +64,7 @@ export function attachWorkerEventLogging<T, R>(worker: Worker<T, R>): void {
         [TelemetryIdentifier.WorkerEvent]: 'progress',
         [TelemetryIdentifier.WorkerJobId]: jobId,
         [TelemetryIdentifier.WorkerJobName]: job?.name,
+        [TelemetryIdentifier.WorkerName]: worker.name,
       },
       `Job ${jobId} progress: ${progress}%`,
     );
@@ -68,6 +75,7 @@ export function attachWorkerEventLogging<T, R>(worker: Worker<T, R>): void {
         [TelemetryIdentifier.WorkerEvent]: 'stalled',
         [TelemetryIdentifier.WorkerJobId]: jobId,
         [TelemetryIdentifier.WorkerJobReason]: jobId,
+        [TelemetryIdentifier.WorkerName]: worker.name,
       },
       `Job ${jobId} stalled: ${reason}`,
     );
@@ -76,6 +84,7 @@ export function attachWorkerEventLogging<T, R>(worker: Worker<T, R>): void {
     logger.debug(
       {
         [TelemetryIdentifier.WorkerEvent]: 'drained',
+        [TelemetryIdentifier.WorkerName]: worker.name,
       },
       'Queue is drained, no waiting jobs remaining',
     );
@@ -84,6 +93,7 @@ export function attachWorkerEventLogging<T, R>(worker: Worker<T, R>): void {
     logger.error(
       {
         [TelemetryIdentifier.WorkerEvent]: 'error',
+        [TelemetryIdentifier.WorkerName]: worker.name,
         err: error,
       },
       `Worker error encountered: ${error.message}`,
@@ -95,11 +105,15 @@ export function attachWorkerEventLogging<T, R>(worker: Worker<T, R>): void {
         [TelemetryIdentifier.WorkerEvent]: 'cancelled',
         [TelemetryIdentifier.WorkerJobId]: jobId,
         [TelemetryIdentifier.WorkerJobReason]: jobId,
+        [TelemetryIdentifier.WorkerName]: worker.name,
       },
       `Job ${jobId} was cancelled: ${reason}`,
     );
   });
   worker.on('closed', () => {
-    logger.info({ [TelemetryIdentifier.WorkerEvent]: 'closed' }, 'Worker has shut down gracefully');
+    logger.info(
+      { [TelemetryIdentifier.WorkerEvent]: 'closed', [TelemetryIdentifier.WorkerName]: worker.name },
+      'Worker has shut down gracefully',
+    );
   });
 }
