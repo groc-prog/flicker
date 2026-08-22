@@ -72,6 +72,7 @@ describe('notifications service', () => {
 
         for (const notificationData of data) {
           const notificationId = await seedNotification({ ...notificationData, userId });
+          await new Promise((resolve) => setTimeout(resolve, 10));
           notificationIds.push(notificationId);
         }
 
@@ -103,6 +104,7 @@ describe('notifications service', () => {
 
         for (const notificationData of data) {
           const notificationId = await seedNotification({ ...notificationData, userId });
+          await new Promise((resolve) => setTimeout(resolve, 10));
           notificationIds.push(notificationId);
         }
 
@@ -136,6 +138,7 @@ describe('notifications service', () => {
 
         for (const notificationData of data) {
           const notificationId = await seedNotification({ ...notificationData, userId });
+          await new Promise((resolve) => setTimeout(resolve, 10));
           notificationIds.push(notificationId);
         }
 
@@ -173,6 +176,7 @@ describe('notifications service', () => {
 
         for (const notificationData of data) {
           const notificationId = await seedNotification({ ...notificationData, userId });
+          await new Promise((resolve) => setTimeout(resolve, 10));
           notificationIds.push(notificationId);
         }
 
@@ -231,6 +235,7 @@ describe('notifications service', () => {
 
         for (const notificationData of data) {
           const notificationId = await seedNotification({ ...notificationData, userId });
+          await new Promise((resolve) => setTimeout(resolve, 10));
           notificationIds.push(notificationId);
         }
 
@@ -254,6 +259,7 @@ describe('notifications service', () => {
 
         for (const notificationData of data) {
           const notificationId = await seedNotification({ ...notificationData, userId });
+          await new Promise((resolve) => setTimeout(resolve, 10));
           notificationIds.push(notificationId);
         }
 
