@@ -1,20 +1,9 @@
 import { sql } from 'drizzle-orm';
-import {
-  boolean,
-  date,
-  decimal,
-  index,
-  integer,
-  jsonb,
-  pgEnum,
-  snakeCase,
-  text,
-  unique,
-  uuid,
-} from 'drizzle-orm/pg-core';
+import { boolean, date, decimal, index, integer, jsonb, snakeCase, text, unique, uuid } from 'drizzle-orm/pg-core';
 
 import { createdAtTimestamp } from '../utils/timestamp';
 import { uuidPk } from '../utils/uuid';
+import { movieLanguageEnum } from './enums';
 import { scrapedMoviesTable } from './scraped-movies';
 
 export interface MovieTranslationVideo {
@@ -50,13 +39,6 @@ export interface MovieTranslationVideo {
    */
   official: boolean;
 }
-
-export enum MovieLanguage {
-  German = 'de',
-  English = 'en',
-}
-
-export const movieLanguageEnum = pgEnum('movie_language', MovieLanguage);
 
 export const moviesTable = snakeCase.table(
   'movies',

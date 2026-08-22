@@ -1,16 +1,8 @@
-import { index, pgEnum, snakeCase, text, unique } from 'drizzle-orm/pg-core';
+import { index, snakeCase, text, unique } from 'drizzle-orm/pg-core';
 
 import { createdAtTimestamp, updatedAtTimestamp } from '../utils/timestamp';
 import { uuidPk } from '../utils/uuid';
-
-export enum AttributeCategory {
-  Fsk = 'fsk',
-  SeatClass = 'seatClasses',
-  Technical = 'technical',
-  Genres = 'genres',
-}
-
-export const attributeCategoryEnum = pgEnum('attribute_category', AttributeCategory);
+import { attributeCategoryEnum } from './enums';
 
 export const attributesTable = snakeCase.table(
   'attributes',
