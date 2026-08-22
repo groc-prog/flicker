@@ -105,7 +105,7 @@ export async function addNotification(
           throw new ServiceModuleError('User not found', ServiceModuleErrorCode.UserNotFound);
         }
 
-        logger.info('Validation successful, storing new notification');
+        logger.info(`Creating new notification for user ${userId}`);
         const [notification] = await db
           .insert(notificationsTable)
           .values({
@@ -157,7 +157,7 @@ export async function updateNotification(
       { [TelemetryIdentifier.UserId]: userId, [TelemetryIdentifier.NotificationId]: notificationId },
       async () => {
         try {
-          logger.debug(`Validating new notification for user ${userId}`);
+          logger.debug(`Validating updated notification options for notification ${notificationId}`);
           const { success, data, error } = UpdateNotificationValidator.safeParse(payload);
 
           if (!success) {
@@ -171,7 +171,7 @@ export async function updateNotification(
             );
           }
 
-          logger.info(`Updating notification ${notificationId} for user ${userId}`);
+          logger.info(`Updating notification ${notificationId}`);
           const [notification] = await db
             .update(notificationsTable)
             .set({
@@ -191,7 +191,7 @@ export async function updateNotification(
             throw new ServiceModuleError('Notification not found', ServiceModuleErrorCode.NotificationNotFound);
           }
 
-          logger.info(`Notification ${notification.id} for user ${userId} updated successfully`);
+          logger.info(`Notification ${notification.id} updated successfully`);
         } catch (error) {
           if (!(error instanceof ServiceModuleError))
             logger.error(error, `Failed to update notification ${notificationId} for user ${userId}`);
@@ -225,7 +225,7 @@ export async function markNotificationDeleted(
       { [TelemetryIdentifier.UserId]: userId, [TelemetryIdentifier.NotificationId]: notificationId },
       async () => {
         try {
-          logger.info(`Marking notification ${notificationId} for user ${userId} as deleted`);
+          logger.info(`Marking notification ${notificationId} as deleted`);
           const [notification] = await db
             .update(notificationsTable)
             .set({ deletedAt: dayjs.utc().toDate() })
@@ -237,7 +237,7 @@ export async function markNotificationDeleted(
             throw new ServiceModuleError('Notification not found', ServiceModuleErrorCode.NotificationNotFound);
           }
 
-          logger.info(`Notification ${notification.id} for user ${userId} marked as deleted successfully`);
+          logger.info(`Notification ${notification.id} marked as deleted successfully`);
         } catch (error) {
           if (!(error instanceof ServiceModuleError))
             logger.error(error, `Failed to mark notification ${notificationId} for user ${userId} as deleted`);
@@ -271,7 +271,7 @@ export async function restoreDeletedNotification(
       { [TelemetryIdentifier.UserId]: userId, [TelemetryIdentifier.NotificationId]: notificationId },
       async () => {
         try {
-          logger.info(`Restoring deleted notification ${notificationId} for user ${userId} as deleted`);
+          logger.info(`Restoring deleted notification ${notificationId}`);
           const [notification] = await db
             .update(notificationsTable)
             .set({ deletedAt: null })
@@ -283,7 +283,7 @@ export async function restoreDeletedNotification(
             throw new ServiceModuleError('Notification not found', ServiceModuleErrorCode.NotificationNotFound);
           }
 
-          logger.info(`Notification ${notification.id} for user ${userId} restored successfully`);
+          logger.info(`Notification ${notification.id} restored successfully`);
         } catch (error) {
           if (!(error instanceof ServiceModuleError))
             logger.error(error, `Failed to restore deleted notification ${notificationId} for user ${userId}`);
@@ -317,7 +317,7 @@ export async function getNotificationById(
       { [TelemetryIdentifier.UserId]: userId, [TelemetryIdentifier.NotificationId]: notificationId },
       async () => {
         try {
-          logger.info(`Getting notification ${notificationId} for user ${userId}`);
+          logger.info(`Getting notification ${notificationId}`);
           const [notification] = await db
             .select({
               id: notificationsTable.id,
@@ -460,6 +460,8 @@ export async function searchNotifications(
         }
 
         const notifications = await query;
+
+        logger.info(`Returning ${notifications.length} matched notifications for user ${userId}`);
         return notifications;
       } catch (error) {
         if (!(error instanceof ServiceModuleError))
