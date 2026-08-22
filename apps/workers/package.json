@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "bun build ./src/index.ts --production --sourcemap --target bun --outdir ./dist",
+    "build": "bun build ./src/index.ts --minify --production --sourcemap=linked --target bun --outdir=./dist",
     "dev": "NODE_ENV=development bun run --preload ./src/telemetry/instrumentation.ts --hot ./src/index.ts",
     "test": "bun test --coverage",
     "test:watch": "bun test --watch",
@@ -15,7 +15,6 @@
     "@flicker/eslint-config": "workspace:*",
     "@flicker/typescript-config": "workspace:*",
     "@types/bun": "latest",
-    "@types/lodash": "^4.17.25",
     "eslint": "^9.39.1",
     "typescript": "^5.9.2"
   },
@@ -28,8 +27,7 @@
     "@opentelemetry/instrumentation-fetch": "^0.221.0",
     "bunqueue": "^2.8.59",
     "cheerio": "^1.2.0",
-    "drizzle-orm": "^1.0.0-rc.4",
     "dayjs": "^1.11.21",
-    "lodash": "^4.18.1"
+    "drizzle-orm": "^1.0.0-rc.4"
   }
 }

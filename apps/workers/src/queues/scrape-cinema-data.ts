@@ -2,7 +2,6 @@ import { SpanStatusCode, trace } from '@opentelemetry/api';
 import * as cheerio from 'cheerio';
 import dayjs from 'dayjs';
 import { and, eq, gt, inArray, not, sql, type InferInsertModel } from 'drizzle-orm';
-import { get, isArray, isPlainObject } from 'lodash';
 
 import db from '@flicker/database';
 import { attributesTable } from '@flicker/database/schemas/attributes';
@@ -233,9 +232,9 @@ function buildEntityMaps(
           'attributes key not found in parsed data. This might indicate that the embedded data has changed',
         );
 
-      const movies = get(data, 'movies.items', null);
-      const performances = get(data, 'performances.items', null);
-      const attributes = get(data, 'attributes', null);
+      const movies = data.movies?.items ?? null;
+      const performances = data.performances?.items ?? null;
+      const attributes = data.attributes ?? null;
 
       if (!movies || !isPlainObject(movies))
         throw new Error(
@@ -398,7 +397,7 @@ async function storeMovies(
           logger.info(`Storing movie ${movieRefId} and it's relations`);
 
           try {
-            const movieMetadata = get(data, `movies.items.${movieRefId}`);
+            const movieMetadata = data.movies?.items?.[movieRefId];
             if (!movieMetadata) {
               logger.warn(`Movie ${movieRefId} not found in scraped data, skipping`);
               return;
@@ -468,7 +467,7 @@ async function storeMovies(
             if (movieRelation.performances.size !== 0) {
               logger.debug(`Preparing ${movieRelation.performances.size} performance relations`);
               for (const performanceRefId of movieRelation.performances.keys()) {
-                const performanceMetadata = get(data, `performances.items.${performanceRefId}`);
+                const performanceMetadata = data.performances?.items?.[performanceRefId];
                 if (!performanceMetadata) {
                   logger.warn(`Performance ${performanceRefId} not found in scraped data, skipping`);
                   continue;
@@ -661,4 +660,19 @@ function scheduleFollowUpJobs(scrapedMovieIds: string[]): void {
 
   tmdbMetadataQueue.addBulk(jobs);
   logger.info(`${scrapedMovieIds.length} job enqueued successfully`);
+}
+
+export function isPlainObject<T extends Record<PropertyKey, unknown> = Record<PropertyKey, unknown>>(
+  value: unknown,
+): value is T {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === null || prototype === Object.prototype;
+}
+
+export function isArray<T = unknown>(value: unknown): value is T[] {
+  return Array.isArray(value);
 }
