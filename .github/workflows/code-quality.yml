@@ -78,10 +78,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .turbo/cache
-          key: ${{ runner.os }}-turbo-${{ github.ref_name }}-${{ github.sha }}
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.ref_name }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-turbo-${{ github.ref_name }}-
-            ${{ runner.os }}-turbo-
+            ${{ runner.os }}-turbo-${{ github.job }}-${{ github.ref_name }}-
+            ${{ runner.os }}-turbo-${{ github.job }}-
 
       - name: Set Turbo Base Ref
         id: turbo-base
@@ -120,10 +120,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .turbo/cache
-          key: ${{ runner.os }}-turbo-${{ github.ref_name }}-${{ github.sha }}
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.ref_name }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-turbo-${{ github.ref_name }}-
-            ${{ runner.os }}-turbo-
+            ${{ runner.os }}-turbo-${{ github.job }}-${{ github.ref_name }}-
+            ${{ runner.os }}-turbo-${{ github.job }}-
 
       - name: Set Turbo Base Ref
         id: turbo-base
@@ -175,10 +175,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .turbo/cache
-          key: ${{ runner.os }}-turbo-${{ github.ref_name }}-${{ github.sha }}
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.ref_name }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-turbo-${{ github.ref_name }}-
-            ${{ runner.os }}-turbo-
+            ${{ runner.os }}-turbo-${{ github.job }}-${{ github.ref_name }}-
+            ${{ runner.os }}-turbo-${{ github.job }}-
 
       - name: Set Turbo Base Ref
         id: turbo-base
