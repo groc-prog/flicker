@@ -21,7 +21,7 @@ export default async function startWorkers(): Promise<void> {
   cinemaDataScrapingQueue.upsertJobScheduler(
     'scheduled-scrape-cinema-data',
     {
-      pattern: process.env.JOB_CINEMA_DATA_SCRAPING_SCHEDULE ?? '@daily',
+      pattern: process.env.JOB_SCRAPE_CINEMA_DATA_CRON ?? '@daily',
     },
     {
       name: 'scrape-cinema-data',
