@@ -16,7 +16,7 @@ import { withLogContext } from '@flicker/telemetry/logging';
 import { attachWorkerEventLogging, logger } from '../telemetry/logging';
 import { movieProcessingTracer } from '../telemetry/tracing';
 import { queue as tmdbMetadataQueue } from './get-tmdb-metadata';
-import { movieProcessingGroup } from './groups';
+import { movieProcessingGroup } from './queue-groups';
 
 interface ScrapedData {
   movies?: {

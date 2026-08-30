@@ -1,9 +1,9 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "db0c1eb3-e055-476e-949a-92c90939ec0d",
+  "id": "e0928ecf-1ae5-49ee-a4a4-6d40f3985be6",
   "prevIds": [
-    "00000000-0000-0000-0000-000000000000"
+    "e510f7f3-9e5e-4b4e-9b00-e7bcd75f9aec"
   ],
   "ddl": [
     {
@@ -14,6 +14,16 @@
         "genres"
       ],
       "name": "attribute_category",
+      "entityType": "enums",
+      "schema": "public"
+    },
+    {
+      "values": [
+        "normal",
+        "lewd",
+        "super_hyped"
+      ],
+      "name": "bot_tone",
       "entityType": "enums",
       "schema": "public"
     },
@@ -33,16 +43,6 @@
         "weekly"
       ],
       "name": "notification_recurrence_pattern",
-      "entityType": "enums",
-      "schema": "public"
-    },
-    {
-      "values": [
-        "normal",
-        "lewd",
-        "super_hyped"
-      ],
-      "name": "notification_tone",
       "entityType": "enums",
       "schema": "public"
     },
@@ -479,6 +479,12 @@
     },
     {
       "isRlsEnabled": false,
+      "name": "groups",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
       "name": "movie_performances_to_attributes",
       "entityType": "tables",
       "schema": "public"
@@ -596,6 +602,110 @@
       "entityType": "columns",
       "schema": "public",
       "table": "attributes"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "groups"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "discord_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "groups"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "discord_channel_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "groups"
+    },
+    {
+      "type": "timezone",
+      "typeSchema": "public",
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "timezone",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "groups"
+    },
+    {
+      "type": "jsonb",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "'[\"en\"]'",
+      "generated": null,
+      "identity": null,
+      "name": "languages",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "groups"
+    },
+    {
+      "type": "bot_tone",
+      "typeSchema": "public",
+      "notNull": true,
+      "dimensions": 0,
+      "default": "'normal'",
+      "generated": null,
+      "identity": null,
+      "name": "tone",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "groups"
+    },
+    {
+      "type": "timestamp(3) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "groups"
+    },
+    {
+      "type": "timestamp(3) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "groups"
     },
     {
       "type": "uuid",
@@ -1034,13 +1144,13 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "preferred_language",
+      "name": "language",
       "entityType": "columns",
       "schema": "public",
       "table": "notifications"
     },
     {
-      "type": "notification_tone",
+      "type": "bot_tone",
       "typeSchema": "public",
       "notNull": true,
       "dimensions": 0,
@@ -1099,7 +1209,33 @@
       "default": null,
       "generated": null,
       "identity": null,
+      "name": "creator_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "notifications"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
       "name": "user_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "notifications"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "group_id",
       "entityType": "columns",
       "schema": "public",
       "table": "notifications"
@@ -1346,7 +1482,7 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "preferred_timezone",
+      "name": "timezone",
       "entityType": "columns",
       "schema": "public",
       "table": "users"
@@ -1359,13 +1495,13 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "preferred_language",
+      "name": "language",
       "entityType": "columns",
       "schema": "public",
       "table": "users"
     },
     {
-      "type": "notification_tone",
+      "type": "bot_tone",
       "typeSchema": "public",
       "notNull": false,
       "dimensions": 0,
@@ -1624,6 +1760,23 @@
     {
       "nameExplicit": false,
       "columns": [
+        "creator_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "users",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "notifications_creator_id_users_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "notifications"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
         "user_id"
       ],
       "schemaTo": "public",
@@ -1634,6 +1787,23 @@
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "notifications_user_id_users_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "notifications"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "group_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "groups",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "notifications_group_id_groups_id_fkey",
       "entityType": "fks",
       "schema": "public",
       "table": "notifications"
@@ -1702,6 +1872,16 @@
       "name": "attributes_pkey",
       "schema": "public",
       "table": "attributes",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "groups_pkey",
+      "schema": "public",
+      "table": "groups",
       "entityType": "pks"
     },
     {
@@ -1793,6 +1973,17 @@
     {
       "nameExplicit": false,
       "columns": [
+        "discord_id"
+      ],
+      "nullsNotDistinct": false,
+      "name": "groups_discord_id_key",
+      "schema": "public",
+      "table": "groups",
+      "entityType": "uniques"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
         "scraped_performance_id"
       ],
       "nullsNotDistinct": false,
@@ -1822,6 +2013,13 @@
       "schema": "public",
       "table": "users",
       "entityType": "uniques"
+    },
+    {
+      "value": "\"user_id\" IS NOT NULL OR \"group_id\" IS NOT NULL",
+      "name": "receiver_defined_check",
+      "entityType": "checks",
+      "schema": "public",
+      "table": "notifications"
     }
   ],
   "renames": []

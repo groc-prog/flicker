@@ -1,34 +1,25 @@
-import {
-  Client,
-  GatewayIntentBits,
-  REST,
-  Routes,
-  type APIApplicationCommand,
-  type SlashCommandDefinition,
-} from 'discord.js';
+import dayjs from 'dayjs';
+import utcPlugin from 'dayjs/plugin/utc';
+import { Client, GatewayIntentBits, REST } from 'discord.js';
 
-import commands from './commands';
+import { registerCommands } from './commands';
 import events from './events';
-import { initializeI18n } from './i18n';
 import { logger } from './telemetry/logging';
+
+dayjs.extend(utcPlugin);
 
 if (!process.env.DISCORD_BOT_TOKEN) {
   logger.error('DISCORD_BOT_TOKEN not defined in environment');
   process.exit(1);
 }
-if (!process.env.DISCORD_APP_ID) {
-  logger.error('DISCORD_APP_ID not defined in environment');
-  process.exit(1);
-}
-
-await initializeI18n();
 
 const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN);
 
 export const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages],
 });
-client.commands = new Map<string, SlashCommandDefinition>();
+client.commands = new Map();
+client.modals = new Map();
 
 logger.info(`Registering ${events.length} events`);
 for (const event of events) {
@@ -41,37 +32,7 @@ for (const event of events) {
   }
 }
 
-logger.info(`Registering ${commands.length} commands with Discord API`);
-let route: Parameters<typeof rest.put>[0];
-
-if (process.env.NODE_ENV === 'development') {
-  logger.warn(`Running in development mode. Commands will only be refreshed in development guild`);
-
-  if (!process.env.DISCORD_DEVELOPMENT_GUILD_ID) {
-    logger.error('DISCORD_DEVELOPMENT_GUILD_ID not defined in environment');
-    process.exit(1);
-  }
-
-  route = Routes.applicationGuildCommands(process.env.DISCORD_APP_ID, process.env.DISCORD_DEVELOPMENT_GUILD_ID);
-} else {
-  route = Routes.applicationCommands(process.env.DISCORD_APP_ID);
-}
-
-const registeredCommands = (await rest.put(route, {
-  body: commands.map((command) => command.data.toJSON()),
-})) as APIApplicationCommand[];
-
-logger.info(`Mapping command definitions for ${registeredCommands.length} commands returned by Discord API`);
-for (const command of registeredCommands) {
-  const matchingCommand = commands.find(({ data }) => data.name === command.name);
-  if (!matchingCommand) {
-    logger.error(`Can not find command definition for command ID ${command.id} returned by Discord API`);
-    process.exit(1);
-  }
-
-  logger.debug(`Registered mapping for command ${command.name} (${command.id}) with client`);
-  client.commands.set(command.id, matchingCommand);
-}
+await registerCommands(rest, client);
 
 logger.info('Logging in with DISCORD_BOT_TOKEN');
 await client.login(process.env.DISCORD_BOT_TOKEN);

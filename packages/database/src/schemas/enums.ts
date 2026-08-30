@@ -6,7 +6,7 @@ export enum NotificationRecurrencePattern {
   Weekly = 'weekly',
 }
 
-export enum NotificationTone {
+export enum BotTone {
   Normal = 'normal',
   Lewd = 'lewd',
   SuperHyped = 'super_hyped',
@@ -29,7 +29,7 @@ export const notificationRecurrencePatternEnum = pgEnum(
   NotificationRecurrencePattern,
 );
 
-export const notificationToneEnum = pgEnum('notification_tone', NotificationTone);
+export const botToneEnum = pgEnum('bot_tone', BotTone);
 
 export const attributeCategoryEnum = pgEnum('attribute_category', AttributeCategory);
 

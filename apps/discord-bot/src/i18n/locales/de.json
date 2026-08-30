@@ -1,1 +1,62 @@
-{}
+{
+  "server": {
+    "configure-server": {
+      "name": "server-konfigurieren",
+      "description": "Konfiguriere Zeitzonen, Sprachen und mehr für deine Server-Benachrichtigungen",
+      "modal": {
+        "title": "Server-Benachrichtigungen konfigurieren",
+        "components": {
+          "timezone": {
+            "label": "Server-Zeitzone",
+            "description": "Die IANA-Zeitzone für Zeitstempel in Benachrichtigungen",
+            "placeholder": "z.B. Europe/Vienna"
+          },
+          "languages": {
+            "label": "Sprachen für Benachrichtigungen",
+            "description": "Eine oder mehrere Sprachen, in denen die Benachrichtigungen gepostet werden",
+            "options": {
+              "en": "Englisch",
+              "de": "Deutsch"
+            }
+          },
+          "tone": {
+            "label": "Bot-Tonalität",
+            "description": "Der Tonfall, den der Bot beim Senden von Nachrichten auf diesem Server verwendet",
+            "options": {
+              "normal": "Normal",
+              "lewd": "Versucht 😈",
+              "super_hyped": "SUPER HYPED 🚀"
+            }
+          },
+          "channel": {
+            "label": "Benachrichtigungskanal",
+            "description": "Der Kanal, in den der Bot die Benachrichtigungen postet"
+          }
+        }
+      }
+    }
+  },
+  "common": {
+    "error": "## ⚠️ Ups, da ist etwas schiefgelaufen\n\nBeim Verarbeiten deiner Anfrage ist ein unerwarteter Fehler aufgetreten. Bitte versuche es später noch einmal oder wende dich an einen Administrator."
+  },
+  "tone": {
+    "normal": {
+      "server-configuration": {
+        "validation-failed": "## ⚠️ Ups, da stimmt etwas nicht\n\nEinige deiner Eingaben sind ungültig (wahrscheinlich eine ungültige Zeitzone). Bitte überprüfe deine Angaben und versuche es erneut.",
+        "created-or-updated": "## 🎉 Einstellungen gespeichert!\n> Deine Änderungen werden beim nächsten Beitrag des Bots aktiv.\n\nMöchtest du weitere Anpassungen vornehmen? Du kannst deine Einstellungen jederzeit mit </<%= it.commandName %>:<%= it.commandId %>> aktualisieren."
+      }
+    },
+    "lewd": {
+      "server-configuration": {
+        "validation-failed": "## ⚠️ Ah-ah~ Das passt so aber nicht rein!\n\nDeine Eingabe ist viel zu falsch, um reinzupassen... Überprüf deine Werte noch mal und versuch's nochmal, ja? ~",
+        "created-or-updated": "## 💋 Ahh... Alles gespeichert & bereit~\n> Meine neuen Änderungen kommen beim nächsten Beitrag so richtig zur Geltung...\n\nWillst du noch weiter an mir rumspielen? Du kannst meine Einstellungen jederzeit wieder anfassen mit </<%= it.commandName %>:<%= it.commandId %>>~"
+      }
+    },
+    "super_hyped": {
+      "server-configuration": {
+        "validation-failed": "## 💥 UUPS! DAS HAT NICHT GEKLAPPT!\n\nDiese Eingaben bringen's echt nicht, Chef! Check nochmal alles durch und dann auf ein NEUES!! 🚀",
+        "created-or-updated": "## 🎉 BOOM! EINSTELLUNGEN SIND DRIN! 🚀\n> ALLES IST BEREIT! Die Änderungen greifen sofort bei meinem nächsten Post!\n\nNOCH EINE RUNDE?! Passe deine Konfiguration jederzeit an mit </<%= it.commandName %>:<%= it.commandId %>>! LET'S GOOOOO!"
+      }
+    }
+  }
+}

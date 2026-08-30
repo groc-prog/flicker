@@ -1,9 +1,10 @@
 import { isNotNull, sql } from 'drizzle-orm';
-import { boolean, index, integer, snakeCase, timestamp, unique, uuid, varchar } from 'drizzle-orm/pg-core';
+import { boolean, check, index, integer, snakeCase, timestamp, unique, uuid, varchar } from 'drizzle-orm/pg-core';
 
 import { createdAtTimestamp, updatedAtTimestamp } from '../utils/timestamp';
 import { uuidPk } from '../utils/uuid';
-import { movieLanguageEnum, notificationRecurrencePatternEnum, NotificationTone, notificationToneEnum } from './enums';
+import { BotTone, botToneEnum, movieLanguageEnum, notificationRecurrencePatternEnum } from './enums';
+import { groupsTable } from './groups';
 import { usersTable } from './users';
 
 export const notificationsTable = snakeCase.table(
@@ -17,10 +18,12 @@ export const notificationsTable = snakeCase.table(
     /**
      * The preferred language in which the notification will be send. If not defined, the
      * default language of the related client will be used.
+     *
+     * For groups this will be ignored as groups can define multiple languages.
      */
-    preferredLanguage: movieLanguageEnum(),
+    language: movieLanguageEnum(),
     /** The tone/vibe the notification text will have. */
-    tone: notificationToneEnum().notNull().default(NotificationTone.Normal),
+    tone: botToneEnum().notNull().default(BotTone.Normal),
     /** Whether the notification will be triggered once or multiple times. */
     isRecurring: boolean().notNull().default(false),
     /**
@@ -37,10 +40,14 @@ export const notificationsTable = snakeCase.table(
      * are defined.
      */
     recurrenceInterval: integer(),
-    /** The user who owns the notification. */
-    userId: uuid()
+    /** The user who created the notification. */
+    creatorId: uuid()
       .notNull()
       .references(() => usersTable.id),
+    /** The user who should receive the notification. */
+    userId: uuid().references(() => usersTable.id),
+    /** The group who should receive the notification. */
+    groupId: uuid().references(() => groupsTable.id),
     /** The date after which the notification can be triggered again. */
     nextTriggerAt: timestamp({
       mode: 'date',
@@ -59,5 +66,6 @@ export const notificationsTable = snakeCase.table(
     unique().on(table.id, table.name),
     index().on(table.nextTriggerAt).where(isNotNull(table.nextTriggerAt)),
     index('idx_notification_name').using('gin', sql`${table.name} gin_trgm_ops`),
+    check('receiver_defined_check', sql`${table.userId} IS NOT NULL OR ${table.groupId} IS NOT NULL`),
   ],
 );

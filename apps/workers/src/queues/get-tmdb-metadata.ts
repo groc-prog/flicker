@@ -12,7 +12,7 @@ import { withLogContext } from '@flicker/telemetry/logging';
 import { attachWorkerEventLogging, logger } from '../telemetry/logging';
 import { movieProcessingTracer } from '../telemetry/tracing';
 import type { operations } from '../types/tmdb-api';
-import { movieProcessingGroup } from './groups';
+import { movieProcessingGroup } from './queue-groups';
 
 export interface TmdbMetadataJob {
   id: InferSelectModel<typeof scrapedMoviesTable>['id'];
