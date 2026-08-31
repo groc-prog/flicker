@@ -1,6 +1,6 @@
 import { context, propagation, trace } from '@opentelemetry/api';
 
-import { ServiceError } from '../error';
+import { ServiceError } from '../utils/error';
 import { logger } from './logging';
 
 export const eventTracer = trace.getTracer(`discord.events`);

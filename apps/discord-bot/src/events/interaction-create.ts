@@ -15,10 +15,10 @@ import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
 import { withLogContext } from '@flicker/telemetry/logging';
 
 import { client } from '..';
-import { ServiceError } from '../error';
 import { getSupportedLocale } from '../i18n';
 import { logger } from '../telemetry/logging';
 import { deserializeTraceParentFromCustomId, eventTracer } from '../telemetry/tracing';
+import { ServiceError } from '../utils/error';
 
 export const once = false;
 export const type = Events.InteractionCreate;
@@ -39,6 +39,11 @@ export async function execute(interaction: Interaction): Promise<void> {
     ctx[TelemetryIdentifier.CommandId] = interaction.commandId;
   }
 
+  if (interaction.isChatInputCommand()) {
+    ctx[TelemetryIdentifier.SubcommandName] = interaction.options.getSubcommand() ?? undefined;
+    ctx[TelemetryIdentifier.SubcommandGroupName] = interaction.options.getSubcommandGroup() ?? undefined;
+  }
+
   return await withLogContext(ctx, async () => {
     if (interaction.isChatInputCommand()) await onChatInputCommand(interaction);
     if (interaction.isModalSubmit()) await onModalSubmit(interaction);
@@ -48,6 +53,20 @@ export async function execute(interaction: Interaction): Promise<void> {
 async function onChatInputCommand(interaction: ChatInputCommandInteraction): Promise<void> {
   await eventTracer.startActiveSpan(`slash_command /${interaction.commandName}`, async (span) => {
     try {
+      const subcommandGroupName = interaction.options.getSubcommandGroup();
+      const subcommandName = interaction.options.getSubcommand();
+      const commandName = interaction.commandName;
+
+      let commandKey = commandName;
+      if (subcommandGroupName) commandKey = `${commandKey}:${subcommandGroupName}`;
+      if (subcommandName) commandKey = `${commandKey}:${subcommandName}`;
+
+      const command = client.commands.get(commandKey);
+      if (!command) {
+        logger.info(`Received unknown command with computed key ${commandKey}, skipping`);
+        return;
+      }
+
       logger.debug(`Received chat input command interaction ${interaction.id}`);
       const now = dayjs.utc();
 
@@ -73,12 +92,6 @@ async function onChatInputCommand(interaction: ChatInputCommandInteraction): Pro
       if (now.isAfter(user.createdAt))
         logger.info(`User with Discord ID ${interaction.user.id} already exists, nothing to update`);
       else logger.info(`Created new user ${user.id}`);
-
-      const command = client.commands.get(interaction.commandId);
-      if (!command) {
-        logger.info(`Received unknown command ID ${interaction.commandId}, skipping`);
-        return;
-      }
 
       await command.onChatInputCommand(interaction);
     } catch (error) {

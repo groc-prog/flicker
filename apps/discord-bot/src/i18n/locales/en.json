@@ -1,5 +1,7 @@
 {
   "server": {
+    "name": "server",
+    "description": "Configure server notifications",
     "configure-server": {
       "name": "configure-server",
       "description": "Configure timezones, languages and more for your server notifications",
@@ -34,6 +36,22 @@
           }
         }
       }
+    },
+    "notification-command-group": {
+      "name": "notification",
+      "description": "Manage your server notifications"
+    },
+    "notification-create": {
+      "name": "create",
+      "description": "Create a new server notification"
+    },
+    "notification-update": {
+      "name": "update",
+      "description": "Update a existing server notification"
+    },
+    "notification-delete": {
+      "name": "delete",
+      "description": "Delete a server notification"
     }
   },
   "common": {
@@ -48,8 +66,8 @@
     },
     "lewd": {
       "server-configuration": {
-        "validation-failed": "## ⚠️ Ah-ah~ You can't put that in there!\n\nThat input is way too wrong to fit properly... double-check your values and try again, okay? ~",
-        "created-or-updated": "## 💋 Ahh... All Saved & Ready~\n> Expect your fresh changes to take full effect next time I post...\n\nWant to mess with my settings some more? You can always touch them again using </<%= it.commandName %>:<%= it.commandId %>>~"
+        "validation-failed": "## ⚠️ Ah-ah~ You can't just shove that in there!\n\nThat value is way too big and wrong to fit inside me properly... tease me with something that actually fits, okay? ~",
+        "created-or-updated": "## 💋 Mmm... Ahh! Touched, Modified & Dripping with New Settings~\n> I'm already throbbing with your new configuration... just wait until you see what I do with it next time I post...\n\nDid that feel good? You can grip my settings and mess with them as hard as you want using </<%= it.commandName %>:<%= it.commandId %>>~"
       }
     },
     "super_hyped": {

@@ -3,14 +3,10 @@ import {
   ChannelSelectMenuBuilder,
   ChannelType,
   ChatInputCommandInteraction,
-  InteractionContextType,
   LabelBuilder,
-  Locale,
   MessageFlags,
   ModalBuilder,
   ModalSubmitInteraction,
-  PermissionFlagsBits,
-  SlashCommandBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
   TextInputBuilder,
@@ -25,10 +21,10 @@ import { BotTone, botToneEnum, MovieLanguage, movieLanguageEnum, timezoneEnum } 
 import { groupsTable } from '@flicker/database/schemas/groups';
 
 import { client } from '../..';
-import { ServiceError } from '../../error';
 import { getSupportedLocale, renderTemplate } from '../../i18n';
 import { logger } from '../../telemetry/logging';
 import { serializeModalCustomId } from '../../telemetry/tracing';
+import { ServiceError } from '../../utils/error';
 
 const GroupConfigurationValidator = z.object({
   timezone: z.enum(timezoneEnum.enumValues).optional(),
@@ -37,18 +33,7 @@ const GroupConfigurationValidator = z.object({
   channel: z.string(),
 });
 
-export const slashCommand = new SlashCommandBuilder()
-  .setContexts(InteractionContextType.Guild)
-  .setName(t('server.configure-server.name', { lng: Locale.EnglishUS }))
-  .setNameLocalization(Locale.German, t('server.configure-server.name', { lng: Locale.German }))
-  .setDescription(t('server.configure-server.description', { lng: Locale.EnglishUS }))
-  .setDescriptionLocalization(Locale.German, t('server.configure-server.description', { lng: Locale.German }))
-  .setContexts(InteractionContextType.Guild)
-  .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
-
-export const modalIds = {
-  configureServer: 'configure-server',
-};
+export const modalCustomId = 'configure-server';
 
 export async function onChatInputCommand(interaction: ChatInputCommandInteraction): Promise<void> {
   logger.info(`Getting current configuration for group ${interaction.guildId}`);
@@ -114,7 +99,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
 
   logger.info('Building response modal with group configuration and defaults');
   const modal = new ModalBuilder()
-    .setCustomId(serializeModalCustomId(modalIds.configureServer))
+    .setCustomId(serializeModalCustomId(modalCustomId))
     .setTitle(t('server.configure-server.modal.title', { lng: getSupportedLocale(interaction.locale) }))
     .addLabelComponents(
       new LabelBuilder()
@@ -220,10 +205,8 @@ export async function onModalSubmit(interaction: ModalSubmitInteraction): Promis
   await interaction.reply({
     flags: [MessageFlags.Ephemeral],
     content: renderTemplate(`tone.${group.tone}.server-configuration.created-or-updated`, interaction.locale, {
-      commandName: slashCommand.name_localizations?.[getSupportedLocale(interaction.locale)] ?? slashCommand.name,
-      commandId: client.commands
-        .keys()
-        .find((commandId) => client.commands.get(commandId)?.slashCommand.name === slashCommand.name),
+      commandName: `${t('server.name', { lng: getSupportedLocale(interaction.locale) })} ${t('server.configure-server.name', { lng: getSupportedLocale(interaction.locale) })}`,
+      commandId: client.commandIds.get(t('server.name')),
     }),
   });
 }

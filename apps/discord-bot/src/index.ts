@@ -18,6 +18,7 @@ const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN);
 export const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages],
 });
+client.commandIds = new Map();
 client.commands = new Map();
 client.modals = new Map();
 

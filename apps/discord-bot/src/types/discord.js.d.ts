@@ -1,13 +1,16 @@
 import type { MaybePromise } from 'bun';
-import type { SlashCommandBuilder } from 'discord.js';
 
 declare module 'discord.js' {
   interface CommandDefinition {
-    slashCommand: SlashCommandBuilder;
-    modalIds?: Record<string, string>;
+    modalCustomId?: string;
     onChatInputCommand: (interaction: ChatInputCommandInteraction) => MaybePromise<void>;
     onAutocomplete?: (interaction: AutocompleteInteraction) => MaybePromise<void>;
     onModalSubmit?: (interaction: ModalSubmitInteraction) => MaybePromise<void>;
+  }
+
+  interface CommandGroupDefinition {
+    command: SharedSlashCommand;
+    map: Record<string, CommandDefinition>;
   }
 
   interface EventDefinition {
@@ -17,9 +20,13 @@ declare module 'discord.js' {
   }
 
   interface Client {
+    // This maps back each command name (top level only) to it's command ID
+    commandIds: Map<string, string>;
+    // This maps back each command name in the format `top-level-command-name:subcommand-group-name:subcommand-name`
+    // to it's definition
     commands: Map<string, CommandDefinition>;
-    // This maps back each custom ID to the respective command holding the
-    // `onModalSubmit` event for that specific custom ID
+    // This maps back each custom ID to the respective command name `onModalSubmit` event for that specific
+    // custom ID
     modals: Map<string, string>;
   }
 }
