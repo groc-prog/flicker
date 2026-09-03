@@ -1,8 +1,10 @@
 import { propagation, ROOT_CONTEXT, SpanStatusCode } from '@opentelemetry/api';
 import dayjs from 'dayjs';
 import {
+  AutocompleteInteraction,
   ChatInputCommandInteraction,
   Events,
+  InteractionContextType,
   MessageFlags,
   ModalSubmitInteraction,
   type Interaction,
@@ -10,6 +12,7 @@ import {
 import { t } from 'i18next';
 
 import db from '@flicker/database';
+import { groupsTable } from '@flicker/database/schemas/groups';
 import { usersTable } from '@flicker/database/schemas/users';
 import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
 import { withLogContext } from '@flicker/telemetry/logging';
@@ -33,7 +36,7 @@ export async function execute(interaction: Interaction): Promise<void> {
     ctx[TelemetryIdentifier.ModalId] = interaction.customId;
   }
 
-  if (interaction.isCommand()) {
+  if (interaction.isCommand() || interaction.isAutocomplete()) {
     ctx[TelemetryIdentifier.CommandName] = interaction.commandName;
     ctx[TelemetryIdentifier.CommandType] = interaction.commandType;
     ctx[TelemetryIdentifier.CommandId] = interaction.commandId;
@@ -47,6 +50,7 @@ export async function execute(interaction: Interaction): Promise<void> {
   return await withLogContext(ctx, async () => {
     if (interaction.isChatInputCommand()) await onChatInputCommand(interaction);
     if (interaction.isModalSubmit()) await onModalSubmit(interaction);
+    if (interaction.isAutocomplete()) await onAutocomplete(interaction);
   });
 }
 
@@ -90,8 +94,33 @@ async function onChatInputCommand(interaction: ChatInputCommandInteraction): Pro
       }
 
       if (now.isAfter(user.createdAt))
-        logger.info(`User with Discord ID ${interaction.user.id} already exists, nothing to update`);
+        logger.debug(`User with Discord ID ${interaction.user.id} already exists, nothing to update`);
       else logger.info(`Created new user ${user.id}`);
+
+      if (interaction.context === InteractionContextType.Guild) {
+        logger.info(`Ensuring group with Discord ID ${interaction.guildId} exists`);
+        const [group] = await db
+          .insert(groupsTable)
+          .values({
+            discordId: interaction.guildId!,
+          })
+          .onConflictDoUpdate({
+            target: groupsTable.discordId,
+            set: {
+              discordId: interaction.guildId!,
+            },
+          })
+          .returning({ id: groupsTable.id, createdAt: groupsTable.createdAt });
+
+        if (!group) {
+          logger.error('Query did not return a group ID');
+          throw new ServiceError(`No group with matching Discord ID ${interaction.guildId} created or found`);
+        }
+
+        if (now.isAfter(group.createdAt))
+          logger.debug(`Group with Discord ID ${interaction.guildId} already exists, nothing to update`);
+        else logger.info(`Created new group ${group.id}`);
+      }
 
       await command.onChatInputCommand(interaction);
     } catch (error) {
@@ -145,18 +174,18 @@ async function onModalSubmit(interaction: ModalSubmitInteraction): Promise<void>
           return;
         }
 
-        const commandDefinition = client.commands.get(commandId);
-        if (!commandDefinition) {
+        const command = client.commands.get(commandId);
+        if (!command) {
           logger.error(`No command found for mapped ID ${commandId}, skipping`);
           return;
         }
 
-        if (!commandDefinition.onModalSubmit) {
+        if (!command.onModalSubmit) {
           logger.error(`No modal function found for command ${commandId}, but registered via custom ID ${customId}`);
           process.exit(1);
         }
 
-        await commandDefinition.onModalSubmit(interaction);
+        await command.onModalSubmit(interaction);
       } catch (error) {
         if (error instanceof ServiceError) {
           logger.error(error, 'Caught service error, replying with generic error response');
@@ -187,4 +216,56 @@ async function onModalSubmit(interaction: ModalSubmitInteraction): Promise<void>
       }
     },
   );
+}
+
+async function onAutocomplete(interaction: AutocompleteInteraction): Promise<void> {
+  await eventTracer.startActiveSpan(`autocomplete /${interaction.commandName}`, async (span) => {
+    try {
+      const subcommandGroupName = interaction.options.getSubcommandGroup();
+      const subcommandName = interaction.options.getSubcommand();
+      const commandName = interaction.commandName;
+
+      let commandKey = commandName;
+      if (subcommandGroupName) commandKey = `${commandKey}:${subcommandGroupName}`;
+      if (subcommandName) commandKey = `${commandKey}:${subcommandName}`;
+
+      const command = client.commands.get(commandKey);
+      if (!command) {
+        logger.info(`Received autocomplete for unknown command with computed key ${commandKey}, skipping`);
+        return;
+      }
+
+      if (!command.onAutocomplete) {
+        logger.error(`No autocomplete function found for command ${interaction.commandId}`);
+        process.exit(1);
+      }
+
+      logger.debug(`Received autocomplete interaction ${interaction.id}`);
+      await command.onAutocomplete(interaction);
+    } catch (error) {
+      if (error instanceof ServiceError) {
+        logger.error(error, 'Caught service error, responding with empty response');
+        if (interaction.responded) {
+          logger.info('Interaction is already responded, skipping empty response');
+          return;
+        }
+
+        try {
+          await interaction.respond([]);
+        } catch (error) {
+          logger.error(error, 'Fallback response failed');
+        }
+        return;
+      }
+
+      logger.error(error, `Autocomplete for command ${interaction.id} in event ${type} failed to complete`);
+
+      span.recordException(error as Error);
+      span.setStatus({
+        code: SpanStatusCode.ERROR,
+      });
+    } finally {
+      span.end();
+    }
+  });
 }
