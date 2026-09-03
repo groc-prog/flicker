@@ -54,10 +54,10 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
   if (!member) {
     logger.info(`User ${interaction.user.id} not found as member of guild ${interaction.guildId}`);
     await interaction.reply({
+      flags: [MessageFlags.Ephemeral],
       content: t(`tone.${tone}.server-configuration.missing-permission`, {
         lng: getSupportedLocale(interaction.locale),
       }),
-      flags: [MessageFlags.Ephemeral],
     });
     return;
   }
@@ -65,10 +65,10 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
   if (!member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
     logger.info(`User ${interaction.user.id} is missing required permission to configure guild ${interaction.guildId}`);
     await interaction.reply({
+      flags: [MessageFlags.Ephemeral],
       content: t(`tone.${tone}.server-configuration.missing-permission`, {
         lng: getSupportedLocale(interaction.locale),
       }),
-      flags: [MessageFlags.Ephemeral],
     });
     return;
   }

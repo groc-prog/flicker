@@ -23,7 +23,7 @@ const NotificationValidator = z.object({
 });
 
 export async function onChatInputCommand(interaction: ChatInputCommandInteraction): Promise<void> {
-  logger.info(`Getting current configuration for group ${interaction.guildId}`);
+  logger.info(`Getting current configuration for group with Discord ID ${interaction.guildId}`);
   const [group] = await db
     .select({
       id: groupsTable.id,
@@ -69,6 +69,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     .select({ id: notificationsTable.id })
     .from(notificationsTable)
     .where(and(eq(notificationsTable.groupId, group.id), eq(notificationsTable.name, data.name)));
+
   if (duplicateNotification) {
     logger.info(
       `Notification with name ${data.name} (${duplicateNotification.id}) already exists for group ${group.id}`,

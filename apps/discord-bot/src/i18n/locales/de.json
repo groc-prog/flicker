@@ -63,13 +63,23 @@
         }
       }
     },
+    "notification-delete": {
+      "name": "delete",
+      "description": "Delete a server notification",
+      "options": {
+        "notification": {
+          "name": "notification",
+          "description": "The notification to soft delete"
+        }
+      }
+    },
     "notification-update": {
       "name": "update",
       "description": "Update a existing server notification"
     },
-    "notification-delete": {
-      "name": "delete",
-      "description": "Delete a server notification"
+    "notification-restore": {
+      "name": "restore",
+      "description": "Restore a previously deleted server notification"
     }
   },
   "common": {
@@ -86,6 +96,10 @@
         "validation-failed": "## ⚠️ Oops, something looks off\n\nSome of your notification settings couldn't be validated. Please check your inputs and try again.",
         "name-already-exists": "## ⚠️ That one is already working hard\n\nYou already have a notification named `<%= it.name %>`. Choose a new name and try again.",
         "created": "## 🎉 A new thing to watch out for!\n> This notification will be checked the next time the bot looks for matching movies.\n\nYour new notification `<%= it.name %>` has been created successfully. You will start to get notifications one a movie matching `<%= it.searchTerm %>` is found.\nNeed to make adjustments? You can update this notification anytime with </<%= it.updateCommandName %>:<%= it.commandId %>> or delete it with </<%= it.deleteCommandName %>:<%= it.commandId %>>."
+      },
+      "notification-delete": {
+        "not-found": "## 🔍️ Where could it be?!?!\n\nLooks like the notification you are looking for can not be found. Please check your inputs and try again.",
+        "soft-deleted": "## 💨 Aaaannndd it's gone\n\nThe notification `<%= it.name %>` has been successfully deleted (for the time being). If you feel the need to bring it back, you can do so with </<%= it.commandName %>:<%= it.commandId %>>."
       }
     },
     "lewd": {
@@ -98,6 +112,10 @@
         "validation-failed": "## ⚠️ Oops, something looks off\n\nSome of your notification settings couldn't be validated. Please check your inputs and try again.",
         "name-already-exists": "## ⚠️ That one is already working hard\n\nYou already have a notification named `<%= it.name %>`. Choose a new name and try again.",
         "created": "## 🎉 A new thing to watch out for!\n> This notification will be checked the next time the bot looks for matching movies.\n\nYour new notification `<%= it.name %>` has been created successfully. You will start to get notifications one a movie matching `<%= it.searchTerm %>` is found.\nNeed to make adjustments? You can update this notification anytime with </<%= it.updateCommandName %>:<%= it.commandId %>> or delete it with </<%= it.deleteCommandName %>:<%= it.commandId %>>."
+      },
+      "notification-delete": {
+        "not-found": "## 🔍️ Where could it be?!?!\n\nLooks like the notification you are looking for can not be found. Please check your inputs and try again.",
+        "soft-deleted": "## 💨 Aaaannndd it's gone\n\nThe notification `<%= it.name %>` has been successfully deleted (for the time being). If you feel the need to bring it back, you can do so with </<%= it.commandName %>:<%= it.commandId %>>."
       }
     },
     "super_hyped": {
@@ -110,6 +128,10 @@
         "validation-failed": "## ⚠️ Oops, something looks off\n\nSome of your notification settings couldn't be validated. Please check your inputs and try again.",
         "name-already-exists": "## ⚠️ That one is already working hard\n\nYou already have a notification named `<%= it.name %>`. Choose a new name and try again.",
         "created": "## 🎉 A new thing to watch out for!\n> This notification will be checked the next time the bot looks for matching movies.\n\nYour new notification `<%= it.name %>` has been created successfully. You will start to get notifications one a movie matching `<%= it.searchTerm %>` is found.\nNeed to make adjustments? You can update this notification anytime with </<%= it.updateCommandName %>:<%= it.commandId %>> or delete it with </<%= it.deleteCommandName %>:<%= it.commandId %>>."
+      },
+      "notification-delete": {
+        "not-found": "## 🔍️ Where could it be?!?!\n\nLooks like the notification you are looking for can not be found. Please check your inputs and try again.",
+        "soft-deleted": "## 💨 Aaaannndd it's gone\n\nThe notification `<%= it.name %>` has been successfully deleted (for the time being). If you feel the need to bring it back, you can do so with </<%= it.commandName %>:<%= it.commandId %>>."
       }
     }
   }

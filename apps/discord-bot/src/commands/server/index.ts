@@ -6,6 +6,7 @@ import { NotificationRecurrencePattern } from '@flicker/database/schemas/enums';
 import * as configureServerCommand from './configure-server';
 import * as notificationCreateCommand from './notification-create';
 import * as notificationDeleteCommand from './notification-delete';
+import * as notificationRestoreCommand from './notification-restore';
 import * as notificationUpdateCommand from './notification-update';
 
 export const command = new SlashCommandBuilder()
@@ -128,6 +129,31 @@ export const command = new SlashCommandBuilder()
       )
       .addSubcommand((subcommand) =>
         subcommand
+          .setName(t('server.notification-delete.name'))
+          .setNameLocalization(Locale.German, t('server.notification-delete.name', { lng: Locale.German }))
+          .setDescription(t('server.notification-delete.description'))
+          .setDescriptionLocalization(
+            Locale.German,
+            t('server.notification-delete.description', { lng: Locale.German }),
+          )
+          .addStringOption((option) =>
+            option
+              .setName(t('server.notification-delete.options.notification.name'))
+              .setNameLocalization(
+                Locale.German,
+                t('server.notification-delete.options.notification.name', { lng: Locale.German }),
+              )
+              .setDescription(t('server.notification-delete.options.notification.description'))
+              .setDescriptionLocalization(
+                Locale.German,
+                t('server.notification-delete.options.notification.description', { lng: Locale.German }),
+              )
+              .setRequired(true)
+              .setAutocomplete(true),
+          ),
+      )
+      .addSubcommand((subcommand) =>
+        subcommand
           .setName(t('server.notification-update.name'))
           .setNameLocalization(Locale.German, t('server.notification-update.name', { lng: Locale.German }))
           .setDescription(t('server.notification-update.description'))
@@ -138,12 +164,12 @@ export const command = new SlashCommandBuilder()
       )
       .addSubcommand((subcommand) =>
         subcommand
-          .setName(t('server.notification-delete.name'))
-          .setNameLocalization(Locale.German, t('server.notification-delete.name', { lng: Locale.German }))
-          .setDescription(t('server.notification-delete.description'))
+          .setName(t('server.notification-restore.name'))
+          .setNameLocalization(Locale.German, t('server.notification-restore.name', { lng: Locale.German }))
+          .setDescription(t('server.notification-restore.description'))
           .setDescriptionLocalization(
             Locale.German,
-            t('server.notification-delete.description', { lng: Locale.German }),
+            t('server.notification-restore.description', { lng: Locale.German }),
           ),
       ),
   );
@@ -156,4 +182,6 @@ export const map: CommandGroupDefinition['map'] = {
     notificationUpdateCommand,
   [`${t('server.name')}:${t('server.notification-command-group.name')}:${t('server.notification-delete.name')}`]:
     notificationDeleteCommand,
+  [`${t('server.name')}:${t('server.notification-command-group.name')}:${t('server.notification-restore.name')}`]:
+    notificationRestoreCommand,
 };
