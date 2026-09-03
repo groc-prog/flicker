@@ -15,6 +15,7 @@ on:
     paths:
       - "apps/**"
       - "packages/**"
+  workflow_dispatch:
 
 jobs:
   install-dependencies:
