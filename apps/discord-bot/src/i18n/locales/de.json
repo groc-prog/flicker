@@ -4,21 +4,16 @@
     "description": "Configure server notifications",
     "configure-server": {
       "name": "configure-server",
-      "description": "Configure timezones, languages and more for your server notifications",
+      "description": "Configure channels, languages and more for your server notifications",
       "modal": {
         "title": "Configure server notifications",
         "components": {
-          "timezone": {
-            "label": "Server timezone",
-            "description": "The IANA timezone used in any timestamps inside notifications",
-            "placeholder": "e.g. Europe/Vienna"
-          },
           "languages": {
             "label": "Notification languages",
             "description": "One or more languages in which the notifications will be posted",
             "options": {
-              "en": "English",
-              "de": "German"
+              "en": "🇺🇸 English",
+              "de": "🇩🇪 German"
             }
           },
           "tone": {
@@ -60,7 +55,7 @@
   "tone": {
     "normal": {
       "server-configuration": {
-        "validation-failed": "## ⚠️ Oops, something looks off\n\nSome of your settings couldn't be validated (most likely a invalid timezone). Please check your inputs and try again.",
+        "validation-failed": "## ⚠️ Oops, something looks off\n\nSome of your settings couldn't be validated. Please check your inputs and try again.",
         "created-or-updated": "## 🎉 Settings Saved!\n> Changes will take effect the next time the bot posts.\n\nNeed to make adjustments? You can update your settings anytime with </<%= it.commandName %>:<%= it.commandId %>>."
       }
     },

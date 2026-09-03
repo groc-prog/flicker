@@ -34,5 +34,3 @@ export const botToneEnum = pgEnum('bot_tone', BotTone);
 export const attributeCategoryEnum = pgEnum('attribute_category', AttributeCategory);
 
 export const movieLanguageEnum = pgEnum('movie_language', MovieLanguage);
-
-export const timezoneEnum = pgEnum('timezone', Intl.supportedValuesOf('timeZone') as [string, ...string[]]);

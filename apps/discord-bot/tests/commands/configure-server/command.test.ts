@@ -37,85 +37,72 @@ describe('configure-server command', () => {
         title: 'server.configure-server.modal.title',
       });
 
-      expect(args).toHaveProperty('components.0.data.label', 'server.configure-server.modal.components.timezone.label');
       expect(args).toHaveProperty(
-        'components.0.data.description',
-        'server.configure-server.modal.components.timezone.description',
-      );
-      expect(args).toHaveProperty('components.0.data.type', 18);
-      expect(args).toHaveProperty('components.0.data.component.data', {
-        custom_id: 'configure-server-timezone',
-        placeholder: 'server.configure-server.modal.components.timezone.placeholder',
-        style: 1,
-        type: 4,
-      });
-
-      expect(args).toHaveProperty(
-        'components.1.data.label',
+        'components.0.data.label',
         'server.configure-server.modal.components.languages.label',
       );
       expect(args).toHaveProperty(
-        'components.1.data.description',
+        'components.0.data.description',
         'server.configure-server.modal.components.languages.description',
       );
-      expect(args).toHaveProperty('components.1.data.type', 18);
-      expect(args).toHaveProperty('components.1.data.component.data', {
+      expect(args).toHaveProperty('components.0.data.type', 18);
+      expect(args).toHaveProperty('components.0.data.component.data', {
         custom_id: 'configure-server-languages',
         min_values: 1,
         max_values: 2,
         type: 3,
       });
-      expect(args).toHaveProperty('components.1.data.component.options.0.data', {
+      expect(args).toHaveProperty('components.0.data.component.options.0.data', {
         default: false,
         emoji: undefined,
         label: 'server.configure-server.modal.components.languages.options.de',
         value: 'de',
       });
-      expect(args).toHaveProperty('components.1.data.component.options.1.data', {
+      expect(args).toHaveProperty('components.0.data.component.options.1.data', {
         default: false,
         emoji: undefined,
         label: 'server.configure-server.modal.components.languages.options.en',
         value: 'en',
       });
 
-      expect(args).toHaveProperty('components.2.data.label', 'server.configure-server.modal.components.tone.label');
+      expect(args).toHaveProperty('components.1.data.label', 'server.configure-server.modal.components.tone.label');
       expect(args).toHaveProperty(
-        'components.2.data.description',
+        'components.1.data.description',
         'server.configure-server.modal.components.tone.description',
       );
-      expect(args).toHaveProperty('components.2.data.type', 18);
-      expect(args).toHaveProperty('components.2.data.component.data', {
+      expect(args).toHaveProperty('components.1.data.type', 18);
+      expect(args).toHaveProperty('components.1.data.component.data', {
         custom_id: 'configure-server-tone',
         min_values: 1,
         max_values: 1,
         type: 3,
       });
-      expect(args).toHaveProperty('components.2.data.component.options.0.data', {
+      expect(args).toHaveProperty('components.1.data.component.options.0.data', {
         default: false,
         emoji: undefined,
         label: 'server.configure-server.modal.components.tone.options.normal',
         value: 'normal',
       });
-      expect(args).toHaveProperty('components.2.data.component.options.1.data', {
+      expect(args).toHaveProperty('components.1.data.component.options.1.data', {
         default: false,
         emoji: undefined,
         label: 'server.configure-server.modal.components.tone.options.lewd',
         value: 'lewd',
       });
-      expect(args).toHaveProperty('components.2.data.component.options.2.data', {
+      expect(args).toHaveProperty('components.1.data.component.options.2.data', {
         default: false,
         emoji: undefined,
         label: 'server.configure-server.modal.components.tone.options.super_hyped',
         value: 'super_hyped',
       });
 
-      expect(args).toHaveProperty('components.3.data.label', 'server.configure-server.modal.components.channel.label');
+      expect(args).toHaveProperty('components.2.data.label', 'server.configure-server.modal.components.channel.label');
       expect(args).toHaveProperty(
-        'components.3.data.description',
+        'components.2.data.description',
         'server.configure-server.modal.components.channel.description',
       );
-      expect(args).toHaveProperty('components.3.data.type', 18);
-      expect(args).toHaveProperty('components.3.data.component.data', {
+      expect(args).toHaveProperty('components.2.data.type', 18);
+      expect(args).toHaveProperty('components.2.data.component.data', {
         custom_id: 'configure-server-channel',
         channel_types: [0],
         type: 8,
@@ -128,7 +115,6 @@ describe('configure-server command', () => {
         .values({
           discordId: '1420788362872230051',
           discordChannelId: '1469389781023588352',
-          timezone: 'Europe/Vienna',
           languages: [MovieLanguage.German],
           tone: BotTone.Lewd,
         })
@@ -153,86 +139,72 @@ describe('configure-server command', () => {
         title: 'server.configure-server.modal.title',
       });
 
-      expect(args).toHaveProperty('components.0.data.label', 'server.configure-server.modal.components.timezone.label');
       expect(args).toHaveProperty(
-        'components.0.data.description',
-        'server.configure-server.modal.components.timezone.description',
-      );
-      expect(args).toHaveProperty('components.0.data.type', 18);
-      expect(args).toHaveProperty('components.0.data.component.data', {
-        custom_id: 'configure-server-timezone',
-        placeholder: 'server.configure-server.modal.components.timezone.placeholder',
-        style: 1,
-        type: 4,
-        value: 'Europe/Vienna',
-      });
-
-      expect(args).toHaveProperty(
-        'components.1.data.label',
+        'components.0.data.label',
         'server.configure-server.modal.components.languages.label',
       );
       expect(args).toHaveProperty(
-        'components.1.data.description',
+        'components.0.data.description',
         'server.configure-server.modal.components.languages.description',
       );
-      expect(args).toHaveProperty('components.1.data.type', 18);
-      expect(args).toHaveProperty('components.1.data.component.data', {
+      expect(args).toHaveProperty('components.0.data.type', 18);
+      expect(args).toHaveProperty('components.0.data.component.data', {
         custom_id: 'configure-server-languages',
         min_values: 1,
         max_values: 2,
         type: 3,
       });
-      expect(args).toHaveProperty('components.1.data.component.options.0.data', {
+      expect(args).toHaveProperty('components.0.data.component.options.0.data', {
         default: true,
         emoji: undefined,
         label: 'server.configure-server.modal.components.languages.options.de',
         value: 'de',
       });
-      expect(args).toHaveProperty('components.1.data.component.options.1.data', {
+      expect(args).toHaveProperty('components.0.data.component.options.1.data', {
         default: false,
         emoji: undefined,
         label: 'server.configure-server.modal.components.languages.options.en',
         value: 'en',
       });
 
-      expect(args).toHaveProperty('components.2.data.label', 'server.configure-server.modal.components.tone.label');
+      expect(args).toHaveProperty('components.1.data.label', 'server.configure-server.modal.components.tone.label');
       expect(args).toHaveProperty(
-        'components.2.data.description',
+        'components.1.data.description',
         'server.configure-server.modal.components.tone.description',
       );
-      expect(args).toHaveProperty('components.2.data.type', 18);
-      expect(args).toHaveProperty('components.2.data.component.data', {
+      expect(args).toHaveProperty('components.1.data.type', 18);
+      expect(args).toHaveProperty('components.1.data.component.data', {
         custom_id: 'configure-server-tone',
         min_values: 1,
         max_values: 1,
         type: 3,
       });
-      expect(args).toHaveProperty('components.2.data.component.options.0.data', {
+      expect(args).toHaveProperty('components.1.data.component.options.0.data', {
         default: false,
         emoji: undefined,
         label: 'server.configure-server.modal.components.tone.options.normal',
         value: 'normal',
       });
-      expect(args).toHaveProperty('components.2.data.component.options.1.data', {
+      expect(args).toHaveProperty('components.1.data.component.options.1.data', {
         default: true,
         emoji: undefined,
         label: 'server.configure-server.modal.components.tone.options.lewd',
         value: 'lewd',
       });
-      expect(args).toHaveProperty('components.2.data.component.options.2.data', {
+      expect(args).toHaveProperty('components.1.data.component.options.2.data', {
         default: false,
         emoji: undefined,
         label: 'server.configure-server.modal.components.tone.options.super_hyped',
         value: 'super_hyped',
       });
 
-      expect(args).toHaveProperty('components.3.data.label', 'server.configure-server.modal.components.channel.label');
+      expect(args).toHaveProperty('components.2.data.label', 'server.configure-server.modal.components.channel.label');
       expect(args).toHaveProperty(
-        'components.3.data.description',
+        'components.2.data.description',
         'server.configure-server.modal.components.channel.description',
       );
-      expect(args).toHaveProperty('components.3.data.type', 18);
-      expect(args).toHaveProperty('components.3.data.component.data', {
+      expect(args).toHaveProperty('components.2.data.type', 18);
+      expect(args).toHaveProperty('components.2.data.component.data', {
         custom_id: 'configure-server-channel',
         channel_types: [0],
         type: 8,
@@ -248,33 +220,6 @@ describe('configure-server command', () => {
 
   describe('onModalSubmit', () => {
     describe('when validation fails', () => {
-      it('replies with a error if timezone validation fails', async () => {
-        const interaction = createMockedInteraction(ModalSubmitInteraction, {
-          guildId: '1420788362872230051',
-          locale: Locale.EnglishUS,
-          fields: {
-            getStringSelectValues(customId) {
-              if (customId === 'configure-server-tone') return [BotTone.Lewd] as readonly string[];
-              if (customId === 'configure-server-languages') return [MovieLanguage.German] as readonly string[];
-              return [];
-            },
-            getTextInputValue() {
-              return 'invalid-time-zone';
-            },
-            getSelectedChannels() {
-              return new Collection([['1469389781023588352', { id: '1469389781023588352' } as TextChannel]]);
-            },
-          },
-        });
-
-        await onModalSubmit(interaction);
-
-        expect(interaction.reply).toHaveBeenNthCalledWith(1, {
-          flags: [MessageFlags.Ephemeral],
-          content: `tone.${BotTone.Normal}.server-configuration.validation-failed`,
-        });
-      });
-
       it('replies with a error if languages validation fails', async () => {
         const interaction = createMockedInteraction(ModalSubmitInteraction, {
           guildId: '1420788362872230051',
@@ -361,7 +306,6 @@ describe('configure-server command', () => {
       it('creates a new group and saves the configuration if none exists yet', async () => {
         const guildId = '1420788362872230051';
         const discordChannelId = '1469389781023588352';
-        const timezone = 'Europe/Vienna';
         const languages = [MovieLanguage.German];
         const botTone = BotTone.Lewd;
 
@@ -373,9 +317,6 @@ describe('configure-server command', () => {
               if (customId === 'configure-server-tone') return [botTone];
               if (customId === 'configure-server-languages') return languages;
               return [];
-            },
-            getTextInputValue() {
-              return timezone;
             },
             getSelectedChannels() {
               return new Collection([[discordChannelId, { id: discordChannelId } as TextChannel]]);
@@ -395,7 +336,6 @@ describe('configure-server command', () => {
           id: expect.any(String),
           discordId: guildId,
           discordChannelId,
-          timezone,
           languages,
           tone: botTone,
           createdAt: expect.any(Date),
@@ -409,7 +349,6 @@ describe('configure-server command', () => {
           .values({
             discordId: '1420788362872230051',
             discordChannelId: '1469389781023588352',
-            timezone: 'America/New_York',
             languages: [MovieLanguage.English],
             tone: BotTone.SuperHyped,
           })
@@ -417,7 +356,6 @@ describe('configure-server command', () => {
 
         const guildId = '1420788362872230051';
         const discordChannelId = '1469389781023588352';
-        const timezone = 'Europe/Vienna';
         const languages = [MovieLanguage.German];
         const botTone = BotTone.Lewd;
 
@@ -429,9 +367,6 @@ describe('configure-server command', () => {
               if (customId === 'configure-server-tone') return [botTone];
               if (customId === 'configure-server-languages') return languages;
               return [];
-            },
-            getTextInputValue() {
-              return timezone;
             },
             getSelectedChannels() {
               return new Collection([[discordChannelId, { id: discordChannelId } as TextChannel]]);
@@ -451,7 +386,6 @@ describe('configure-server command', () => {
           id: existingGroup!.id,
           discordId: existingGroup!.discordId,
           discordChannelId,
-          timezone,
           languages,
           tone: botTone,
           createdAt: existingGroup!.updatedAt,

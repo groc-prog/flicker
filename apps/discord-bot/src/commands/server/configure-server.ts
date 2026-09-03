@@ -9,15 +9,13 @@ import {
   ModalSubmitInteraction,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
-  TextInputBuilder,
-  TextInputStyle,
 } from 'discord.js';
 import { eq, sql } from 'drizzle-orm';
 import { t } from 'i18next';
 import * as z from 'zod';
 
 import db from '@flicker/database';
-import { BotTone, botToneEnum, MovieLanguage, movieLanguageEnum, timezoneEnum } from '@flicker/database/schemas/enums';
+import { BotTone, botToneEnum, MovieLanguage, movieLanguageEnum } from '@flicker/database/schemas/enums';
 import { groupsTable } from '@flicker/database/schemas/groups';
 import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
 
@@ -28,7 +26,6 @@ import { serializeModalCustomId } from '../../telemetry/tracing';
 import { ServiceError } from '../../utils/error';
 
 const GroupConfigurationValidator = z.object({
-  timezone: z.enum(timezoneEnum.enumValues).optional(),
   languages: z.array(z.enum(MovieLanguage)).optional(),
   tone: z.enum(BotTone).optional(),
   channel: z.string(),
@@ -40,23 +37,12 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
   logger.info(`Getting current configuration for group ${interaction.guildId}`);
   const [group] = await db
     .select({
-      timezone: groupsTable.timezone,
       languages: groupsTable.languages,
       tone: groupsTable.tone,
       discordChannelId: groupsTable.discordChannelId,
     })
     .from(groupsTable)
     .where(eq(groupsTable.discordId, interaction.guildId!));
-
-  const timezoneTextInput = new TextInputBuilder()
-    .setCustomId('configure-server-timezone')
-    .setStyle(TextInputStyle.Short)
-    .setPlaceholder(
-      t('server.configure-server.modal.components.timezone.placeholder', {
-        lng: getSupportedLocale(interaction.locale),
-      }),
-    );
-  if (group?.timezone) timezoneTextInput.setValue(group.timezone);
 
   const languageStringSelect = new StringSelectMenuBuilder()
     .setCustomId('configure-server-languages')
@@ -103,16 +89,6 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     .setCustomId(serializeModalCustomId(modalCustomId))
     .setTitle(t('server.configure-server.modal.title', { lng: getSupportedLocale(interaction.locale) }))
     .addLabelComponents(
-      new LabelBuilder()
-        .setLabel(
-          t('server.configure-server.modal.components.timezone.label', { lng: getSupportedLocale(interaction.locale) }),
-        )
-        .setDescription(
-          t('server.configure-server.modal.components.timezone.description', {
-            lng: getSupportedLocale(interaction.locale),
-          }),
-        )
-        .setTextInputComponent(timezoneTextInput),
       new LabelBuilder()
         .setLabel(
           t('server.configure-server.modal.components.languages.label', {
@@ -162,7 +138,6 @@ export async function onModalSubmit(interaction: ModalSubmitInteraction): Promis
   const channel = interaction.fields.getSelectedChannels('configure-server-channel');
 
   const { success, error, data } = GroupConfigurationValidator.safeParse({
-    timezone: interaction.fields.getTextInputValue('configure-server-timezone') ?? undefined,
     languages: interaction.fields.getStringSelectValues('configure-server-languages') ?? undefined,
     tone: tone.length === 1 ? tone[0] : undefined,
     channel: channel?.first()?.id,
@@ -186,7 +161,6 @@ export async function onModalSubmit(interaction: ModalSubmitInteraction): Promis
   const [group] = await db
     .insert(groupsTable)
     .values({
-      timezone: data.timezone,
       languages: data.languages,
       tone: data.tone,
       discordChannelId: data.channel,
@@ -195,7 +169,6 @@ export async function onModalSubmit(interaction: ModalSubmitInteraction): Promis
     .onConflictDoUpdate({
       target: [groupsTable.discordId],
       set: {
-        timezone: sql.raw(`excluded.${groupsTable.timezone.name}`),
         languages: sql.raw(`excluded.${groupsTable.languages.name}`),
         tone: sql.raw(`excluded.${groupsTable.tone.name}`),
         discordChannelId: sql.raw(`excluded.${groupsTable.discordChannelId.name}`),
