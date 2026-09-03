@@ -7,6 +7,7 @@ import {
   MessageFlags,
   ModalBuilder,
   ModalSubmitInteraction,
+  PermissionsBitField,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
 } from 'discord.js';
@@ -43,6 +44,34 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     })
     .from(groupsTable)
     .where(eq(groupsTable.discordId, interaction.guildId!));
+  const tone = group?.tone ?? BotTone.Normal;
+
+  logger.info(`Ensuring user ${interaction.user.id} has required server permissions`);
+  const member = await interaction.guild?.members.fetch({
+    user: interaction.user.id,
+  });
+
+  if (!member) {
+    logger.info(`User ${interaction.user.id} not found as member of guild ${interaction.guildId}`);
+    await interaction.reply({
+      content: t(`tone.${tone}.server-configuration.missing-permission`, {
+        lng: getSupportedLocale(interaction.locale),
+      }),
+      flags: [MessageFlags.Ephemeral],
+    });
+    return;
+  }
+
+  if (!member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
+    logger.info(`User ${interaction.user.id} is missing required permission to configure guild ${interaction.guildId}`);
+    await interaction.reply({
+      content: t(`tone.${tone}.server-configuration.missing-permission`, {
+        lng: getSupportedLocale(interaction.locale),
+      }),
+      flags: [MessageFlags.Ephemeral],
+    });
+    return;
+  }
 
   const languageStringSelect = new StringSelectMenuBuilder()
     .setCustomId('configure-server-languages')
