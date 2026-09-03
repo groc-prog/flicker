@@ -44,7 +44,8 @@
     "test": {
       "env": [
         "POSTGRES_DATABASE_URL",
-        "BUNQUEUE_DATA_PATH"
+        "BUNQUEUE_DATA_PATH",
+        "LOG_LEVEL",
       ],
       "inputs": [
         "$TURBO_DEFAULT$",

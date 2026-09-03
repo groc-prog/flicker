@@ -23,17 +23,17 @@ const movieMetadataMock = {
   updatedAt: dayjs.utc('2026-08-15 13:03:41.662+00').toDate(),
 };
 
+const originalEnv = process.env.TMDB_API_TOKEN;
+
+beforeAll(() => {
+  process.env.TMDB_API_TOKEN = 'mocked-api-token';
+});
+
+afterAll(() => {
+  process.env.TMDB_API_TOKEN = originalEnv;
+});
+
 describe('get-tmdb-metadata worker', () => {
-  const originalEnv = process.env.TMDB_API_TOKEN;
-
-  beforeAll(() => {
-    process.env.TMDB_API_TOKEN = 'mocked-api-token';
-  });
-
-  afterAll(() => {
-    process.env.TMDB_API_TOKEN = originalEnv;
-  });
-
   describe('when the TMDB movie search is not successful', () => {
     it('falls back to the scraped movie if no original title is defined', async () => {
       const movieMock = {
