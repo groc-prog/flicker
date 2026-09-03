@@ -26,4 +26,5 @@ export enum TelemetryIdentifier {
   CommandType = 'discord.command.type',
   DiscordUserId = 'discord.user.id',
   DiscordGuildId = 'discord.guild.id',
+  ValidationErrors = 'validation.errors',
 }

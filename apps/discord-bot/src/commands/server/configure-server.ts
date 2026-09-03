@@ -19,6 +19,7 @@ import * as z from 'zod';
 import db from '@flicker/database';
 import { BotTone, botToneEnum, MovieLanguage, movieLanguageEnum, timezoneEnum } from '@flicker/database/schemas/enums';
 import { groupsTable } from '@flicker/database/schemas/groups';
+import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
 
 import { client } from '../..';
 import { getSupportedLocale, renderTemplate } from '../../i18n';
@@ -167,7 +168,13 @@ export async function onModalSubmit(interaction: ModalSubmitInteraction): Promis
     channel: channel?.first()?.id,
   });
   if (!success) {
-    logger.info(`Modal submission failed input validation for fields ${error.issues.keys()}`);
+    logger.info(
+      { [TelemetryIdentifier.ValidationErrors]: error.issues.values().toArray() },
+      `Modal submission failed input validation for fields ${error.issues
+        .values()
+        .map((value) => value.path[0])
+        .toArray()}`,
+    );
     await interaction.reply({
       flags: [MessageFlags.Ephemeral],
       content: renderTemplate(`tone.${botTone}.server-configuration.validation-failed`, interaction.locale),
