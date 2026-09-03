@@ -13,6 +13,7 @@ describe('scrape-cinema-data worker', () => {
     it('enqueues follow-up-jobs for each movie', async () => {
       const fetchSpy = spyOn(globalThis, 'fetch').mockResolvedValueOnce(getScrapedDataResponse(moviesMultipleMockData));
       const addBulkSpy = spyOn(getTmdbMetadataQueue, 'addBulk');
+
       const job = await queue.add(
         crypto.randomUUID(),
         {},
@@ -21,9 +22,12 @@ describe('scrape-cinema-data worker', () => {
         },
       );
       await waitForJobCompletion(worker, job.id);
+
       expect(fetchSpy).toHaveBeenNthCalledWith(1, 'https://gleisdorf.dieselkino.at');
+
       const dlqEntries = queue.getDlq();
       expect(dlqEntries).toBeEmpty();
+
       const scrapedMovies = await db.select().from(scrapedMoviesTable);
       expect(scrapedMovies).toHaveLength(2);
       expect(addBulkSpy).toHaveBeenNthCalledWith(1, [

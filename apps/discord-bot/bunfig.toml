@@ -1,3 +1,8 @@
 [test]
 preload = ["./tests/setup.ts"]
-coveragePathIgnorePatterns = ["tests/**", "../../packages/test-utils/**", "../../packages/database/**"]
+coveragePathIgnorePatterns = [
+  "tests/**",
+  "../../packages/test-utils/**",
+  "../../packages/database/**",
+  "../../packages/telemetry/**",
+]

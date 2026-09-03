@@ -9,16 +9,6 @@ import { scrapedMoviesTable } from '@flicker/database/schemas/scraped-movies';
 import { queue, worker } from '../../../src/queues/get-tmdb-metadata';
 import { waitForJobCompletion, waitForJobFailure } from '../../fixtures/queue';
 
-const originalEnv = process.env.TMDB_API_TOKEN;
-
-beforeAll(() => {
-  process.env.TMDB_API_TOKEN = 'mocked-api-token';
-});
-
-afterAll(() => {
-  process.env.TMDB_API_TOKEN = originalEnv;
-});
-
 const movieMetadataMock = {
   id: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
   scrapedMovieId: 'f3e754ef-5e4c-4b0a-9f64-014e9a96af45',
@@ -34,6 +24,16 @@ const movieMetadataMock = {
 };
 
 describe('get-tmdb-metadata worker', () => {
+  const originalEnv = process.env.TMDB_API_TOKEN;
+
+  beforeAll(() => {
+    process.env.TMDB_API_TOKEN = 'mocked-api-token';
+  });
+
+  afterAll(() => {
+    process.env.TMDB_API_TOKEN = originalEnv;
+  });
+
   describe('when the TMDB movie search is not successful', () => {
     it('falls back to the scraped movie if no original title is defined', async () => {
       const movieMock = {
