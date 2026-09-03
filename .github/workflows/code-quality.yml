@@ -139,14 +139,19 @@ jobs:
 
   test:
     needs: install-dependencies
-    name: Test
+    name: Test (${{ matrix.app }})
+    strategy:
+      matrix:
+        app:
+          - discord-bot
+          - workers
     runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:latest
         env:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: test
+          POSTGRES_DB: ${{ matrix.app }}-tests
         ports:
           - 5432:5432
         options: >-
@@ -180,17 +185,8 @@ jobs:
             ${{ runner.os }}-turbo-${{ github.job }}-${{ github.ref_name }}-
             ${{ runner.os }}-turbo-${{ github.job }}-
 
-      - name: Set Turbo Base Ref
-        id: turbo-base
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "BASE=origin/${{ github.base_ref }}" >> $GITHUB_OUTPUT
-          else
-            echo "BASE=HEAD~1" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Run tests on affected packages
+      - name: Run tests
         env:
           LOG_LEVEL: fatal
-          POSTGRES_DATABASE_URL: postgresql://postgres:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/test
-        run: bunx turbo run test --filter="...[${{ steps.turbo-base.outputs.BASE }}]"
+          POSTGRES_DATABASE_URL: postgresql://postgres:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/${{ matrix.app }}-tests
+        run: bunx turbo run test --filter="@flicker/${{ matrix.app }}"
