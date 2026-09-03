@@ -3,7 +3,7 @@ import { boolean, check, index, integer, snakeCase, timestamp, unique, uuid, var
 
 import { createdAtTimestamp, updatedAtTimestamp } from '../utils/timestamp';
 import { uuidPk } from '../utils/uuid';
-import { BotTone, botToneEnum, movieLanguageEnum, notificationRecurrencePatternEnum } from './enums';
+import { movieLanguageEnum, notificationRecurrencePatternEnum } from './enums';
 import { groupsTable } from './groups';
 import { usersTable } from './users';
 
@@ -22,8 +22,6 @@ export const notificationsTable = snakeCase.table(
      * For groups this will be ignored as groups can define multiple languages.
      */
     language: movieLanguageEnum(),
-    /** The tone/vibe the notification text will have. */
-    tone: botToneEnum().notNull().default(BotTone.Normal),
     /** Whether the notification will be triggered once or multiple times. */
     isRecurring: boolean().notNull().default(false),
     /**

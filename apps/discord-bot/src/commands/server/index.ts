@@ -1,6 +1,8 @@
 import { InteractionContextType, Locale, SlashCommandBuilder, type CommandGroupDefinition } from 'discord.js';
 import { t } from 'i18next';
 
+import { NotificationRecurrencePattern } from '@flicker/database/schemas/enums';
+
 import * as configureServerCommand from './configure-server';
 import * as notificationCreateCommand from './notification-create';
 import * as notificationDeleteCommand from './notification-delete';
@@ -36,6 +38,92 @@ export const command = new SlashCommandBuilder()
           .setDescriptionLocalization(
             Locale.German,
             t('server.notification-create.description', { lng: Locale.German }),
+          )
+          .addStringOption((option) =>
+            option
+              .setName(t('server.notification-create.options.name.name'))
+              .setNameLocalization(
+                Locale.German,
+                t('server.notification-create.options.name.name', { lng: Locale.German }),
+              )
+              .setDescription(t('server.notification-create.options.name.description'))
+              .setDescriptionLocalization(
+                Locale.German,
+                t('server.notification-create.options.name.description', { lng: Locale.German }),
+              )
+              .setRequired(true)
+              .setMaxLength(255),
+          )
+          .addStringOption((option) =>
+            option
+              .setName(t('server.notification-create.options.search-term.name'))
+              .setNameLocalization(
+                Locale.German,
+                t('server.notification-create.options.search-term.name', { lng: Locale.German }),
+              )
+              .setDescription(t('server.notification-create.options.search-term.description'))
+              .setDescriptionLocalization(
+                Locale.German,
+                t('server.notification-create.options.search-term.description', { lng: Locale.German }),
+              )
+              .setRequired(true)
+              .setMaxLength(255),
+          )
+          .addStringOption((option) =>
+            option
+              .setName(t('server.notification-create.options.recurrence-pattern.name'))
+              .setNameLocalization(
+                Locale.German,
+                t('server.notification-create.options.recurrence-pattern.name', { lng: Locale.German }),
+              )
+              .setDescription(t('server.notification-create.options.recurrence-pattern.description'))
+              .setDescriptionLocalization(
+                Locale.German,
+                t('server.notification-create.options.recurrence-pattern.description', { lng: Locale.German }),
+              )
+              .setChoices(
+                {
+                  name: t('server.notification-create.options.recurrence-pattern.options.hourly'),
+                  name_localizations: {
+                    [Locale.German]: t('server.notification-create.options.recurrence-pattern.options.hourly', {
+                      lng: Locale.German,
+                    }),
+                  },
+                  value: NotificationRecurrencePattern.Hourly,
+                },
+                {
+                  name: t('server.notification-create.options.recurrence-pattern.options.daily'),
+                  name_localizations: {
+                    [Locale.German]: t('server.notification-create.options.recurrence-pattern.options.daily', {
+                      lng: Locale.German,
+                    }),
+                  },
+                  value: NotificationRecurrencePattern.Daily,
+                },
+                {
+                  name: t('server.notification-create.options.recurrence-pattern.options.weekly'),
+                  name_localizations: {
+                    [Locale.German]: t('server.notification-create.options.recurrence-pattern.options.weekly', {
+                      lng: Locale.German,
+                    }),
+                  },
+                  value: NotificationRecurrencePattern.Weekly,
+                },
+              ),
+          )
+          .addIntegerOption((option) =>
+            option
+              .setName(t('server.notification-create.options.recurrence-interval.name'))
+              .setNameLocalization(
+                Locale.German,
+                t('server.notification-create.options.recurrence-interval.name', { lng: Locale.German }),
+              )
+              .setDescription(t('server.notification-create.options.recurrence-interval.description'))
+              .setDescriptionLocalization(
+                Locale.German,
+                t('server.notification-create.options.recurrence-interval.description', { lng: Locale.German }),
+              )
+              .setMinValue(1),
           ),
       )
       .addSubcommand((subcommand) =>

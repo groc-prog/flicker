@@ -38,7 +38,30 @@
     },
     "notification-create": {
       "name": "create",
-      "description": "Create a new server notification"
+      "description": "Create a new server notification",
+      "options": {
+        "name": {
+          "name": "name",
+          "description": "A unique name for this notification"
+        },
+        "search-term": {
+          "name": "search-term",
+          "description": "A fuzzy-matched movie search term"
+        },
+        "recurrence-pattern": {
+          "name": "recurrence-pattern",
+          "description": "The pattern after which the notification can be triggered again",
+          "options": {
+            "hourly": "Hourly",
+            "daily": "Daily",
+            "weekly": "Weekly"
+          }
+        },
+        "recurrence-interval": {
+          "name": "recurrence-interval",
+          "description": "The interval for the recurrence pattern"
+        }
+      }
     },
     "notification-update": {
       "name": "update",
@@ -56,19 +79,37 @@
     "normal": {
       "server-configuration": {
         "validation-failed": "## ⚠️ Oops, something looks off\n\nSome of your settings couldn't be validated. Please check your inputs and try again.",
-        "created-or-updated": "## 🎉 Settings Saved!\n> Changes will take effect the next time the bot posts.\n\nNeed to make adjustments? You can update your settings anytime with </<%= it.commandName %>:<%= it.commandId %>>."
+        "created-or-updated": "## 🎉 Settings Saved!\n> Changes will take effect the next time the bot posts.\n\nNeed to make adjustments? You can update your settings anytime with </<%= it.commandName %>:<%= it.commandId %>>.",
+        "missing-permission": "## 🛡️ Very close, but no\n\nLooks like you don't have the required permissions to do whatever it is you want to do. Too bad."
+      },
+      "notification-create": {
+        "validation-failed": "## ⚠️ Oops, something looks off\n\nSome of your notification settings couldn't be validated. Please check your inputs and try again.",
+        "name-already-exists": "## ⚠️ That one is already working hard\n\nYou already have a notification named `<%= it.name %>`. Choose a new name and try again.",
+        "created": "## 🎉 A new thing to watch out for!\n> This notification will be checked the next time the bot looks for matching movies.\n\nYour new notification `<%= it.name %>` has been created successfully. You will start to get notifications one a movie matching `<%= it.searchTerm %>` is found.\nNeed to make adjustments? You can update this notification anytime with </<%= it.updateCommandName %>:<%= it.commandId %>> or delete it with </<%= it.deleteCommandName %>:<%= it.commandId %>>."
       }
     },
     "lewd": {
       "server-configuration": {
         "validation-failed": "## ⚠️ Ah-ah~ You can't just shove that in there!\n\nThat value is way too big and wrong to fit inside me properly... tease me with something that actually fits, okay? ~",
-        "created-or-updated": "## 💋 Mmm... Ahh! Touched, Modified & Dripping with New Settings~\n> I'm already throbbing with your new configuration... just wait until you see what I do with it next time I post...\n\nDid that feel good? You can grip my settings and mess with them as hard as you want using </<%= it.commandName %>:<%= it.commandId %>>~"
+        "created-or-updated": "## 💋 Mmm... Ahh! Touched, Modified & Dripping with New Settings~\n> I'm already throbbing with your new configuration... just wait until you see what I do with it next time I post...\n\nDid that feel good? You can grip my settings and mess with them as hard as you want using </<%= it.commandName %>:<%= it.commandId %>>~",
+        "missing-permission": "## 🛡️ Very close, but no\n\nLooks like you don't have the required permissions to do whatever it is you want to do. Too bad."
+      },
+      "notification-create": {
+        "validation-failed": "## ⚠️ Oops, something looks off\n\nSome of your notification settings couldn't be validated. Please check your inputs and try again.",
+        "name-already-exists": "## ⚠️ That one is already working hard\n\nYou already have a notification named `<%= it.name %>`. Choose a new name and try again.",
+        "created": "## 🎉 A new thing to watch out for!\n> This notification will be checked the next time the bot looks for matching movies.\n\nYour new notification `<%= it.name %>` has been created successfully. You will start to get notifications one a movie matching `<%= it.searchTerm %>` is found.\nNeed to make adjustments? You can update this notification anytime with </<%= it.updateCommandName %>:<%= it.commandId %>> or delete it with </<%= it.deleteCommandName %>:<%= it.commandId %>>."
       }
     },
     "super_hyped": {
       "server-configuration": {
         "validation-failed": "## 💥 WHOOPSIE! SOMETHING BROKE!\n\nThose inputs aren't gonna cut it, chief! Double-check everything and let's try that AGAIN!! 🚀",
-        "created-or-updated": "## 🎉 BOOM! SETTINGS LOCKED IN! 🚀\n> EVERYTHING IS READY TO GO! Changes hit the exact moment I post next!\n\nWANNA DO IT AGAIN?! Edit your config anytime with </<%= it.commandName %>:<%= it.commandId %>>! LET'S GOOOOO!"
+        "created-or-updated": "## 🎉 BOOM! SETTINGS LOCKED IN! 🚀\n> EVERYTHING IS READY TO GO! Changes hit the exact moment I post next!\n\nWANNA DO IT AGAIN?! Edit your config anytime with </<%= it.commandName %>:<%= it.commandId %>>! LET'S GOOOOO!",
+        "missing-permission": "## 🛡️ Very close, but no\n\nLooks like you don't have the required permissions to do whatever it is you want to do. Too bad."
+      },
+      "notification-create": {
+        "validation-failed": "## ⚠️ Oops, something looks off\n\nSome of your notification settings couldn't be validated. Please check your inputs and try again.",
+        "name-already-exists": "## ⚠️ That one is already working hard\n\nYou already have a notification named `<%= it.name %>`. Choose a new name and try again.",
+        "created": "## 🎉 A new thing to watch out for!\n> This notification will be checked the next time the bot looks for matching movies.\n\nYour new notification `<%= it.name %>` has been created successfully. You will start to get notifications one a movie matching `<%= it.searchTerm %>` is found.\nNeed to make adjustments? You can update this notification anytime with </<%= it.updateCommandName %>:<%= it.commandId %>> or delete it with </<%= it.deleteCommandName %>:<%= it.commandId %>>."
       }
     }
   }
