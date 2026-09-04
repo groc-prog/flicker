@@ -125,7 +125,7 @@ async function onChatInputCommand(interaction: ChatInputCommandInteraction): Pro
       await command.onChatInputCommand(interaction);
     } catch (error) {
       if (error instanceof ServiceError) {
-        logger.error(error, 'Caught service error, replying with generic error response');
+        logger.info('Caught service error, replying with generic error response');
         if (interaction.replied) {
           logger.info('Interaction is already replied, skipping error response');
           return;
@@ -188,7 +188,7 @@ async function onModalSubmit(interaction: ModalSubmitInteraction): Promise<void>
         await command.onModalSubmit(interaction);
       } catch (error) {
         if (error instanceof ServiceError) {
-          logger.error(error, 'Caught service error, replying with generic error response');
+          logger.info('Caught service error, replying with generic error response');
           if (interaction.replied) {
             logger.info('Interaction is already replied, skipping error response');
             return;
@@ -244,7 +244,7 @@ async function onAutocomplete(interaction: AutocompleteInteraction): Promise<voi
       await command.onAutocomplete(interaction);
     } catch (error) {
       if (error instanceof ServiceError) {
-        logger.error(error, 'Caught service error, responding with empty response');
+        logger.info('Caught service error, responding with empty response');
         if (interaction.responded) {
           logger.info('Interaction is already responded, skipping empty response');
           return;

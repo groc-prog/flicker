@@ -1,5 +1,5 @@
 import { AutocompleteInteraction, MessageFlags, type ChatInputCommandInteraction } from 'discord.js';
-import { and, asc, desc, eq, sql, type InferInsertModel } from 'drizzle-orm';
+import { and, asc, desc, eq, not, sql, type InferInsertModel } from 'drizzle-orm';
 import { t } from 'i18next';
 import z from 'zod';
 
@@ -81,7 +81,13 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     const [duplicateNotification] = await db
       .select({ id: notificationsTable.id })
       .from(notificationsTable)
-      .where(and(eq(notificationsTable.groupId, group.id), eq(notificationsTable.name, data.name)));
+      .where(
+        and(
+          eq(notificationsTable.groupId, group.id),
+          eq(notificationsTable.name, data.name),
+          not(eq(notificationsTable.id, notificationId)),
+        ),
+      );
 
     if (duplicateNotification) {
       logger.info(
@@ -105,15 +111,25 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     fieldsToUpdate.recurrencePattern = data.recurrencePattern;
   if (data.recurrenceInterval !== 0) fieldsToUpdate.recurrenceInterval = data.recurrenceInterval;
 
-  const [notification] = await db.update(notificationsTable).set(fieldsToUpdate).returning({
-    name: notificationsTable.name,
-    key: notificationsTable.key,
-    recurrencePattern: notificationsTable.recurrencePattern,
-    recurrenceInterval: notificationsTable.recurrenceInterval,
-  });
+  if (fieldsToUpdate.recurrencePattern || fieldsToUpdate.recurrenceInterval) fieldsToUpdate.isRecurring = true;
+
+  const [notification] = await db
+    .update(notificationsTable)
+    .set(fieldsToUpdate)
+    .where(eq(notificationsTable.id, notificationId))
+    .returning({
+      name: notificationsTable.name,
+      key: notificationsTable.key,
+      recurrencePattern: notificationsTable.recurrencePattern,
+      recurrenceInterval: notificationsTable.recurrenceInterval,
+    });
   if (!notification) {
-    logger.error('Query did not return a notification ID');
-    throw new ServiceError(`No notification was update`);
+    logger.info(`Notification with ID ${notificationId} not found`);
+    await interaction.reply({
+      flags: [MessageFlags.Ephemeral],
+      content: renderTemplate(`tone.${botTone}.notification.not-found`, interaction.locale),
+    });
+    return;
   }
 
   logger.info(`Successfully updated notification ${notificationId} for group ${group.id}`);
