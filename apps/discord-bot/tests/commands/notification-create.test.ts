@@ -30,7 +30,7 @@ describe('notification-create command', () => {
     });
 
     describe('when input validation fails', () => {
-      it('replies with a validation error if the name is invalid', async () => {
+      it('replies with a validation error if the name is empty', async () => {
         await db
           .insert(groupsTable)
           .values({
@@ -63,7 +63,41 @@ describe('notification-create command', () => {
         });
       });
 
-      it('replies with a validation error if the key is invalid', async () => {
+      it('replies with a validation error if the name exceeds 255 chars', async () => {
+        await db
+          .insert(groupsTable)
+          .values({
+            discordId: '1420788362872230051',
+          })
+          .returning();
+
+        const interaction = createMockedInteraction(ChatInputCommandInteraction, {
+          guildId: '1420788362872230051',
+          user: {
+            id: '1420788362872230052',
+          },
+          locale: Locale.EnglishUS,
+          options: {
+            getString: (name: string) => {
+              if (name === 'server.notification-create.options.name.name')
+                return Array.from({ length: 300 }, () => 'a');
+              if (name === 'server.notification-create.options.recurrence-pattern.name')
+                return NotificationRecurrencePattern.Hourly;
+              return 'str-value';
+            },
+            getInteger: () => 2,
+          },
+        });
+
+        await onChatInputCommand(interaction);
+
+        expect(interaction.reply).toHaveBeenNthCalledWith(1, {
+          flags: [MessageFlags.Ephemeral],
+          content: `tone.${BotTone.Normal}.notification.validation-failed`,
+        });
+      });
+
+      it('replies with a validation error if the key is empty', async () => {
         await db
           .insert(groupsTable)
           .values({
@@ -80,6 +114,40 @@ describe('notification-create command', () => {
           options: {
             getString: (name: string) => {
               if (name === 'server.notification-create.options.search-term.name') return '';
+              if (name === 'server.notification-create.options.recurrence-pattern.name')
+                return NotificationRecurrencePattern.Hourly;
+              return 'str-value';
+            },
+            getInteger: () => 2,
+          },
+        });
+
+        await onChatInputCommand(interaction);
+
+        expect(interaction.reply).toHaveBeenNthCalledWith(1, {
+          flags: [MessageFlags.Ephemeral],
+          content: `tone.${BotTone.Normal}.notification.validation-failed`,
+        });
+      });
+
+      it('replies with a validation error if the key exceeds 255 chars', async () => {
+        await db
+          .insert(groupsTable)
+          .values({
+            discordId: '1420788362872230051',
+          })
+          .returning();
+
+        const interaction = createMockedInteraction(ChatInputCommandInteraction, {
+          guildId: '1420788362872230051',
+          user: {
+            id: '1420788362872230052',
+          },
+          locale: Locale.EnglishUS,
+          options: {
+            getString: (name: string) => {
+              if (name === 'server.notification-create.options.search-term.name')
+                return Array.from({ length: 300 }, () => 'a');
               if (name === 'server.notification-create.options.recurrence-pattern.name')
                 return NotificationRecurrencePattern.Hourly;
               return 'str-value';
