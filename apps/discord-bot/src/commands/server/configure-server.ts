@@ -82,7 +82,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     languageStringSelect.addOptions(
       new StringSelectMenuOptionBuilder()
         .setLabel(
-          t(`server.configure-server.modal.components.languages.options.${language}`, {
+          t(`enum.language.${language}`, {
             lng: getSupportedLocale(interaction.locale),
           }),
         )
@@ -99,7 +99,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     toneStringSelect.addOptions(
       new StringSelectMenuOptionBuilder()
         .setLabel(
-          t(`server.configure-server.modal.components.tone.options.${tone}`, {
+          t(`enum.tone.${tone}`, {
             lng: getSupportedLocale(interaction.locale),
           }),
         )

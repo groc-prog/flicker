@@ -59,7 +59,7 @@ describe('notification-create command', () => {
 
         expect(interaction.reply).toHaveBeenNthCalledWith(1, {
           flags: [MessageFlags.Ephemeral],
-          content: `tone.${BotTone.Normal}.notification-create.validation-failed`,
+          content: `tone.${BotTone.Normal}.notification.validation-failed`,
         });
       });
 
@@ -92,7 +92,7 @@ describe('notification-create command', () => {
 
         expect(interaction.reply).toHaveBeenNthCalledWith(1, {
           flags: [MessageFlags.Ephemeral],
-          content: `tone.${BotTone.Normal}.notification-create.validation-failed`,
+          content: `tone.${BotTone.Normal}.notification.validation-failed`,
         });
       });
 
@@ -124,7 +124,7 @@ describe('notification-create command', () => {
 
         expect(interaction.reply).toHaveBeenNthCalledWith(1, {
           flags: [MessageFlags.Ephemeral],
-          content: `tone.${BotTone.Normal}.notification-create.validation-failed`,
+          content: `tone.${BotTone.Normal}.notification.validation-failed`,
         });
       });
 
@@ -174,7 +174,7 @@ describe('notification-create command', () => {
 
         expect(interaction.reply).toHaveBeenNthCalledWith(1, {
           flags: [MessageFlags.Ephemeral],
-          content: `tone.${BotTone.Normal}.notification-create.name-already-exists`,
+          content: `tone.${BotTone.Normal}.notification.name-already-exists`,
         });
       });
     });

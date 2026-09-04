@@ -27,12 +27,13 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
 
   const notificationId = interaction.options.getString(t('server.notification-delete.options.notification.name'), true);
 
+  logger.debug('Validating notification ID');
   const { success } = z.uuid().safeParse(notificationId);
   if (!success) {
     logger.info(`Provided notification ID ${notificationId} is not a valid ID`);
     await interaction.reply({
       flags: [MessageFlags.Ephemeral],
-      content: renderTemplate(`tone.${botTone}.notification-delete.not-found`, interaction.locale),
+      content: renderTemplate(`tone.${botTone}.notification.not-found`, interaction.locale),
     });
     return;
   }
@@ -47,7 +48,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     logger.info(`Provided notification ID ${notificationId} not found`);
     await interaction.reply({
       flags: [MessageFlags.Ephemeral],
-      content: renderTemplate(`tone.${botTone}.notification-delete.not-found`, interaction.locale),
+      content: renderTemplate(`tone.${botTone}.notification.not-found`, interaction.locale),
     });
     return;
   }
@@ -65,7 +66,6 @@ export async function onAutocomplete(interaction: AutocompleteInteraction): Prom
   const search = interaction.options.getString(t('server.notification-delete.options.notification.name'));
 
   logger.debug(`Fuzzy searching notifications for group ${interaction.guildId} matching search term ${search}`);
-
   const query = db
     .select({ name: notificationsTable.name, value: notificationsTable.id })
     .from(notificationsTable)

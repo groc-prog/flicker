@@ -10,20 +10,11 @@
         "components": {
           "languages": {
             "label": "Notification languages",
-            "description": "One or more languages in which the notifications will be posted",
-            "options": {
-              "en": "🇺🇸 English",
-              "de": "🇩🇪 German"
-            }
+            "description": "One or more languages in which the notifications will be posted"
           },
           "tone": {
             "label": "Bot tone",
-            "description": "The tone the bot will use when sending messages in this server",
-            "options": {
-              "normal": "Normal",
-              "lewd": "Lewd 😈",
-              "super_hyped": "SUPER HYPED 🚀"
-            }
+            "description": "The tone the bot will use when sending messages in this server"
           },
           "channel": {
             "label": "Notification channel",
@@ -50,12 +41,7 @@
         },
         "recurrence-pattern": {
           "name": "recurrence-pattern",
-          "description": "The pattern after which the notification can be triggered again",
-          "options": {
-            "hourly": "Hourly",
-            "daily": "Daily",
-            "weekly": "Weekly"
-          }
+          "description": "The pattern after which the notification can be triggered again"
         },
         "recurrence-interval": {
           "name": "recurrence-interval",
@@ -75,7 +61,46 @@
     },
     "notification-update": {
       "name": "update",
-      "description": "Update a existing server notification"
+      "description": "Update a existing server notification",
+      "options": {
+        "notification": {
+          "name": "notification",
+          "description": "The notification to update"
+        },
+        "name": {
+          "name": "name",
+          "description": "A unique name for this notification"
+        },
+        "search-term": {
+          "name": "search-term",
+          "description": "A fuzzy-matched movie search term"
+        },
+        "recurrence-pattern": {
+          "name": "recurrence-pattern",
+          "description": "The pattern after which the notification can be triggered again"
+        },
+        "recurrence-interval": {
+          "name": "recurrence-interval",
+          "description": "The interval for the recurrence pattern. 0 means no change"
+        }
+      }
+    }
+  },
+  "enum": {
+    "language": {
+      "en": "🇺🇸 English",
+      "de": "🇩🇪 German"
+    },
+    "tone": {
+      "normal": "Normal",
+      "lewd": "Lewd 😈",
+      "super_hyped": "SUPER HYPED 🔥"
+    },
+    "recurrence-pattern": {
+      "unchanged": "Unchanged",
+      "hourly": "Hourly",
+      "daily": "Daily",
+      "weekly": "Weekly"
     }
   },
   "common": {
@@ -89,13 +114,18 @@
         "missing-permission": "## 🛡️ Very close, but no\n\nLooks like you don't have the required permissions to do whatever it is you want to do. Too bad."
       },
       "notification-create": {
-        "validation-failed": "## ⚠️ Oops, something looks off\n\nSome of your notification settings couldn't be validated. Please check your inputs and try again.",
-        "name-already-exists": "## ⚠️ That one is already working hard\n\nYou already have a notification named `<%= it.name %>`. Choose a new name and try again.",
         "created": "## 🎉 A new thing to watch out for!\n> This notification will be checked the next time the bot looks for matching movies.\n\nYour new notification `<%= it.name %>` has been created successfully. You will start to get notifications one a movie matching `<%= it.searchTerm %>` is found.\nNeed to make adjustments? You can update this notification anytime with </<%= it.updateCommandName %>:<%= it.commandId %>> or delete it with </<%= it.deleteCommandName %>:<%= it.commandId %>>."
       },
       "notification-delete": {
-        "not-found": "## 🔍️ Where could it be?!?!\n\nLooks like the notification you are looking for can not be found. Please check your inputs and try again.",
-        "deleted": "## 💨 Aaaannndd it's gone\n\nThe notification `<%= it.name %>` has been successfully deleted (for the time being). If you feel the need to bring it back, you can do so with </<%= it.commandName %>:<%= it.commandId %>>."
+        "deleted": "## 💨 Aaaannndd it's gone\n\nThe notification `<%= it.name %>` has been successfully deleted."
+      },
+      "notification-update": {
+        "updated": "## 🎉 All set and done!\n> This notification will be checked the next time the bot looks for matching movies.\n\nYour notification `<%= it.name %>` has been successfully updated to your new settings:\n- **Search term**: `<%= it.key %>`\n- **Recurrence pattern**: `<%= it.recurrencePattern %>`\n- **Recurrence interval**: `<%= it.recurrenceInterval %>`"
+      },
+      "notification": {
+        "name-already-exists": "## ⚠️ That one is already working hard\n\nYou already have a notification named `<%= it.name %>`. Choose a new name and try again.",
+        "validation-failed": "## ⚠️ Oops, something looks off\n\nSome of your notification settings couldn't be validated. Please check your inputs and try again.",
+        "not-found": "## 🔍️ Where could it be?!?!\n\nLooks like the notification you are looking for can not be found. Please check your inputs and try again."
       }
     },
     "lewd": {
@@ -105,13 +135,18 @@
         "missing-permission": "## 🛡️ Very close, but no\n\nLooks like you don't have the required permissions to do whatever it is you want to do. Too bad."
       },
       "notification-create": {
-        "validation-failed": "## ⚠️ Oops, something looks off\n\nSome of your notification settings couldn't be validated. Please check your inputs and try again.",
-        "name-already-exists": "## ⚠️ That one is already working hard\n\nYou already have a notification named `<%= it.name %>`. Choose a new name and try again.",
         "created": "## 🎉 A new thing to watch out for!\n> This notification will be checked the next time the bot looks for matching movies.\n\nYour new notification `<%= it.name %>` has been created successfully. You will start to get notifications one a movie matching `<%= it.searchTerm %>` is found.\nNeed to make adjustments? You can update this notification anytime with </<%= it.updateCommandName %>:<%= it.commandId %>> or delete it with </<%= it.deleteCommandName %>:<%= it.commandId %>>."
       },
       "notification-delete": {
-        "not-found": "## 🔍️ Where could it be?!?!\n\nLooks like the notification you are looking for can not be found. Please check your inputs and try again.",
-        "deleted": "## 💨 Aaaannndd it's gone\n\nThe notification `<%= it.name %>` has been successfully deleted (for the time being). If you feel the need to bring it back, you can do so with </<%= it.commandName %>:<%= it.commandId %>>."
+        "deleted": "## 💨 Aaaannndd it's gone\n\nThe notification `<%= it.name %>` has been successfully deleted."
+      },
+      "notification-update": {
+        "updated": "## 🎉 All set and done!\n> This notification will be checked the next time the bot looks for matching movies.\n\nYour notification `<%= it.name %>` has been successfully updated to your new settings:\n- **Search term**: `<%= it.key %>`\n- **Recurrence pattern**: `<%= it.recurrencePattern %>`\n- **Recurrence interval**: `<%= it.recurrenceInterval %>`"
+      },
+      "notification": {
+        "name-already-exists": "## ⚠️ That one is already working hard\n\nYou already have a notification named `<%= it.name %>`. Choose a new name and try again.",
+        "validation-failed": "## ⚠️ Oops, something looks off\n\nSome of your notification settings couldn't be validated. Please check your inputs and try again.",
+        "not-found": "## 🔍️ Where could it be?!?!\n\nLooks like the notification you are looking for can not be found. Please check your inputs and try again."
       }
     },
     "super_hyped": {
@@ -121,13 +156,18 @@
         "missing-permission": "## 🛡️ Very close, but no\n\nLooks like you don't have the required permissions to do whatever it is you want to do. Too bad."
       },
       "notification-create": {
-        "validation-failed": "## ⚠️ Oops, something looks off\n\nSome of your notification settings couldn't be validated. Please check your inputs and try again.",
-        "name-already-exists": "## ⚠️ That one is already working hard\n\nYou already have a notification named `<%= it.name %>`. Choose a new name and try again.",
         "created": "## 🎉 A new thing to watch out for!\n> This notification will be checked the next time the bot looks for matching movies.\n\nYour new notification `<%= it.name %>` has been created successfully. You will start to get notifications one a movie matching `<%= it.searchTerm %>` is found.\nNeed to make adjustments? You can update this notification anytime with </<%= it.updateCommandName %>:<%= it.commandId %>> or delete it with </<%= it.deleteCommandName %>:<%= it.commandId %>>."
       },
       "notification-delete": {
-        "not-found": "## 🔍️ Where could it be?!?!\n\nLooks like the notification you are looking for can not be found. Please check your inputs and try again.",
-        "deleted": "## 💨 Aaaannndd it's gone\n\nThe notification `<%= it.name %>` has been successfully deleted (for the time being). If you feel the need to bring it back, you can do so with </<%= it.commandName %>:<%= it.commandId %>>."
+        "deleted": "## 💨 Aaaannndd it's gone\n\nThe notification `<%= it.name %>` has been successfully deleted."
+      },
+      "notification-update": {
+        "updated": "## 🎉 All set and done!\n> This notification will be checked the next time the bot looks for matching movies.\n\nYour notification `<%= it.name %>` has been successfully updated to your new settings:\n- **Search term**: `<%= it.key %>`\n- **Recurrence pattern**: `<%= it.recurrencePattern %>`\n- **Recurrence interval**: `<%= it.recurrenceInterval %>`"
+      },
+      "notification": {
+        "name-already-exists": "## ⚠️ That one is already working hard\n\nYou already have a notification named `<%= it.name %>`. Choose a new name and try again.",
+        "validation-failed": "## ⚠️ Oops, something looks off\n\nSome of your notification settings couldn't be validated. Please check your inputs and try again.",
+        "not-found": "## 🔍️ Where could it be?!?!\n\nLooks like the notification you are looking for can not be found. Please check your inputs and try again."
       }
     }
   }

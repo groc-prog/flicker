@@ -83,27 +83,27 @@ export const command = new SlashCommandBuilder()
               )
               .setChoices(
                 {
-                  name: t('server.notification-create.options.recurrence-pattern.options.hourly'),
+                  name: t('enum.recurrence-pattern.hourly'),
                   name_localizations: {
-                    [Locale.German]: t('server.notification-create.options.recurrence-pattern.options.hourly', {
+                    [Locale.German]: t('enum.recurrence-pattern.hourly', {
                       lng: Locale.German,
                     }),
                   },
                   value: NotificationRecurrencePattern.Hourly,
                 },
                 {
-                  name: t('server.notification-create.options.recurrence-pattern.options.daily'),
+                  name: t('enum.recurrence-pattern.daily'),
                   name_localizations: {
-                    [Locale.German]: t('server.notification-create.options.recurrence-pattern.options.daily', {
+                    [Locale.German]: t('enum.recurrence-pattern.daily', {
                       lng: Locale.German,
                     }),
                   },
                   value: NotificationRecurrencePattern.Daily,
                 },
                 {
-                  name: t('server.notification-create.options.recurrence-pattern.options.weekly'),
+                  name: t('enum.recurrence-pattern.weekly'),
                   name_localizations: {
-                    [Locale.German]: t('server.notification-create.options.recurrence-pattern.options.weekly', {
+                    [Locale.German]: t('enum.recurrence-pattern.weekly', {
                       lng: Locale.German,
                     }),
                   },
@@ -159,6 +159,118 @@ export const command = new SlashCommandBuilder()
           .setDescriptionLocalization(
             Locale.German,
             t('server.notification-update.description', { lng: Locale.German }),
+          )
+          .addStringOption((option) =>
+            option
+              .setName(t('server.notification-update.options.name.name'))
+              .setNameLocalization(
+                Locale.German,
+                t('server.notification-update.options.name.name', { lng: Locale.German }),
+              )
+              .setDescription(t('server.notification-update.options.name.description'))
+              .setDescriptionLocalization(
+                Locale.German,
+                t('server.notification-update.options.name.description', { lng: Locale.German }),
+              )
+              .setRequired(true)
+              .setMaxLength(255),
+          )
+          .addStringOption((option) =>
+            option
+              .setName(t('server.notification-update.options.search-term.name'))
+              .setNameLocalization(
+                Locale.German,
+                t('server.notification-update.options.search-term.name', { lng: Locale.German }),
+              )
+              .setDescription(t('server.notification-update.options.search-term.description'))
+              .setDescriptionLocalization(
+                Locale.German,
+                t('server.notification-update.options.search-term.description', { lng: Locale.German }),
+              )
+              .setRequired(true)
+              .setMaxLength(255),
+          )
+          .addStringOption((option) =>
+            option
+              .setName(t('server.notification-update.options.recurrence-pattern.name'))
+              .setNameLocalization(
+                Locale.German,
+                t('server.notification-update.options.recurrence-pattern.name', { lng: Locale.German }),
+              )
+              .setDescription(t('server.notification-update.options.recurrence-pattern.description'))
+              .setDescriptionLocalization(
+                Locale.German,
+                t('server.notification-update.options.recurrence-pattern.description', { lng: Locale.German }),
+              )
+              .setRequired(true)
+              .setChoices(
+                {
+                  name: t('enum.recurrence-pattern.unchanged'),
+                  name_localizations: {
+                    [Locale.German]: t('enum.recurrence-pattern.unchanged', {
+                      lng: Locale.German,
+                    }),
+                  },
+                  value: NotificationRecurrencePattern.Unchanged,
+                },
+                {
+                  name: t('enum.recurrence-pattern.hourly'),
+                  name_localizations: {
+                    [Locale.German]: t('enum.recurrence-pattern.hourly', {
+                      lng: Locale.German,
+                    }),
+                  },
+                  value: NotificationRecurrencePattern.Hourly,
+                },
+                {
+                  name: t('enum.recurrence-pattern.daily'),
+                  name_localizations: {
+                    [Locale.German]: t('enum.recurrence-pattern.daily', {
+                      lng: Locale.German,
+                    }),
+                  },
+                  value: NotificationRecurrencePattern.Daily,
+                },
+                {
+                  name: t('enum.recurrence-pattern.weekly'),
+                  name_localizations: {
+                    [Locale.German]: t('enum.recurrence-pattern.weekly', {
+                      lng: Locale.German,
+                    }),
+                  },
+                  value: NotificationRecurrencePattern.Weekly,
+                },
+              ),
+          )
+          .addIntegerOption((option) =>
+            option
+              .setName(t('server.notification-update.options.recurrence-interval.name'))
+              .setNameLocalization(
+                Locale.German,
+                t('server.notification-update.options.recurrence-interval.name', { lng: Locale.German }),
+              )
+              .setDescription(t('server.notification-update.options.recurrence-interval.description'))
+              .setDescriptionLocalization(
+                Locale.German,
+                t('server.notification-update.options.recurrence-interval.description', { lng: Locale.German }),
+              )
+              .setRequired(true)
+              .setMinValue(0),
+          )
+          .addStringOption((option) =>
+            option
+              .setName(t('server.notification-update.options.notification.name'))
+              .setNameLocalization(
+                Locale.German,
+                t('server.notification-update.options.notification.name', { lng: Locale.German }),
+              )
+              .setDescription(t('server.notification-update.options.notification.description'))
+              .setDescriptionLocalization(
+                Locale.German,
+                t('server.notification-update.options.notification.description', { lng: Locale.German }),
+              )
+              .setRequired(true)
+              .setAutocomplete(true),
           ),
       ),
   );

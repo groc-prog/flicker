@@ -1,6 +1,7 @@
 import { pgEnum } from 'drizzle-orm/pg-core';
 
 export enum NotificationRecurrencePattern {
+  Unchanged = 'unchanged',
   Hourly = 'hourly',
   Daily = 'daily',
   Weekly = 'weekly',

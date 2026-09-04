@@ -44,6 +44,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     t('server.notification-create.options.recurrence-interval.name'),
   );
 
+  logger.debug('Validating notification properties');
   const { success, error, data } = NotificationValidator.safeParse({
     name,
     key: searchTerm,
@@ -60,11 +61,12 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     );
     await interaction.reply({
       flags: [MessageFlags.Ephemeral],
-      content: renderTemplate(`tone.${botTone}.notification-create.validation-failed`, interaction.locale),
+      content: renderTemplate(`tone.${botTone}.notification.validation-failed`, interaction.locale),
     });
     return;
   }
 
+  logger.debug('Checking for notifications with duplicate name');
   const [duplicateNotification] = await db
     .select({ id: notificationsTable.id })
     .from(notificationsTable)
@@ -76,7 +78,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     );
     await interaction.reply({
       flags: [MessageFlags.Ephemeral],
-      content: renderTemplate(`tone.${botTone}.notification-create.name-already-exists`, interaction.locale, {
+      content: renderTemplate(`tone.${botTone}.notification.name-already-exists`, interaction.locale, {
         name: data.name,
       }),
     });

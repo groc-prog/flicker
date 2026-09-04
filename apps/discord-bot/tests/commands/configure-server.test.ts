@@ -142,13 +142,13 @@ describe('configure-server command', () => {
         expect(args).toHaveProperty('components.0.data.component.options.0.data', {
           default: false,
           emoji: undefined,
-          label: 'server.configure-server.modal.components.languages.options.de',
+          label: 'enum.language.de',
           value: 'de',
         });
         expect(args).toHaveProperty('components.0.data.component.options.1.data', {
           default: false,
           emoji: undefined,
-          label: 'server.configure-server.modal.components.languages.options.en',
+          label: 'enum.language.en',
           value: 'en',
         });
 
@@ -167,19 +167,19 @@ describe('configure-server command', () => {
         expect(args).toHaveProperty('components.1.data.component.options.0.data', {
           default: false,
           emoji: undefined,
-          label: 'server.configure-server.modal.components.tone.options.normal',
+          label: 'enum.tone.normal',
           value: 'normal',
         });
         expect(args).toHaveProperty('components.1.data.component.options.1.data', {
           default: false,
           emoji: undefined,
-          label: 'server.configure-server.modal.components.tone.options.lewd',
+          label: 'enum.tone.lewd',
           value: 'lewd',
         });
         expect(args).toHaveProperty('components.1.data.component.options.2.data', {
           default: false,
           emoji: undefined,
-          label: 'server.configure-server.modal.components.tone.options.super_hyped',
+          label: 'enum.tone.super_hyped',
           value: 'super_hyped',
         });
 
@@ -256,13 +256,13 @@ describe('configure-server command', () => {
         expect(args).toHaveProperty('components.0.data.component.options.0.data', {
           default: true,
           emoji: undefined,
-          label: 'server.configure-server.modal.components.languages.options.de',
+          label: 'enum.language.de',
           value: 'de',
         });
         expect(args).toHaveProperty('components.0.data.component.options.1.data', {
           default: false,
           emoji: undefined,
-          label: 'server.configure-server.modal.components.languages.options.en',
+          label: 'enum.language.en',
           value: 'en',
         });
 
@@ -281,19 +281,19 @@ describe('configure-server command', () => {
         expect(args).toHaveProperty('components.1.data.component.options.0.data', {
           default: false,
           emoji: undefined,
-          label: 'server.configure-server.modal.components.tone.options.normal',
+          label: 'enum.tone.normal',
           value: 'normal',
         });
         expect(args).toHaveProperty('components.1.data.component.options.1.data', {
           default: true,
           emoji: undefined,
-          label: 'server.configure-server.modal.components.tone.options.lewd',
+          label: 'enum.tone.lewd',
           value: 'lewd',
         });
         expect(args).toHaveProperty('components.1.data.component.options.2.data', {
           default: false,
           emoji: undefined,
-          label: 'server.configure-server.modal.components.tone.options.super_hyped',
+          label: 'enum.tone.super_hyped',
           value: 'super_hyped',
         });
 

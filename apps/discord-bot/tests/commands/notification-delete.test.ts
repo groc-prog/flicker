@@ -54,7 +54,7 @@ describe('notification-delete command', () => {
 
         expect(interaction.reply).toHaveBeenNthCalledWith(1, {
           flags: [MessageFlags.Ephemeral],
-          content: `tone.${BotTone.Normal}.notification-delete.not-found`,
+          content: `tone.${BotTone.Normal}.notification.not-found`,
         });
       });
 
@@ -81,7 +81,7 @@ describe('notification-delete command', () => {
 
         expect(interaction.reply).toHaveBeenNthCalledWith(1, {
           flags: [MessageFlags.Ephemeral],
-          content: `tone.${BotTone.Normal}.notification-delete.not-found`,
+          content: `tone.${BotTone.Normal}.notification.not-found`,
         });
       });
     });
