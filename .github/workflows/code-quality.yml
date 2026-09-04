@@ -52,7 +52,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.modules-cache.outputs.cache-hit != 'true'
-        run: bun install
+        run: bun ci
 
   lint:
     needs: install-dependencies
