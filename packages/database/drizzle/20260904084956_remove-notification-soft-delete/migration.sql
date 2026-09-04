@@ -1,0 +1,1 @@
+ALTER TABLE "notifications" DROP COLUMN "deleted_at";

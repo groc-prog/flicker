@@ -52,11 +52,6 @@ export const notificationsTable = snakeCase.table(
       precision: 3,
       withTimezone: true,
     }),
-    deletedAt: timestamp({
-      mode: 'date',
-      precision: 3,
-      withTimezone: true,
-    }),
     ...createdAtTimestamp,
     ...updatedAtTimestamp,
   },

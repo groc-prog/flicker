@@ -1,6 +1,5 @@
-import dayjs from 'dayjs';
 import { AutocompleteInteraction, ChatInputCommandInteraction, MessageFlags } from 'discord.js';
-import { and, asc, desc, eq, isNull, sql } from 'drizzle-orm';
+import { asc, desc, eq, sql } from 'drizzle-orm';
 import { t } from 'i18next';
 import * as z from 'zod';
 
@@ -9,8 +8,7 @@ import { BotTone } from '@flicker/database/schemas/enums';
 import { groupsTable } from '@flicker/database/schemas/groups';
 import { notificationsTable } from '@flicker/database/schemas/notifications';
 
-import { client } from '../..';
-import { getSupportedLocale, renderTemplate } from '../../i18n';
+import { renderTemplate } from '../../i18n';
 import { logger } from '../../telemetry/logging';
 import { ServiceError } from '../../utils/error';
 
@@ -39,12 +37,9 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     return;
   }
 
-  logger.info(`Soft-deleting notification ${notificationId}`);
+  logger.info(`Deleting notification ${notificationId}`);
   const [notification] = await db
-    .update(notificationsTable)
-    .set({
-      deletedAt: dayjs.utc().toDate(),
-    })
+    .delete(notificationsTable)
     .where(eq(notificationsTable.id, notificationId))
     .returning({ id: notificationsTable.id, name: notificationsTable.name });
 
@@ -57,13 +52,11 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     return;
   }
 
-  logger.info(`Successfully soft deleted notification ${notification.id} for group ${group.id}`);
+  logger.info(`Successfully deleted notification ${notification.id} for group ${group.id}`);
   await interaction.reply({
     flags: [MessageFlags.Ephemeral],
-    content: renderTemplate(`tone.${botTone}.notification-delete.soft-deleted`, interaction.locale, {
+    content: renderTemplate(`tone.${botTone}.notification-delete.deleted`, interaction.locale, {
       name: notification.name,
-      commandName: `${t('server.name', { lng: getSupportedLocale(interaction.locale) })} ${t('server.notification-command-group.name', { lng: getSupportedLocale(interaction.locale) })} ${t('server.notification-restore.name', { lng: getSupportedLocale(interaction.locale) })}`,
-      commandId: client.commandIds.get(t('server.name')),
     }),
   });
 }
@@ -77,7 +70,7 @@ export async function onAutocomplete(interaction: AutocompleteInteraction): Prom
     .select({ name: notificationsTable.name, value: notificationsTable.id })
     .from(notificationsTable)
     .leftJoin(groupsTable, eq(notificationsTable.groupId, groupsTable.id))
-    .where(and(eq(groupsTable.discordId, interaction.guildId!), isNull(notificationsTable.deletedAt)));
+    .where(eq(groupsTable.discordId, interaction.guildId!));
 
   const trimmedSearch = search?.trim();
   if (trimmedSearch && trimmedSearch.length !== 0) {

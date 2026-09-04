@@ -69,17 +69,13 @@
       "options": {
         "notification": {
           "name": "notification",
-          "description": "The notification to soft delete"
+          "description": "The notification to delete"
         }
       }
     },
     "notification-update": {
       "name": "update",
       "description": "Update a existing server notification"
-    },
-    "notification-restore": {
-      "name": "restore",
-      "description": "Restore a previously deleted server notification"
     }
   },
   "common": {
@@ -99,7 +95,7 @@
       },
       "notification-delete": {
         "not-found": "## 🔍️ Where could it be?!?!\n\nLooks like the notification you are looking for can not be found. Please check your inputs and try again.",
-        "soft-deleted": "## 💨 Aaaannndd it's gone\n\nThe notification `<%= it.name %>` has been successfully deleted (for the time being). If you feel the need to bring it back, you can do so with </<%= it.commandName %>:<%= it.commandId %>>."
+        "deleted": "## 💨 Aaaannndd it's gone\n\nThe notification `<%= it.name %>` has been successfully deleted (for the time being). If you feel the need to bring it back, you can do so with </<%= it.commandName %>:<%= it.commandId %>>."
       }
     },
     "lewd": {
@@ -115,7 +111,7 @@
       },
       "notification-delete": {
         "not-found": "## 🔍️ Where could it be?!?!\n\nLooks like the notification you are looking for can not be found. Please check your inputs and try again.",
-        "soft-deleted": "## 💨 Aaaannndd it's gone\n\nThe notification `<%= it.name %>` has been successfully deleted (for the time being). If you feel the need to bring it back, you can do so with </<%= it.commandName %>:<%= it.commandId %>>."
+        "deleted": "## 💨 Aaaannndd it's gone\n\nThe notification `<%= it.name %>` has been successfully deleted (for the time being). If you feel the need to bring it back, you can do so with </<%= it.commandName %>:<%= it.commandId %>>."
       }
     },
     "super_hyped": {
@@ -131,7 +127,7 @@
       },
       "notification-delete": {
         "not-found": "## 🔍️ Where could it be?!?!\n\nLooks like the notification you are looking for can not be found. Please check your inputs and try again.",
-        "soft-deleted": "## 💨 Aaaannndd it's gone\n\nThe notification `<%= it.name %>` has been successfully deleted (for the time being). If you feel the need to bring it back, you can do so with </<%= it.commandName %>:<%= it.commandId %>>."
+        "deleted": "## 💨 Aaaannndd it's gone\n\nThe notification `<%= it.name %>` has been successfully deleted (for the time being). If you feel the need to bring it back, you can do so with </<%= it.commandName %>:<%= it.commandId %>>."
       }
     }
   }
