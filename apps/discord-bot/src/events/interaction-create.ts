@@ -18,7 +18,7 @@ import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
 import { withLogContext } from '@flicker/telemetry/logging';
 
 import { client } from '..';
-import { getSupportedLocale } from '../i18n';
+import { getSupportedLocale } from '../i18n/utils';
 import { logger } from '../telemetry/logging';
 import { deserializeTraceParentFromCustomId, eventTracer } from '../telemetry/tracing';
 import { ServiceError } from '../utils/error';

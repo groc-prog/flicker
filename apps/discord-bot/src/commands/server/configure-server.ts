@@ -18,10 +18,11 @@ import * as z from 'zod';
 import db from '@flicker/database';
 import { BotTone, botToneEnum, MovieLanguage, movieLanguageEnum } from '@flicker/database/schemas/enums';
 import { groupsTable } from '@flicker/database/schemas/groups';
+import { renderTemplate } from '@flicker/i18n/utils';
 import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
 
 import { client } from '../..';
-import { getSupportedLocale, renderTemplate } from '../../i18n';
+import { getSupportedLocale } from '../../i18n/utils';
 import { logger } from '../../telemetry/logging';
 import { serializeModalCustomId } from '../../telemetry/tracing';
 import { ServiceError } from '../../utils/error';
@@ -181,7 +182,10 @@ export async function onModalSubmit(interaction: ModalSubmitInteraction): Promis
     );
     await interaction.reply({
       flags: [MessageFlags.Ephemeral],
-      content: renderTemplate(`tone.${botTone}.server-configuration.validation-failed`, interaction.locale),
+      content: renderTemplate(
+        `tone.${botTone}.server-configuration.validation-failed`,
+        getSupportedLocale(interaction.locale),
+      ),
     });
     return;
   }
@@ -213,9 +217,13 @@ export async function onModalSubmit(interaction: ModalSubmitInteraction): Promis
 
   await interaction.reply({
     flags: [MessageFlags.Ephemeral],
-    content: renderTemplate(`tone.${group.tone}.server-configuration.created-or-updated`, interaction.locale, {
-      commandName: `${t('server.name', { lng: getSupportedLocale(interaction.locale) })} ${t('server.configure-server.name', { lng: getSupportedLocale(interaction.locale) })}`,
-      commandId: client.commandIds.get(t('server.name')),
-    }),
+    content: renderTemplate(
+      `tone.${group.tone}.server-configuration.created-or-updated`,
+      getSupportedLocale(interaction.locale),
+      {
+        commandName: `${t('server.name', { lng: getSupportedLocale(interaction.locale) })} ${t('server.configure-server.name', { lng: getSupportedLocale(interaction.locale) })}`,
+        commandId: client.commandIds.get(t('server.name')),
+      },
+    ),
   });
 }

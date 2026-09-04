@@ -8,10 +8,11 @@ import { BotTone, NotificationRecurrencePattern } from '@flicker/database/schema
 import { groupsTable } from '@flicker/database/schemas/groups';
 import { notificationsTable } from '@flicker/database/schemas/notifications';
 import { usersTable } from '@flicker/database/schemas/users';
+import { renderTemplate } from '@flicker/i18n/utils';
 import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
 
 import { client } from '../..';
-import { getSupportedLocale, renderTemplate } from '../../i18n';
+import { getSupportedLocale } from '../../i18n/utils';
 import { logger } from '../../telemetry/logging';
 import { ServiceError } from '../../utils/error';
 
@@ -61,7 +62,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     );
     await interaction.reply({
       flags: [MessageFlags.Ephemeral],
-      content: renderTemplate(`tone.${botTone}.notification.validation-failed`, interaction.locale),
+      content: renderTemplate(`tone.${botTone}.notification.validation-failed`, getSupportedLocale(interaction.locale)),
     });
     return;
   }
@@ -78,9 +79,13 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     );
     await interaction.reply({
       flags: [MessageFlags.Ephemeral],
-      content: renderTemplate(`tone.${botTone}.notification.name-already-exists`, interaction.locale, {
-        name: data.name,
-      }),
+      content: renderTemplate(
+        `tone.${botTone}.notification.name-already-exists`,
+        getSupportedLocale(interaction.locale),
+        {
+          name: data.name,
+        },
+      ),
     });
     return;
   }
@@ -117,7 +122,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
   logger.info(`Successfully created notification ${notification.id} for group ${group.id}`);
   await interaction.reply({
     flags: [MessageFlags.Ephemeral],
-    content: renderTemplate(`tone.${botTone}.notification-create.created`, interaction.locale, {
+    content: renderTemplate(`tone.${botTone}.notification-create.created`, getSupportedLocale(interaction.locale), {
       name: notification.name,
       searchTerm: notification.searchTerm,
       updateCommandName: `${t('server.name', { lng: getSupportedLocale(interaction.locale) })} ${t('server.notification-command-group.name', { lng: getSupportedLocale(interaction.locale) })} ${t('server.notification-update.name', { lng: getSupportedLocale(interaction.locale) })}`,

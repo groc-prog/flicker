@@ -7,8 +7,9 @@ import db from '@flicker/database';
 import { BotTone } from '@flicker/database/schemas/enums';
 import { groupsTable } from '@flicker/database/schemas/groups';
 import { notificationsTable } from '@flicker/database/schemas/notifications';
+import { renderTemplate } from '@flicker/i18n/utils';
 
-import { renderTemplate } from '../../i18n';
+import { getSupportedLocale } from '../../i18n/utils';
 import { logger } from '../../telemetry/logging';
 import { ServiceError } from '../../utils/error';
 
@@ -33,7 +34,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     logger.info(`Provided notification ID ${notificationId} is not a valid ID`);
     await interaction.reply({
       flags: [MessageFlags.Ephemeral],
-      content: renderTemplate(`tone.${botTone}.notification.not-found`, interaction.locale),
+      content: renderTemplate(`tone.${botTone}.notification.not-found`, getSupportedLocale(interaction.locale)),
     });
     return;
   }
@@ -48,7 +49,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     logger.info(`Provided notification ID ${notificationId} not found`);
     await interaction.reply({
       flags: [MessageFlags.Ephemeral],
-      content: renderTemplate(`tone.${botTone}.notification.not-found`, interaction.locale),
+      content: renderTemplate(`tone.${botTone}.notification.not-found`, getSupportedLocale(interaction.locale)),
     });
     return;
   }
@@ -56,7 +57,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
   logger.info(`Successfully deleted notification ${notification.id} for group ${group.id}`);
   await interaction.reply({
     flags: [MessageFlags.Ephemeral],
-    content: renderTemplate(`tone.${botTone}.notification-delete.deleted`, interaction.locale, {
+    content: renderTemplate(`tone.${botTone}.notification-delete.deleted`, getSupportedLocale(interaction.locale), {
       name: notification.name,
     }),
   });

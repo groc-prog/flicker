@@ -7,9 +7,10 @@ import db from '@flicker/database';
 import { BotTone, NotificationRecurrencePattern } from '@flicker/database/schemas/enums';
 import { groupsTable } from '@flicker/database/schemas/groups';
 import { notificationsTable } from '@flicker/database/schemas/notifications';
+import { renderTemplate } from '@flicker/i18n/utils';
 import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
 
-import { renderTemplate } from '../../i18n';
+import { getSupportedLocale } from '../../i18n/utils';
 import { logger } from '../../telemetry/logging';
 import { ServiceError } from '../../utils/error';
 
@@ -49,7 +50,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     logger.info(`Provided notification ID ${notificationId} is not a valid ID`);
     await interaction.reply({
       flags: [MessageFlags.Ephemeral],
-      content: renderTemplate(`tone.${botTone}.notification.not-found`, interaction.locale),
+      content: renderTemplate(`tone.${botTone}.notification.not-found`, getSupportedLocale(interaction.locale)),
     });
     return;
   }
@@ -71,7 +72,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     );
     await interaction.reply({
       flags: [MessageFlags.Ephemeral],
-      content: renderTemplate(`tone.${botTone}.notification.validation-failed`, interaction.locale),
+      content: renderTemplate(`tone.${botTone}.notification.validation-failed`, getSupportedLocale(interaction.locale)),
     });
     return;
   }
@@ -95,9 +96,13 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
       );
       await interaction.reply({
         flags: [MessageFlags.Ephemeral],
-        content: renderTemplate(`tone.${botTone}.notification.name-already-exists`, interaction.locale, {
-          name: data.name,
-        }),
+        content: renderTemplate(
+          `tone.${botTone}.notification.name-already-exists`,
+          getSupportedLocale(interaction.locale),
+          {
+            name: data.name,
+          },
+        ),
       });
       return;
     }
@@ -127,7 +132,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     logger.info(`Notification with ID ${notificationId} not found`);
     await interaction.reply({
       flags: [MessageFlags.Ephemeral],
-      content: renderTemplate(`tone.${botTone}.notification.not-found`, interaction.locale),
+      content: renderTemplate(`tone.${botTone}.notification.not-found`, getSupportedLocale(interaction.locale)),
     });
     return;
   }
@@ -135,7 +140,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
   logger.info(`Successfully updated notification ${notificationId} for group ${group.id}`);
   await interaction.reply({
     flags: [MessageFlags.Ephemeral],
-    content: renderTemplate(`tone.${botTone}.notification-update.updated`, interaction.locale, {
+    content: renderTemplate(`tone.${botTone}.notification-update.updated`, getSupportedLocale(interaction.locale), {
       name: notification.name,
       key: notification.key,
       recurrencePattern: notification.recurrencePattern ?? '--',

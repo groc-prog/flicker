@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@flicker/database": "workspace:*",
+    "@flicker/i18n": "workspace:*",
     "@flicker/telemetry": "workspace:*",
     "@flicker/test-utils": "workspace:*",
     "@opentelemetry/api": "1.9.1",
