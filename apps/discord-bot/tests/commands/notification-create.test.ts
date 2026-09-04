@@ -13,7 +13,7 @@ import { createMockedInteraction } from '../fixtures/interaction';
 
 describe('notification-create command', () => {
   describe('onChatInputCommand', () => {
-    describe('when group or user is missing', () => {
+    describe('when previously created records are not found', () => {
       it('throws if the group is not found', async () => {
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: '1420788362872230051',
@@ -232,7 +232,6 @@ describe('notification-create command', () => {
           userId: null,
           groupId: group!.id,
           nextTriggerAt: null,
-          deletedAt: null,
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),
         });
@@ -289,7 +288,6 @@ describe('notification-create command', () => {
           userId: null,
           groupId: group!.id,
           nextTriggerAt: null,
-          deletedAt: null,
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),
         });
