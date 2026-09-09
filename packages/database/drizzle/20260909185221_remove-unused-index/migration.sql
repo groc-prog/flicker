@@ -1,1 +1,0 @@
-DROP INDEX "notifications_last_trigger_at_index";

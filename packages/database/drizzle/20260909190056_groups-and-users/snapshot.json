@@ -1,9 +1,9 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "badac19d-388e-479e-9aba-ece729ac8f54",
+  "id": "d4130875-9b78-47e2-aff7-574a0cc9059c",
   "prevIds": [
-    "e0928ecf-1ae5-49ee-a4a4-6d40f3985be6"
+    "23e25541-5d02-4535-8d87-993a214eed0a"
   ],
   "ddl": [
     {
@@ -38,9 +38,9 @@
     },
     {
       "values": [
-        "hourly",
-        "daily",
-        "weekly"
+        "hours",
+        "days",
+        "weeks"
       ],
       "name": "notification_recurrence_pattern",
       "entityType": "enums",
@@ -73,12 +73,6 @@
     {
       "isRlsEnabled": false,
       "name": "movies",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "notifications",
       "entityType": "tables",
       "schema": "public"
     },
@@ -220,7 +214,7 @@
     {
       "type": "jsonb",
       "typeSchema": null,
-      "notNull": false,
+      "notNull": true,
       "dimensions": 0,
       "default": "'[\"en\"]'",
       "generated": null,
@@ -664,201 +658,6 @@
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
-      "default": "gen_random_uuid()",
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "type": "varchar(250)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "type": "varchar(250)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "key",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "type": "movie_language",
-      "typeSchema": "public",
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "language",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "type": "bot_tone",
-      "typeSchema": "public",
-      "notNull": true,
-      "dimensions": 0,
-      "default": "'normal'",
-      "generated": null,
-      "identity": null,
-      "name": "tone",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "type": "boolean",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "false",
-      "generated": null,
-      "identity": null,
-      "name": "is_recurring",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "type": "notification_recurrence_pattern",
-      "typeSchema": "public",
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "recurrence_pattern",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "recurrence_interval",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "creator_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "group_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "type": "timestamp(3) with time zone",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "next_trigger_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "type": "timestamp(3) with time zone",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "deleted_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "type": "timestamp(3) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "type": "timestamp(3) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
@@ -1174,52 +973,10 @@
       "with": "",
       "method": "gin",
       "concurrently": false,
-      "name": "idx_movie_translations_language_title",
+      "name": "idx_movie_language_title",
       "entityType": "indexes",
       "schema": "public",
       "table": "movies"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        {
-          "value": "next_trigger_at",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": "(\"next_trigger_at\" is not null)",
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "notifications_next_trigger_at_index",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "\"name\" gin_trgm_ops",
-          "isExpression": true,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "gin",
-      "concurrently": false,
-      "name": "idx_notification_name",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "notifications"
     },
     {
       "nameExplicit": false,
@@ -1305,57 +1062,6 @@
       "entityType": "fks",
       "schema": "public",
       "table": "movies"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "creator_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "users",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "notifications_creator_id_users_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "users",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "notifications_user_id_users_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "group_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "groups",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "notifications_group_id_groups_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "notifications"
     },
     {
       "nameExplicit": false,
@@ -1458,16 +1164,6 @@
         "id"
       ],
       "nameExplicit": false,
-      "name": "notifications_pkey",
-      "schema": "public",
-      "table": "notifications",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
       "name": "scraped_movies_pkey",
       "schema": "public",
       "table": "scraped_movies",
@@ -1506,18 +1202,6 @@
       "entityType": "uniques",
       "schema": "public",
       "table": "movies"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "id",
-        "name"
-      ],
-      "nullsNotDistinct": false,
-      "name": "notifications_id_name_unique",
-      "entityType": "uniques",
-      "schema": "public",
-      "table": "notifications"
     },
     {
       "nameExplicit": false,
@@ -1562,13 +1246,6 @@
       "schema": "public",
       "table": "users",
       "entityType": "uniques"
-    },
-    {
-      "value": "\"user_id\" IS NOT NULL OR \"group_id\" IS NOT NULL",
-      "name": "receiver_defined_check",
-      "entityType": "checks",
-      "schema": "public",
-      "table": "notifications"
     }
   ],
   "renames": []

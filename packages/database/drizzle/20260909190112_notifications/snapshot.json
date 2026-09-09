@@ -1,9 +1,9 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "d066f6eb-f23b-4dd0-9693-91ff2779df31",
+  "id": "5a08fe68-f592-4572-8937-f3bbe4af380f",
   "prevIds": [
-    "32bedc15-5105-4b3d-ac52-3bb41e7426d8"
+    "d4130875-9b78-47e2-aff7-574a0cc9059c"
   ],
   "ddl": [
     {
@@ -1170,27 +1170,6 @@
       "method": "btree",
       "concurrently": false,
       "name": "notifications_next_trigger_at_index",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "notifications"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        {
-          "value": "last_trigger_at",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": "(\"last_trigger_at\" is not null)",
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "notifications_last_trigger_at_index",
       "entityType": "indexes",
       "schema": "public",
       "table": "notifications"
