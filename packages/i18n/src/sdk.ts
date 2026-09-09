@@ -1,4 +1,4 @@
-import i18next from 'i18next';
+import i18next, { type Resource } from 'i18next';
 
 import { MovieLanguage } from '@flicker/database/schemas/enums';
 
@@ -14,6 +14,12 @@ export async function initializeI18n(languages: Record<MovieLanguage, Translatio
   await i18next.init({
     lng: MovieLanguage.English,
     debug: process.env.NODE_ENV === 'development',
-    resources: languages,
+    resources: Object.keys(languages).reduce((resources, language) => {
+      resources[language] = {
+        translation: languages[language as MovieLanguage],
+      };
+
+      return resources;
+    }, {} as Resource),
   });
 }

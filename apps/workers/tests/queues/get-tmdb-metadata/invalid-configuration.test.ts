@@ -15,7 +15,7 @@ describe('get-tmdb-metadata worker', () => {
       const job = await queue.add(
         crypto.randomUUID(),
         {
-          id: 'f3e754ef-5e4c-4b0a-9f64-014e9a96af45',
+          scrapedMovieId: 'f3e754ef-5e4c-4b0a-9f64-014e9a96af45',
         },
         {
           attempts: 1,
@@ -53,7 +53,7 @@ describe('get-tmdb-metadata worker', () => {
       const job = await queue.add(
         crypto.randomUUID(),
         {
-          id: mockedMovieId,
+          scrapedMovieId: mockedMovieId,
         },
         {
           attempts: 1,

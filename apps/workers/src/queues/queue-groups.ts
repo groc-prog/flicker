@@ -1,3 +1,5 @@
 import { QueueGroup } from 'bunqueue/client';
 
-export const movieProcessingGroup = new QueueGroup('movie-processing');
+export const movieProcessingQueueGroup = new QueueGroup('movie-processing');
+
+export const notificationsQueueGroup = new QueueGroup('notifications');

@@ -11,6 +11,7 @@ export enum TelemetryIdentifier {
   WorkerJobReason = 'worker.job.reason',
   MovieRefId = 'movie.ref_id',
   MovieId = 'movie.id',
+  ScrapedMovieId = 'scraped_movie.id',
   MovieLanguage = 'movie.language',
   PerformanceRefId = 'performance.ref_id',
   AttributeCategory = 'attribute.category',
@@ -26,5 +27,6 @@ export enum TelemetryIdentifier {
   CommandType = 'discord.command.type',
   DiscordUserId = 'discord.user.id',
   DiscordGuildId = 'discord.guild.id',
+  DiscordChannelId = 'discord.channel.id',
   ValidationErrors = 'validation.errors',
 }

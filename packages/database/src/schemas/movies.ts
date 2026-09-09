@@ -96,6 +96,6 @@ export const moviesTable = snakeCase.table(
   (table) => [
     index().on(table.availableAt),
     unique().on(table.language, table.scrapedMovieId),
-    index('idx_movie_translations_language_title').using('gin', sql`${table.language}, ${table.title} gin_trgm_ops`),
+    index('idx_movie_language_title').using('gin', sql`${table.language}, ${table.title} gin_trgm_ops`),
   ],
 );

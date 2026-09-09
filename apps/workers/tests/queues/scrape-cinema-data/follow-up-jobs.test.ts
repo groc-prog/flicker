@@ -33,11 +33,11 @@ describe('scrape-cinema-data worker', () => {
       expect(addBulkSpy).toHaveBeenNthCalledWith(1, [
         {
           name: `get-tmdb-metadata-${scrapedMovies[0]!.id}`,
-          data: { id: scrapedMovies[0]!.id },
+          data: { scrapedMovieId: scrapedMovies[0]!.id },
         },
         {
           name: `get-tmdb-metadata-${scrapedMovies[1]!.id}`,
-          data: { id: scrapedMovies[1]!.id },
+          data: { scrapedMovieId: scrapedMovies[1]!.id },
         },
       ]);
     });

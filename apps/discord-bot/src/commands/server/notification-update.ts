@@ -116,8 +116,6 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     fieldsToUpdate.recurrencePattern = data.recurrencePattern;
   if (data.recurrenceInterval !== 0) fieldsToUpdate.recurrenceInterval = data.recurrenceInterval;
 
-  if (fieldsToUpdate.recurrencePattern || fieldsToUpdate.recurrenceInterval) fieldsToUpdate.isRecurring = true;
-
   const [notification] = await db
     .update(notificationsTable)
     .set(fieldsToUpdate)

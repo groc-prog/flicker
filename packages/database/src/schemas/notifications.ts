@@ -1,5 +1,5 @@
 import { isNotNull, sql } from 'drizzle-orm';
-import { boolean, check, index, integer, snakeCase, timestamp, unique, uuid, varchar } from 'drizzle-orm/pg-core';
+import { check, index, integer, snakeCase, timestamp, unique, uuid, varchar } from 'drizzle-orm/pg-core';
 
 import { createdAtTimestamp, updatedAtTimestamp } from '../utils/timestamp';
 import { uuidPk } from '../utils/uuid';
@@ -22,8 +22,6 @@ export const notificationsTable = snakeCase.table(
      * For groups this will be ignored as groups can define multiple languages.
      */
     language: movieLanguageEnum(),
-    /** Whether the notification will be triggered once or multiple times. */
-    isRecurring: boolean().notNull().default(false),
     /**
      * The recurrence pattern to use.
      *
@@ -52,6 +50,12 @@ export const notificationsTable = snakeCase.table(
       precision: 3,
       withTimezone: true,
     }),
+    /** The date at which the notification was last triggered.  */
+    lastTriggerAt: timestamp({
+      mode: 'date',
+      precision: 3,
+      withTimezone: true,
+    }),
     ...createdAtTimestamp,
     ...updatedAtTimestamp,
   },
@@ -59,6 +63,7 @@ export const notificationsTable = snakeCase.table(
     unique().on(table.id, table.name),
     index().on(table.nextTriggerAt).where(isNotNull(table.nextTriggerAt)),
     index('idx_notification_name').using('gin', sql`${table.name} gin_trgm_ops`),
+    index('idx_notification_key_trgm').using('gin', sql`${table.key} gin_trgm_ops`),
     check('receiver_defined_check', sql`${table.userId} IS NOT NULL OR ${table.groupId} IS NOT NULL`),
   ],
 );

@@ -1,14 +1,20 @@
 import { shutdownManager } from 'bunqueue/client';
 
 import { logger } from '../telemetry/logging';
+import { queue as getAffectedGroupsQueue, worker as getAffectedGroupsWorker } from './get-affected-groups';
 import { queue as tmdbMetadataQueue, worker as tmdbMetadataWorker } from './get-tmdb-metadata';
 import { queue as cinemaDataScrapingQueue, worker as cinemaDataScrapingWorker } from './scrape-cinema-data';
+import { queue as sendGroupNotificationQueue, worker as sendGroupNotificationWorker } from './send-group-notifications';
 
 export default async function startWorkers(): Promise<void> {
   await cinemaDataScrapingQueue.waitUntilReady();
   await cinemaDataScrapingWorker.waitUntilReady();
   await tmdbMetadataQueue.waitUntilReady();
   await tmdbMetadataWorker.waitUntilReady();
+  await getAffectedGroupsQueue.waitUntilReady();
+  await getAffectedGroupsWorker.waitUntilReady();
+  await sendGroupNotificationQueue.waitUntilReady();
+  await sendGroupNotificationWorker.waitUntilReady();
 
   cinemaDataScrapingQueue.upsertJobScheduler(
     'scheduled-scrape-cinema-data',

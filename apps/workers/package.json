@@ -29,6 +29,7 @@
     "cheerio": "1.2.0",
     "dayjs": "1.11.21",
     "discord.js": "14.27.0",
-    "drizzle-orm": "1.0.0-rc.4"
+    "drizzle-orm": "1.0.0-rc.4",
+    "i18next": "26.4.0"
   }
 }

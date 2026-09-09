@@ -45,7 +45,7 @@ describe('get-tmdb-metadata worker', () => {
       const job = await queue.add(
         crypto.randomUUID(),
         {
-          id: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          scrapedMovieId: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
         },
         {
           attempts: 1,
@@ -94,7 +94,7 @@ describe('get-tmdb-metadata worker', () => {
       const job = await queue.add(
         crypto.randomUUID(),
         {
-          id: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          scrapedMovieId: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
         },
         {
           attempts: 1,
@@ -137,7 +137,7 @@ describe('get-tmdb-metadata worker', () => {
       const job = await queue.add(
         crypto.randomUUID(),
         {
-          id: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          scrapedMovieId: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
         },
         {
           attempts: 1,
@@ -195,7 +195,7 @@ describe('get-tmdb-metadata worker', () => {
       const job = await queue.add(
         crypto.randomUUID(),
         {
-          id: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          scrapedMovieId: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
         },
         {
           attempts: 1,
@@ -263,7 +263,7 @@ describe('get-tmdb-metadata worker', () => {
       const job = await queue.add(
         crypto.randomUUID(),
         {
-          id: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          scrapedMovieId: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
         },
         {
           attempts: 1,
@@ -346,7 +346,7 @@ describe('get-tmdb-metadata worker', () => {
       const job = await queue.add(
         crypto.randomUUID(),
         {
-          id: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          scrapedMovieId: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
         },
         {
           attempts: 1,
@@ -471,7 +471,7 @@ describe('get-tmdb-metadata worker', () => {
       const job = await queue.add(
         crypto.randomUUID(),
         {
-          id: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          scrapedMovieId: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
         },
         {
           attempts: 1,
@@ -662,7 +662,7 @@ describe('get-tmdb-metadata worker', () => {
       const job = await queue.add(
         crypto.randomUUID(),
         {
-          id: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          scrapedMovieId: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
         },
         {
           attempts: 1,
@@ -824,7 +824,7 @@ describe('get-tmdb-metadata worker', () => {
       const job = await queue.add(
         crypto.randomUUID(),
         {
-          id: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
+          scrapedMovieId: '7578d1ea-ca48-4f1c-ad77-96a40682420d',
         },
         {
           attempts: 1,

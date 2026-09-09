@@ -1,1 +1,28 @@
-{}
+{
+  "tone": {
+    "normal": {
+      "send-notification": {
+        "announcement": "## 🎬 `<%= it.title %>` jetzt im Kino!\n>",
+        "metadata": "> Dieser Film wurde über folgende Benachrichtigungen gefunden: `<%= it.notifications %><% if (it.totalNotifications > 5) { %>und <%= it.totalNotifications - 5 %> andere<% } %>`\n\n<%= it.description %>\n\n- **Bewertung**: `<%= it.voteAverage %>/10` (<%= it.voteCount %> Stimmen)\n- **Nächste Vorstellung**: <%= it.nextAvailablePerformance %>",
+        "trailer": "🎬 Trailer ansehen",
+        "poster-alt": "Poster zu <%= it.title %>"
+      }
+    },
+    "lewd": {
+      "send-notification": {
+        "announcement": "## 🔞 Mmmh~ `<%= it.title %>` wird endlich tief in die Kinosäle geschoben! 💦\n> Ich werde schon ganz feucht bei dem Gedanken, wie du im dunklen Saal sitzt und zuschaust...~",
+        "metadata": "> Dieser Film wurde über folgende Benachrichtigungen gefunden: `<%= it.notifications %><% if (it.totalNotifications > 5) { %>und <%= it.totalNotifications - 5 %> andere<% } %>`\n\n<%= it.description %>\n\n- **Score**: `<%= it.voteAverage %>/10` (von <%= it.voteCount %> versuchten Perversen bewertet)\n- **Nächste heiße Session**: <%= it.nextAvailablePerformance %>~",
+        "trailer": "⛓️ Werft einen Blick auf den Trailer",
+        "poster-alt": "Ein dreckiger kleiner Blick auf <%= it.title %>"
+      }
+    },
+    "super_hyped": {
+      "send-notification": {
+        "announcement": "## 🚨 ES IST SOWEIT! `<%= it.title %>` BALLERT AB SOFORT IN DEN KINOS! 🍿⚡\n> UNGLAUBLICHE NEWS! DAS IST KEIN DRILL, HOLT EUCH DIREKT POPCORN UND AB DAFÜR!!",
+        "metadata": "> Dieser Film wurde über folgende Benachrichtigungen gefunden: `<%= it.notifications %><% if (it.totalNotifications > 5) { %>und <%= it.totalNotifications - 5 %> andere<% } %>`\n\n<%= it.description %>\n\n- **DAS VERDIKT**: `<%= it.voteAverage %>/10` VON <%= it.voteCount %> VOLLKOMMEN HYPED FANS!!\n- **NÄCHSTE VORSTELLUNG**: <%= it.nextAvailablePerformance %> !!",
+        "trailer": "🚀 KICKEN FÜR TRAILER",
+        "poster-alt": "EPISCHES POSTER ZU <%= it.title %>"
+      }
+    }
+  }
+}

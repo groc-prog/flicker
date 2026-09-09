@@ -1,1 +1,28 @@
-{}
+{
+  "tone": {
+    "normal": {
+      "send-notification": {
+        "announcement": "## 🎬 `<%= it.title %>` Available in Cinemas!\n>",
+        "metadata": "> This movie was matched by the following notifications: `<%= it.notifications %><% if (it.totalNotifications > 5) { %>and <%= it.totalNotifications - 5 %> other(s)<% } %>`\n\n<%= it.description %>\n\n- **Rating**: `<%= it.voteAverage %>/10` (<%= it.voteCount %> votes)\n- **Next Showtime**: <%= it.nextAvailablePerformance %>",
+        "trailer": "🎬 Watch Trailer",
+        "poster-alt": "<%= it.title %> poster"
+      }
+    },
+    "lewd": {
+      "send-notification": {
+        "announcement": "## 🔞 Ooh~ `<%= it.title %>` is finally getting shoved into the big screen! 💦\n> I can barely keep myself together knowing you're gonna sit in the dark and watch this...~",
+        "metadata": "> This movie was matched by the following notifications: `<%= it.notifications %><% if (it.totalNotifications > 5) { %>and <%= it.totalNotifications - 5 %> other(s)<% } %>`\n\n<%= it.description %>\n\n- **Score**: `<%= it.voteAverage %>/10` (<%= it.voteCount %> dirty perverts rated it)\n- **Next Naughty Session**: <%= it.nextAvailablePerformance %>~",
+        "trailer": "⛓️ Peek at Trailer",
+        "poster-alt": "A dirty little look at <%= it.title %>"
+      }
+    },
+    "super_hyped": {
+      "send-notification": {
+        "announcement": "## 🚨 IT'S HERE! `<%= it.title %>` HAS OFFICIALLY HIT THE THEATERS! 🍿⚡\n> UNBELIEVABLE NEWS! THIS IS NOT A DRILL, GET YOUR POPCORN READY RIGHT NOW!!",
+        "metadata": "> This movie was matched by the following notifications: `<%= it.notifications %><% if (it.totalNotifications > 5) { %>and <%= it.totalNotifications - 5 %> other(s)<% } %>`\n\n<%= it.description %>\n\n- **THE VERDICT**: `<%= it.voteAverage %>/10` FROM <%= it.voteCount %> HYPED FANS!!\n- **NEXT SHOWTIME**: <%= it.nextAvailablePerformance %> !!",
+        "trailer": "🚀 SMASH TO WATCH TRAILER",
+        "poster-alt": "EPIC POSTER FOR <%= it.title %>"
+      }
+    }
+  }
+}

@@ -98,9 +98,9 @@
     },
     "recurrence-pattern": {
       "unchanged": "Unverändert",
-      "hourly": "Stündlich",
-      "daily": "Täglich",
-      "weekly": "Wöchentlich"
+      "hours": "Stündlich",
+      "days": "Täglich",
+      "weeks": "Wöchentlich"
     }
   },
   "common": {

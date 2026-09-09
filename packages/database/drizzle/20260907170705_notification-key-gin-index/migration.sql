@@ -1,0 +1,1 @@
+CREATE INDEX "idx_notification_key_trgm" ON "notifications" USING gin ("key" gin_trgm_ops);

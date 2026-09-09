@@ -12,10 +12,10 @@ import { withLogContext } from '@flicker/telemetry/logging';
 import { attachWorkerEventLogging, logger } from '../telemetry/logging';
 import { movieProcessingTracer } from '../telemetry/tracing';
 import type { operations } from '../types/tmdb-api';
-import { movieProcessingGroup } from './queue-groups';
+import { movieProcessingQueueGroup } from './queue-groups';
 
 export interface TmdbMetadataJob {
-  id: InferSelectModel<typeof scrapedMoviesTable>['id'];
+  scrapedMovieId: InferSelectModel<typeof scrapedMoviesTable>['id'];
 }
 
 type ScrapedMovie = Pick<
@@ -33,14 +33,14 @@ type MovieDetailsResponseBody = operations['movie-details']['responses']['200'][
 const identifier = 'get-tmdb-metadata';
 const tmdbApiBaseUrl = 'https://api.themoviedb.org/3';
 
-export const queue = movieProcessingGroup.getQueue<TmdbMetadataJob>(identifier, {
+export const queue = movieProcessingQueueGroup.getQueue<TmdbMetadataJob>(identifier, {
   embedded: true,
   dataPath: process.env.BUNQUEUE_DATA_PATH,
 });
 queue.setGlobalRateLimit(10, 1000);
 queue.setGlobalConcurrency(10);
 
-export const worker = movieProcessingGroup.getWorker<TmdbMetadataJob>(
+export const worker = movieProcessingQueueGroup.getWorker<TmdbMetadataJob>(
   identifier,
   async (job) => {
     await movieProcessingTracer.startActiveSpan(
@@ -49,14 +49,15 @@ export const worker = movieProcessingGroup.getWorker<TmdbMetadataJob>(
         attributes: {
           [TelemetryIdentifier.WorkerJobId]: job.id,
           [TelemetryIdentifier.WorkerJobName]: job.name,
+          [TelemetryIdentifier.ScrapedMovieId]: job.data.scrapedMovieId,
         },
       },
       async (span) => {
         try {
-          await withLogContext({ [TelemetryIdentifier.MovieId]: job.data.id }, async () => {
+          await withLogContext({ [TelemetryIdentifier.ScrapedMovieId]: job.data.scrapedMovieId }, async () => {
             if (!process.env.TMDB_API_TOKEN) throw new Error('TMDB_API_TOKEN not defined in environment');
 
-            logger.info(`Getting TMDB metadata for scraped movie ${job.data.id}`);
+            logger.info(`Getting TMDB metadata for scraped movie ${job.data.scrapedMovieId}`);
             const [scrapedMovie] = await db
               .select({
                 id: scrapedMoviesTable.id,
@@ -68,9 +69,9 @@ export const worker = movieProcessingGroup.getWorker<TmdbMetadataJob>(
                 availableAt: scrapedMoviesTable.availableAt,
               })
               .from(scrapedMoviesTable)
-              .where(eq(scrapedMoviesTable.id, job.data.id));
+              .where(eq(scrapedMoviesTable.id, job.data.scrapedMovieId));
 
-            if (!scrapedMovie) throw new Error(`Scraped movie ${job.data.id} not found`);
+            if (!scrapedMovie) throw new Error(`Scraped movie ${job.data.scrapedMovieId} not found`);
             if (!scrapedMovie.originalTitle) {
               logger.warn(`Movies does not have a original title, falling back to scraped values`);
               await storeFallbackValues(scrapedMovie);

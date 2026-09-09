@@ -16,7 +16,7 @@ import { withLogContext } from '@flicker/telemetry/logging';
 import { attachWorkerEventLogging, logger } from '../telemetry/logging';
 import { movieProcessingTracer } from '../telemetry/tracing';
 import { queue as tmdbMetadataQueue } from './get-tmdb-metadata';
-import { movieProcessingGroup } from './queue-groups';
+import { movieProcessingQueueGroup } from './queue-groups';
 
 interface ScrapedData {
   movies?: {
@@ -90,12 +90,12 @@ type ExtractedAttributes = Omit<InferInsertModel<typeof attributesTable>, 'id' |
 
 const identifier = 'scrape-cinema-data';
 
-export const queue = movieProcessingGroup.getQueue(identifier, {
+export const queue = movieProcessingQueueGroup.getQueue(identifier, {
   embedded: true,
   dataPath: process.env.BUNQUEUE_DATA_PATH,
 });
 
-export const worker = movieProcessingGroup.getWorker(
+export const worker = movieProcessingQueueGroup.getWorker(
   identifier,
   async (job) => {
     await movieProcessingTracer.startActiveSpan(
@@ -654,12 +654,12 @@ function scheduleFollowUpJobs(scrapedMovieIds: string[]): void {
   const jobs: Parameters<typeof tmdbMetadataQueue.addBulk>[0] = scrapedMovieIds.map((id) => ({
     name: `get-tmdb-metadata-${id}`,
     data: {
-      id,
+      scrapedMovieId: id,
     },
   }));
 
   tmdbMetadataQueue.addBulk(jobs);
-  logger.info(`${scrapedMovieIds.length} job enqueued successfully`);
+  logger.info(`${jobs.length} jobs enqueued successfully`);
 }
 
 export function isPlainObject<T extends Record<PropertyKey, unknown> = Record<PropertyKey, unknown>>(

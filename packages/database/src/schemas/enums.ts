@@ -2,9 +2,9 @@ import { pgEnum } from 'drizzle-orm/pg-core';
 
 export enum NotificationRecurrencePattern {
   Unchanged = 'unchanged',
-  Hourly = 'hourly',
-  Daily = 'daily',
-  Weekly = 'weekly',
+  Hourly = 'hours',
+  Daily = 'days',
+  Weekly = 'weeks',
 }
 
 export enum BotTone {
@@ -27,7 +27,10 @@ export enum MovieLanguage {
 
 export const notificationRecurrencePatternEnum = pgEnum(
   'notification_recurrence_pattern',
-  NotificationRecurrencePattern,
+  Object.values(NotificationRecurrencePattern).filter((value) => value !== NotificationRecurrencePattern.Unchanged) as [
+    string,
+    ...string[],
+  ],
 );
 
 export const botToneEnum = pgEnum('bot_tone', BotTone);

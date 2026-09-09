@@ -104,7 +104,6 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
   const [notification] = await db
     .insert(notificationsTable)
     .values({
-      isRecurring: !!data.recurrencePattern || !!data.recurrenceInterval,
       ...data,
       creatorId: user.id,
       groupId: group.id,
