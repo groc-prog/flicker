@@ -51,7 +51,7 @@ describe('scrape-cinema-data worker', () => {
       const scrapedMovies = await db.select({ count: count() }).from(scrapedMoviesTable);
       const scrapedMovieAttributes = await db.select({ count: count() }).from(scrapedMoviesToAttributesTable);
       const attributes = await db
-        .select({ category: attributesTable.category, key: attributesTable.key, name: attributesTable.name })
+        .select({ category: attributesTable.category, key: attributesTable.key })
         .from(attributesTable);
       const performances = await db.select({ count: count() }).from(moviePerformancesTable);
       const performancesAttributes = await db.select({ count: count() }).from(moviePerformancesToAttributesTable);
@@ -65,7 +65,6 @@ describe('scrape-cinema-data worker', () => {
       for (const attribute of attributes) {
         expect(attribute.category).toBe(AttributeCategory.Genres);
         expect(attribute.key).toBeOneOf(['Komödie', 'Dokumentarfilm']);
-        expect(attribute.name).toBeOneOf(['Komödie', 'Dokumentarfilm']);
       }
     });
   });

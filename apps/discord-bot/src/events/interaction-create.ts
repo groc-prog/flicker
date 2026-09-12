@@ -13,7 +13,6 @@ import { t } from 'i18next';
 
 import db from '@flicker/database';
 import { groupsTable } from '@flicker/database/schemas/groups';
-import { usersTable } from '@flicker/database/schemas/users';
 import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
 import { withLogContext } from '@flicker/telemetry/logging';
 
@@ -73,29 +72,6 @@ async function onChatInputCommand(interaction: ChatInputCommandInteraction): Pro
 
       logger.debug(`Received chat input command interaction ${interaction.id}`);
       const now = dayjs.utc();
-
-      logger.info(`Ensuring user with Discord ID ${interaction.user.id} exists`);
-      const [user] = await db
-        .insert(usersTable)
-        .values({
-          discordId: interaction.user.id,
-        })
-        .onConflictDoUpdate({
-          target: usersTable.discordId,
-          set: {
-            discordId: interaction.user.id,
-          },
-        })
-        .returning({ id: usersTable.id, createdAt: usersTable.createdAt });
-
-      if (!user) {
-        logger.error('Query did not return a user ID');
-        throw new ServiceError(`No user with matching Discord ID ${interaction.user.id} created or found`);
-      }
-
-      if (now.isAfter(user.createdAt))
-        logger.debug(`User with Discord ID ${interaction.user.id} already exists, nothing to update`);
-      else logger.info(`Created new user ${user.id}`);
 
       if (interaction.context === InteractionContextType.Guild) {
         logger.info(`Ensuring group with Discord ID ${interaction.guildId} exists`);

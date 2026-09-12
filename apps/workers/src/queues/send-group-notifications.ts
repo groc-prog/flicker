@@ -37,7 +37,7 @@ type MovieMetadata = Pick<
 
 type NotificationMetadata = Pick<InferSelectModel<typeof notificationsTable>, 'name'>;
 
-const identifier = 'send-group-notification';
+const identifier = 'send-group-notifications';
 
 export const queue = notificationsQueueGroup.getQueue<SendGroupNotificationsJob>(identifier, {
   embedded: true,

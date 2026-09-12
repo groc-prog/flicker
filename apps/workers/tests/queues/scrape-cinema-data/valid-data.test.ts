@@ -61,19 +61,15 @@ describe('scrape-cinema-data worker', () => {
 
       expect(attributeGenres?.category).toBe(AttributeCategory.Genres);
       expect(attributeGenres?.key).toBe('Komödie');
-      expect(attributeGenres?.name).toBe('Komödie');
 
       expect(attributeFsk?.category).toBe(AttributeCategory.Fsk);
       expect(attributeFsk?.key).toBe('0');
-      expect(attributeFsk?.name).toBe('0');
 
       expect(attributeSeatClass?.category).toBe(AttributeCategory.SeatClass);
       expect(attributeSeatClass?.key).toBe('2');
-      expect(attributeSeatClass?.name).toBe('Kategorie 2');
 
       expect(attributeTechnical?.category).toBe(AttributeCategory.Technical);
       expect(attributeTechnical?.key).toBe('_pm_preview');
-      expect(attributeTechnical?.name).toBe('Vorschau');
     });
 
     it('inserts movies with optional properties missing', async () => {
@@ -250,7 +246,6 @@ describe('scrape-cinema-data worker', () => {
       for (const attribute of attributes) {
         expect(attribute.category).toBeOneOf([AttributeCategory.Genres, AttributeCategory.Technical]);
         expect(attribute.key).toBeOneOf(['Drama', 'Komödie', 'Fantasy', '_pm_preview', '2d']);
-        expect(attribute.name).toBeOneOf(['Drama', 'Komödie', 'Fantasy', 'Vorschau', '2D']);
       }
 
       for (const movieAttribute of scrapedMovieAttributes) {
@@ -371,11 +366,9 @@ describe('scrape-cinema-data worker', () => {
 
       expect(attributeSeatClass?.category).toBe(AttributeCategory.SeatClass);
       expect(attributeSeatClass?.key).toBe('5');
-      expect(attributeSeatClass?.name).toBe('VIP Plus');
 
       expect(attributeTechnical?.category).toBe(AttributeCategory.Technical);
       expect(attributeTechnical?.key).toBe('2d');
-      expect(attributeTechnical?.name).toBe('2D');
 
       for (const performanceAttribute of performancesAttributes) {
         expect(performanceAttribute.performanceId).toBe(moviePerformance.id);
@@ -452,7 +445,6 @@ describe('scrape-cinema-data worker', () => {
         {
           id: 'f18c77a9-630e-41de-86e7-900122be9ffc',
           category: AttributeCategory.Genres,
-          name: 'mocked',
           key: 'Fantasy',
           createdAt: dayjs.utc('2026-08-15 13:03:41.657+00').toDate(),
           updatedAt: mockedUpdatedAtTimestamp,
@@ -460,7 +452,6 @@ describe('scrape-cinema-data worker', () => {
         {
           id: 'd169ee35-aefa-4c63-8519-f8ea2a2a128a',
           category: AttributeCategory.Genres,
-          name: 'mocked',
           key: 'Drama',
           createdAt: dayjs.utc('2026-08-15 13:03:41.657+00').toDate(),
           updatedAt: mockedUpdatedAtTimestamp,
@@ -468,7 +459,6 @@ describe('scrape-cinema-data worker', () => {
         {
           id: '2ddd2bb1-42a6-40c2-9691-01ef73c5b236',
           category: AttributeCategory.Genres,
-          name: 'mocked',
           key: 'Komödie',
           createdAt: dayjs.utc('2026-08-15 13:03:41.657+00').toDate(),
           updatedAt: mockedUpdatedAtTimestamp,
@@ -476,7 +466,6 @@ describe('scrape-cinema-data worker', () => {
         {
           id: '7dea6b6a-e553-4dea-8448-4ef1e753e196',
           category: AttributeCategory.SeatClass,
-          name: 'mocked',
           key: '5',
           createdAt: dayjs.utc('2026-08-15 13:03:41.657+00').toDate(),
           updatedAt: mockedUpdatedAtTimestamp,
@@ -484,7 +473,6 @@ describe('scrape-cinema-data worker', () => {
         {
           id: '0f7e599d-cac8-4fb8-aab8-1c7cc69ce3fd',
           category: AttributeCategory.Technical,
-          name: 'mocked',
           key: '2d',
           createdAt: dayjs.utc('2026-08-15 13:03:41.657+00').toDate(),
           updatedAt: mockedUpdatedAtTimestamp,
@@ -492,7 +480,6 @@ describe('scrape-cinema-data worker', () => {
         {
           id: '3cce3d6e-ce4d-4faf-9e16-4c59628b702e',
           category: AttributeCategory.Technical,
-          name: 'mocked',
           key: '_pm_preview',
           createdAt: dayjs.utc('2026-08-15 13:03:41.657+00').toDate(),
           updatedAt: mockedUpdatedAtTimestamp,
@@ -568,7 +555,6 @@ describe('scrape-cinema-data worker', () => {
       expect(attributes).toHaveLength(6);
 
       for (const attribute of attributes) {
-        expect(attribute.name).not.toBe('mocked');
         expect(attribute.updatedAt).not.toBe(mockedUpdatedAtTimestamp);
       }
 

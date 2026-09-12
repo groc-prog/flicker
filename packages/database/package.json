@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "type-check": "tsc --noEmit",
+    "type-check": "tsc --build --noEmit",
     "drizzle-kit:studio": "bun run --env-file=.env.development.local drizzle-kit studio",
     "drizzle-kit:generate": "bun run --env-file=.env.development.local drizzle-kit generate",
     "drizzle-kit:migrate": "bun run --env-file=.env.development.local drizzle-kit migrate"

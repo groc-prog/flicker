@@ -5,7 +5,6 @@ import db from '@flicker/database';
 import { BotTone, NotificationRecurrencePattern } from '@flicker/database/schemas/enums';
 import { groupsTable } from '@flicker/database/schemas/groups';
 import { notificationsTable } from '@flicker/database/schemas/notifications';
-import { usersTable } from '@flicker/database/schemas/users';
 
 import { onChatInputCommand } from '../../src/commands/server/notification-create';
 import { ServiceError } from '../../src/utils/error';
@@ -205,18 +204,11 @@ describe('notification-create command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
         await db
           .insert(notificationsTable)
           .values({
             name: notificationName,
             key: 'key',
-            creatorId: user!.id,
             groupId: group!.id,
           })
           .returning();
@@ -255,17 +247,11 @@ describe('notification-create command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
 
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: group?.discordId,
           user: {
-            id: user?.discordId,
+            id: '1420788362872230052',
           },
           locale: Locale.EnglishUS,
           options: {
@@ -295,8 +281,6 @@ describe('notification-create command', () => {
           language: null,
           recurrencePattern: NotificationRecurrencePattern.Hourly,
           recurrenceInterval: 2,
-          creatorId: user!.id,
-          userId: null,
           groupId: group!.id,
           nextTriggerAt: null,
           lastTriggerAt: null,
@@ -312,17 +296,11 @@ describe('notification-create command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
 
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: group?.discordId,
           user: {
-            id: user?.discordId,
+            id: '1420788362872230052',
           },
           locale: Locale.EnglishUS,
           options: {
@@ -351,8 +329,6 @@ describe('notification-create command', () => {
           language: null,
           recurrencePattern: null,
           recurrenceInterval: null,
-          creatorId: user!.id,
-          userId: null,
           groupId: group!.id,
           nextTriggerAt: null,
           lastTriggerAt: null,

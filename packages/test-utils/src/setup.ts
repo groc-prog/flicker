@@ -11,11 +11,9 @@ import { moviesTable } from '@flicker/database/schemas/movies';
 import { notificationsTable } from '@flicker/database/schemas/notifications';
 import { scrapedMoviesToAttributesTable } from '@flicker/database/schemas/scraped-movie-attributes';
 import { scrapedMoviesTable } from '@flicker/database/schemas/scraped-movies';
-import { usersTable } from '@flicker/database/schemas/users';
 
 export async function truncateDatabase(): Promise<void> {
   await db.delete(notificationsTable);
-  await db.delete(usersTable);
   await db.delete(groupsTable);
   await db.delete(attributesTable);
   await db.delete(scrapedMoviesToAttributesTable);

@@ -1,11 +1,10 @@
 import { isNotNull, sql } from 'drizzle-orm';
-import { check, index, integer, snakeCase, timestamp, unique, uuid, varchar } from 'drizzle-orm/pg-core';
+import { index, integer, snakeCase, timestamp, unique, uuid, varchar } from 'drizzle-orm/pg-core';
 
 import { createdAtTimestamp, updatedAtTimestamp } from '../utils/timestamp';
 import { uuidPk } from '../utils/uuid';
 import { movieLanguageEnum, notificationRecurrencePatternEnum } from './enums';
 import { groupsTable } from './groups';
-import { usersTable } from './users';
 
 export const notificationsTable = snakeCase.table(
   'notifications',
@@ -14,7 +13,7 @@ export const notificationsTable = snakeCase.table(
     /** A user-defined name for this notification. */
     name: varchar({ length: 250 }).notNull(),
     /** The search key used to do a movie lookup. */
-    key: varchar({ length: 250 }).notNull(),
+    key: varchar({ length: 250 }),
     /**
      * The preferred language in which the notification will be send. If not defined, the
      * default language of the related client will be used.
@@ -36,12 +35,6 @@ export const notificationsTable = snakeCase.table(
      * are defined.
      */
     recurrenceInterval: integer(),
-    /** The user who created the notification. */
-    creatorId: uuid()
-      .notNull()
-      .references(() => usersTable.id),
-    /** The user who should receive the notification. */
-    userId: uuid().references(() => usersTable.id),
     /** The group who should receive the notification. */
     groupId: uuid().references(() => groupsTable.id),
     /** The date after which the notification can be triggered again. */
@@ -64,6 +57,5 @@ export const notificationsTable = snakeCase.table(
     index().on(table.nextTriggerAt).where(isNotNull(table.nextTriggerAt)),
     index('idx_notification_name').using('gin', sql`${table.name} gin_trgm_ops`),
     index('idx_notification_key_trgm').using('gin', sql`${table.key} gin_trgm_ops`),
-    check('receiver_defined_check', sql`${table.userId} IS NOT NULL OR ${table.groupId} IS NOT NULL`),
   ],
 );

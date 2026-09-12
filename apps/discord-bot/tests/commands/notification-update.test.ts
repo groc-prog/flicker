@@ -6,7 +6,6 @@ import db from '@flicker/database';
 import { BotTone, NotificationRecurrencePattern } from '@flicker/database/schemas/enums';
 import { groupsTable } from '@flicker/database/schemas/groups';
 import { notificationsTable } from '@flicker/database/schemas/notifications';
-import { usersTable } from '@flicker/database/schemas/users';
 
 import { onAutocomplete, onChatInputCommand } from '../../src/commands/server/notification-update';
 import { ServiceError } from '../../src/utils/error';
@@ -38,23 +37,16 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
         await db.insert(notificationsTable).values({
           name: 'name',
           key: 'key',
-          creatorId: user!.id,
           groupId: group!.id,
         });
 
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: group?.discordId,
           user: {
-            id: user?.discordId,
+            id: '1420788362872230052',
           },
           locale: Locale.EnglishUS,
           options: {
@@ -78,23 +70,16 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
         await db.insert(notificationsTable).values({
           name: 'name',
           key: 'key',
-          creatorId: user!.id,
           groupId: group!.id,
         });
 
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: group?.discordId,
           user: {
-            id: user?.discordId,
+            id: '1420788362872230052',
           },
           locale: Locale.EnglishUS,
           options: {
@@ -125,23 +110,16 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
         await db.insert(notificationsTable).values({
           name: 'name',
           key: 'key',
-          creatorId: user!.id,
           groupId: group!.id,
         });
 
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: group?.discordId,
           user: {
-            id: user?.discordId,
+            id: '1420788362872230052',
           },
           locale: Locale.EnglishUS,
           options: {
@@ -172,23 +150,16 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
         await db.insert(notificationsTable).values({
           name: 'name',
           key: 'key',
-          creatorId: user!.id,
           groupId: group!.id,
         });
 
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: group?.discordId,
           user: {
-            id: user?.discordId,
+            id: '1420788362872230052',
           },
           locale: Locale.EnglishUS,
           options: {
@@ -219,23 +190,16 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
         await db.insert(notificationsTable).values({
           name: 'name',
           key: 'key',
-          creatorId: user!.id,
           groupId: group!.id,
         });
 
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: group?.discordId,
           user: {
-            id: user?.discordId,
+            id: '1420788362872230052',
           },
           locale: Locale.EnglishUS,
           options: {
@@ -266,23 +230,16 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
         await db.insert(notificationsTable).values({
           name: 'name',
           key: 'key',
-          creatorId: user!.id,
           groupId: group!.id,
         });
 
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: group?.discordId,
           user: {
-            id: user?.discordId,
+            id: '1420788362872230052',
           },
           locale: Locale.EnglishUS,
           options: {
@@ -313,23 +270,15 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
         await db.insert(notificationsTable).values([
           {
             name: 'name',
             key: 'key',
-            creatorId: user!.id,
             groupId: group!.id,
           },
           {
             name: 'updated-name',
             key: 'updated-key',
-            creatorId: user!.id,
             groupId: group!.id,
           },
         ]);
@@ -337,7 +286,7 @@ describe('notification-update command', () => {
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: group?.discordId,
           user: {
-            id: user?.discordId,
+            id: '1420788362872230052',
           },
           locale: Locale.EnglishUS,
           options: {
@@ -370,17 +319,11 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
 
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: group?.discordId,
           user: {
-            id: user?.discordId,
+            id: '1420788362872230052',
           },
           locale: Locale.EnglishUS,
           options: {
@@ -413,19 +356,12 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
         const [notification] = await db
           .insert(notificationsTable)
           .values([
             {
               name: 'name',
               key: 'key',
-              creatorId: user!.id,
               groupId: group!.id,
             },
           ])
@@ -434,7 +370,7 @@ describe('notification-update command', () => {
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: group?.discordId,
           user: {
-            id: user?.discordId,
+            id: '1420788362872230052',
           },
           locale: Locale.EnglishUS,
           options: {
@@ -469,8 +405,6 @@ describe('notification-update command', () => {
           language: null,
           recurrencePattern: NotificationRecurrencePattern.Weekly,
           recurrenceInterval: 4,
-          creatorId: user!.id,
-          userId: null,
           groupId: group!.id,
           nextTriggerAt: null,
           lastTriggerAt: null,
@@ -486,19 +420,12 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
         const [notification] = await db
           .insert(notificationsTable)
           .values([
             {
               name: 'name',
               key: 'key',
-              creatorId: user!.id,
               groupId: group!.id,
             },
           ])
@@ -507,7 +434,7 @@ describe('notification-update command', () => {
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: group?.discordId,
           user: {
-            id: user?.discordId,
+            id: '1420788362872230052',
           },
           locale: Locale.EnglishUS,
           options: {
@@ -542,8 +469,6 @@ describe('notification-update command', () => {
           language: null,
           recurrencePattern: NotificationRecurrencePattern.Weekly,
           recurrenceInterval: 4,
-          creatorId: user!.id,
-          userId: null,
           groupId: group!.id,
           nextTriggerAt: null,
           lastTriggerAt: null,
@@ -559,19 +484,12 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
         const [notification] = await db
           .insert(notificationsTable)
           .values([
             {
               name: 'name',
               key: 'key',
-              creatorId: user!.id,
               groupId: group!.id,
             },
           ])
@@ -580,7 +498,7 @@ describe('notification-update command', () => {
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: group?.discordId,
           user: {
-            id: user?.discordId,
+            id: '1420788362872230052',
           },
           locale: Locale.EnglishUS,
           options: {
@@ -615,8 +533,6 @@ describe('notification-update command', () => {
           language: null,
           recurrencePattern: NotificationRecurrencePattern.Weekly,
           recurrenceInterval: 4,
-          creatorId: user!.id,
-          userId: null,
           groupId: group!.id,
           nextTriggerAt: null,
           lastTriggerAt: null,
@@ -632,19 +548,12 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
         const [notification] = await db
           .insert(notificationsTable)
           .values([
             {
               name: 'name',
               key: 'key',
-              creatorId: user!.id,
               groupId: group!.id,
               recurrencePattern: NotificationRecurrencePattern.Weekly,
             },
@@ -654,7 +563,7 @@ describe('notification-update command', () => {
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: group?.discordId,
           user: {
-            id: user?.discordId,
+            id: '1420788362872230052',
           },
           locale: Locale.EnglishUS,
           options: {
@@ -689,8 +598,6 @@ describe('notification-update command', () => {
           language: null,
           recurrencePattern: NotificationRecurrencePattern.Weekly,
           recurrenceInterval: 4,
-          creatorId: user!.id,
-          userId: null,
           groupId: group!.id,
           nextTriggerAt: null,
           lastTriggerAt: null,
@@ -706,19 +613,12 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
         const [notification] = await db
           .insert(notificationsTable)
           .values([
             {
               name: 'name',
               key: 'key',
-              creatorId: user!.id,
               groupId: group!.id,
               recurrenceInterval: 4,
             },
@@ -728,7 +628,7 @@ describe('notification-update command', () => {
         const interaction = createMockedInteraction(ChatInputCommandInteraction, {
           guildId: group?.discordId,
           user: {
-            id: user?.discordId,
+            id: '1420788362872230052',
           },
           locale: Locale.EnglishUS,
           options: {
@@ -763,8 +663,6 @@ describe('notification-update command', () => {
           language: null,
           recurrencePattern: NotificationRecurrencePattern.Weekly,
           recurrenceInterval: 4,
-          creatorId: user!.id,
-          userId: null,
           groupId: group!.id,
           nextTriggerAt: null,
           lastTriggerAt: null,
@@ -784,12 +682,6 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
 
         const notifications = await db
           .insert(notificationsTable)
@@ -797,25 +689,21 @@ describe('notification-update command', () => {
             {
               name: 'b',
               key: 'key',
-              creatorId: user!.id,
               groupId: group!.id,
             },
             {
               name: 'd',
               key: 'key',
-              creatorId: user!.id,
               groupId: group!.id,
             },
             {
               name: 'a',
               key: 'key',
-              creatorId: user!.id,
               groupId: group!.id,
             },
             {
               name: 'c',
               key: 'key',
-              creatorId: user!.id,
               groupId: group!.id,
             },
           ])
@@ -854,12 +742,6 @@ describe('notification-update command', () => {
             discordId: '1420788362872230053',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
 
         const notifications = await db
           .insert(notificationsTable)
@@ -867,25 +749,21 @@ describe('notification-update command', () => {
             {
               name: 'b',
               key: 'key',
-              creatorId: user!.id,
               groupId: ownerGroup!.id,
             },
             {
               name: 'd',
               key: 'key',
-              creatorId: user!.id,
               groupId: otherGroup!.id,
             },
             {
               name: 'a',
               key: 'key',
-              creatorId: user!.id,
               groupId: otherGroup!.id,
             },
             {
               name: 'c',
               key: 'key',
-              creatorId: user!.id,
               groupId: ownerGroup!.id,
             },
           ])
@@ -916,19 +794,12 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
 
         const notifications: InferInsertModel<typeof notificationsTable>[] = [];
         for (let index = 0; index < 30; index++) {
           notifications.push({
             name: `name${index}`,
             key: 'key',
-            creatorId: user!.id,
             groupId: group!.id,
           });
         }
@@ -961,12 +832,6 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
 
         const notifications = await db
           .insert(notificationsTable)
@@ -974,25 +839,21 @@ describe('notification-update command', () => {
             {
               name: 'dune',
               key: 'key',
-              creatorId: user!.id,
               groupId: group!.id,
             },
             {
               name: 'dune 2',
               key: 'key',
-              creatorId: user!.id,
               groupId: group!.id,
             },
             {
               name: 'obsession',
               key: 'key',
-              creatorId: user!.id,
               groupId: group!.id,
             },
             {
               name: 'weapons',
               key: 'key',
-              creatorId: user!.id,
               groupId: group!.id,
             },
           ])
@@ -1031,12 +892,6 @@ describe('notification-update command', () => {
             discordId: '1420788362872230053',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
 
         const notifications = await db
           .insert(notificationsTable)
@@ -1044,25 +899,21 @@ describe('notification-update command', () => {
             {
               name: 'dune',
               key: 'key',
-              creatorId: user!.id,
               groupId: ownerGroup!.id,
             },
             {
               name: 'dune 2',
               key: 'key',
-              creatorId: user!.id,
               groupId: otherGroup!.id,
             },
             {
               name: 'obsession',
               key: 'key',
-              creatorId: user!.id,
               groupId: ownerGroup!.id,
             },
             {
               name: 'weapons',
               key: 'key',
-              creatorId: user!.id,
               groupId: ownerGroup!.id,
             },
           ])
@@ -1094,19 +945,12 @@ describe('notification-update command', () => {
             discordId: '1420788362872230051',
           })
           .returning();
-        const [user] = await db
-          .insert(usersTable)
-          .values({
-            discordId: '1420788362872230052',
-          })
-          .returning();
 
         const notifications: InferInsertModel<typeof notificationsTable>[] = [];
         for (let index = 0; index < 30; index++) {
           notifications.push({
             name: `name${index}`,
             key: 'key',
-            creatorId: user!.id,
             groupId: group!.id,
           });
         }

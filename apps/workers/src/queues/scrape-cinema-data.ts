@@ -303,7 +303,6 @@ function buildEntityMaps(
               }
 
               extractedAttributes.push({
-                name: attributeData.name,
                 category: attributeCategory as AttributeCategory,
                 key: attributeKey,
               });
@@ -363,12 +362,7 @@ async function storeAttributes(extractedAttributes: ExtractedAttributes): Promis
   const insertedOrUpdated = await db
     .insert(attributesTable)
     .values(extractedAttributes)
-    .onConflictDoUpdate({
-      target: [attributesTable.category, attributesTable.key],
-      set: {
-        name: sql.raw(`excluded.${attributesTable.name.name}`),
-      },
-    })
+    .onConflictDoNothing()
     .returning({
       id: attributesTable.id,
       category: attributesTable.category,

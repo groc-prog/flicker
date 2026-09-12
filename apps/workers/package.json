@@ -9,7 +9,7 @@
     "test": "bun test --coverage",
     "test:watch": "bun test --watch",
     "lint": "eslint .",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --build --noEmit"
   },
   "devDependencies": {
     "@flicker/eslint-config": "workspace:*",

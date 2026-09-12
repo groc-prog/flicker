@@ -88,6 +88,8 @@ export const worker = movieProcessingQueueGroup.getWorker<TmdbMetadataJob>(
             for (const language of movieLanguageEnum.enumValues) {
               await storeMovieDetailsForLanguage(movieMetadata.id, language as MovieLanguage, scrapedMovie);
             }
+
+            // TODO: Enqueue follow-up jobs for sending group notifications
           });
         } catch (error) {
           span.recordException(error as Error);

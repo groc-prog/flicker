@@ -12,7 +12,7 @@ import { withLogContext } from '@flicker/telemetry/logging';
 import { attachWorkerEventLogging, logger } from '../telemetry/logging';
 import { movieProcessingTracer } from '../telemetry/tracing';
 import { notificationsQueueGroup } from './queue-groups';
-import { queue as sendGroupNotificationQueue } from './send-group-notifications';
+import { queue as sendGroupNotificationsQueue } from './send-group-notifications';
 
 export interface GetMatchingGroupNotificationsJob {
   scrapedMovieId: InferSelectModel<typeof moviesTable>['scrapedMovieId'];
@@ -23,13 +23,13 @@ type MovieMapItem = {
   id: InferSelectModel<typeof moviesTable>['id'];
 };
 
-const identifier = 'get-matching-group-notifications';
+const identifier = 'collect-group-notifications';
 
-const parsedSimilarityThreshold = Number(process.env.JOB_GET_AFFECTED_GROUPS_SIMILARITY_THRESHOLD);
+const parsedSimilarityThreshold = Number(process.env.JOB_COLLECT_GROUP_NOTIFICATION_FUZZY_MATCH_THRESHOLD);
 const similarityThreshold = isNaN(parsedSimilarityThreshold) ? 0.7 : parsedSimilarityThreshold;
 
 if (similarityThreshold <= 0 || similarityThreshold >= 1) {
-  logger.error('JOB_GET_AFFECTED_GROUPS_SIMILARITY_THRESHOLD must be between 0 and 1');
+  logger.error('JOB_COLLECT_GROUP_NOTIFICATION_FUZZY_MATCH_THRESHOLD must be between 0 and 1');
   process.exit(1);
 }
 
@@ -122,10 +122,10 @@ export const worker = notificationsQueueGroup.getWorker<GetMatchingGroupNotifica
 
                 return collected;
               },
-              [] as Parameters<typeof sendGroupNotificationQueue.addBulk>[0],
+              [] as Parameters<typeof sendGroupNotificationsQueue.addBulk>[0],
             );
 
-            sendGroupNotificationQueue.addBulk(jobs);
+            sendGroupNotificationsQueue.addBulk(jobs);
             logger.info(`${jobs.length} jobs enqueued successfully`);
           });
         } catch (error) {

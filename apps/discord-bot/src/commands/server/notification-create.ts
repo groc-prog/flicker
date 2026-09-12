@@ -7,7 +7,6 @@ import db from '@flicker/database';
 import { BotTone, NotificationRecurrencePattern } from '@flicker/database/schemas/enums';
 import { groupsTable } from '@flicker/database/schemas/groups';
 import { notificationsTable } from '@flicker/database/schemas/notifications';
-import { usersTable } from '@flicker/database/schemas/users';
 import { renderTemplate } from '@flicker/i18n/utils';
 import { TelemetryIdentifier } from '@flicker/telemetry/identifiers';
 
@@ -90,22 +89,11 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
     return;
   }
 
-  logger.info(`Getting ID for user with Discord ID ${interaction.user.id}`);
-  const [user] = await db
-    .select({ id: usersTable.id })
-    .from(usersTable)
-    .where(eq(usersTable.discordId, interaction.user.id));
-  if (!user) {
-    logger.error('User who initialized command not found');
-    throw new ServiceError(`No user with matching Discord ID ${interaction.user.id} found`);
-  }
-
   logger.info(`Creating new notification with name ${data.name} for group ${group.id}`);
   const [notification] = await db
     .insert(notificationsTable)
     .values({
       ...data,
-      creatorId: user.id,
       groupId: group.id,
     })
     .returning({

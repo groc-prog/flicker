@@ -43,3 +43,6 @@ yarn-error.log*
 
 # Bunqueue
 .bunqueue
+
+# Typescript build info
+*.tsbuildinfo
