@@ -3,11 +3,14 @@ import {
   ChannelSelectMenuBuilder,
   ChannelType,
   ChatInputCommandInteraction,
+  InteractionContextType,
   LabelBuilder,
+  Locale,
   MessageFlags,
   ModalBuilder,
   ModalSubmitInteraction,
   PermissionsBitField,
+  SlashCommandBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
 } from 'discord.js';
@@ -27,11 +30,12 @@ import { logger } from '../../telemetry/logging';
 import { serializeModalCustomId } from '../../telemetry/tracing';
 import { ServiceError } from '../../utils/error';
 
-const GroupConfigurationValidator = z.object({
-  languages: z.array(z.enum(MovieLanguage)).optional(),
-  tone: z.enum(BotTone).optional(),
-  channel: z.string(),
-});
+export const command = new SlashCommandBuilder()
+  .setName(t('command.configure-server.name'))
+  .setNameLocalization(Locale.German, t('command.configure-server.name', { lng: Locale.German }))
+  .setDescription(t('command.configure-server.description'))
+  .setDescriptionLocalization(Locale.German, t('command.configure-server.description', { lng: Locale.German }))
+  .setContexts(InteractionContextType.Guild);
 
 export const modalCustomId = 'configure-server';
 
@@ -75,7 +79,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
   }
 
   const languageStringSelect = new StringSelectMenuBuilder()
-    .setCustomId('configure-server-languages')
+    .setCustomId(`${modalCustomId}-languages`)
     .setMinValues(1)
     .setMaxValues(movieLanguageEnum.enumValues.length);
   for (const language of movieLanguageEnum.enumValues) {
@@ -93,7 +97,7 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
   }
 
   const toneStringSelect = new StringSelectMenuBuilder()
-    .setCustomId('configure-server-tone')
+    .setCustomId(`${modalCustomId}-tone`)
     .setMinValues(1)
     .setMaxValues(1);
   for (const tone of botToneEnum.enumValues) {
@@ -110,43 +114,43 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
   }
 
   const channelSelect = new ChannelSelectMenuBuilder()
-    .setCustomId('configure-server-channel')
+    .setCustomId(`${modalCustomId}-channel`)
     .setChannelTypes(ChannelType.GuildText);
   if (group?.discordChannelId) channelSelect.setDefaultChannels(group.discordChannelId);
 
   logger.info('Building response modal with group configuration and defaults');
   const modal = new ModalBuilder()
     .setCustomId(serializeModalCustomId(modalCustomId))
-    .setTitle(t('server.configure-server.modal.title', { lng: getSupportedLocale(interaction.locale) }))
+    .setTitle(t('command.configure-server.modal.title', { lng: getSupportedLocale(interaction.locale) }))
     .addLabelComponents(
       new LabelBuilder()
         .setLabel(
-          t('server.configure-server.modal.components.languages.label', {
+          t('command.configure-server.modal.components.languages.label', {
             lng: getSupportedLocale(interaction.locale),
           }),
         )
         .setDescription(
-          t('server.configure-server.modal.components.languages.description', {
+          t('command.configure-server.modal.components.languages.description', {
             lng: getSupportedLocale(interaction.locale),
           }),
         )
         .setStringSelectMenuComponent(languageStringSelect),
       new LabelBuilder()
         .setLabel(
-          t('server.configure-server.modal.components.tone.label', { lng: getSupportedLocale(interaction.locale) }),
+          t('command.configure-server.modal.components.tone.label', { lng: getSupportedLocale(interaction.locale) }),
         )
         .setDescription(
-          t('server.configure-server.modal.components.tone.description', {
+          t('command.configure-server.modal.components.tone.description', {
             lng: getSupportedLocale(interaction.locale),
           }),
         )
         .setStringSelectMenuComponent(toneStringSelect),
       new LabelBuilder()
         .setLabel(
-          t('server.configure-server.modal.components.channel.label', { lng: getSupportedLocale(interaction.locale) }),
+          t('command.configure-server.modal.components.channel.label', { lng: getSupportedLocale(interaction.locale) }),
         )
         .setDescription(
-          t('server.configure-server.modal.components.channel.description', {
+          t('command.configure-server.modal.components.channel.description', {
             lng: getSupportedLocale(interaction.locale),
           }),
         )
@@ -157,12 +161,6 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
 }
 
 export async function onModalSubmit(interaction: ModalSubmitInteraction): Promise<void> {
-  const [existingGroupConfiguration] = await db
-    .select({ tone: groupsTable.tone })
-    .from(groupsTable)
-    .where(eq(groupsTable.discordId, interaction.guildId!));
-  const botTone = existingGroupConfiguration?.tone ?? BotTone.Normal;
-
   logger.debug('Validating inputs from modal');
   const tone = interaction.fields.getStringSelectValues('configure-server-tone');
   const channel = interaction.fields.getSelectedChannels('configure-server-channel');
@@ -180,11 +178,23 @@ export async function onModalSubmit(interaction: ModalSubmitInteraction): Promis
         .map((value) => value.path[0])
         .toArray()}`,
     );
+
+    const validationIssues = error.issues.map(({ message }) =>
+      renderTemplate(message, getSupportedLocale(interaction.locale), {
+        languages: movieLanguageEnum.enumValues.map((language) =>
+          t(`enum.language.${language}`, { lng: interaction.locale }),
+        ),
+        tones: botToneEnum.enumValues.map((tone) => t(`enum.tone.${tone}`, { lng: interaction.locale })),
+      }),
+    );
     await interaction.reply({
       flags: [MessageFlags.Ephemeral],
       content: renderTemplate(
-        `tone.${botTone}.server-configuration.validation-failed`,
+        'validation.server-configuration.validation-failure',
         getSupportedLocale(interaction.locale),
+        {
+          issues: validationIssues,
+        },
       ),
     });
     return;
@@ -221,9 +231,15 @@ export async function onModalSubmit(interaction: ModalSubmitInteraction): Promis
       `tone.${group.tone}.server-configuration.created-or-updated`,
       getSupportedLocale(interaction.locale),
       {
-        commandName: `${t('server.name', { lng: getSupportedLocale(interaction.locale) })} ${t('server.configure-server.name', { lng: getSupportedLocale(interaction.locale) })}`,
-        commandId: client.commandIds.get(t('server.name')),
+        commandName: t('command.configure-server.name', { lng: getSupportedLocale(interaction.locale) }),
+        commandId: client.commandIds.get(t('command.configure-server.name')),
       },
     ),
   });
 }
+
+const GroupConfigurationValidator = z.object({
+  languages: z.array(z.enum(MovieLanguage), { error: 'validation.configure-server.languages' }).optional(),
+  tone: z.enum(BotTone, { error: 'validation.configure-server.tone' }).optional(),
+  channel: z.string({ error: 'validation.configure-server.channel' }),
+});

@@ -1,9 +1,9 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "d4130875-9b78-47e2-aff7-574a0cc9059c",
+  "id": "e5629abe-64c9-4919-bd15-9831bec31270",
   "prevIds": [
-    "23e25541-5d02-4535-8d87-993a214eed0a"
+    "a9eb8155-1f7a-48a9-b5b4-6aa27053fda4"
   ],
   "ddl": [
     {
@@ -54,12 +54,6 @@
     },
     {
       "isRlsEnabled": false,
-      "name": "groups",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
       "name": "movie_performances_to_attributes",
       "entityType": "tables",
       "schema": "public"
@@ -89,12 +83,6 @@
       "schema": "public"
     },
     {
-      "isRlsEnabled": false,
-      "name": "users",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -116,19 +104,6 @@
       "generated": null,
       "identity": null,
       "name": "category",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "attributes"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "name",
       "entityType": "columns",
       "schema": "public",
       "table": "attributes"
@@ -171,97 +146,6 @@
       "entityType": "columns",
       "schema": "public",
       "table": "attributes"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "gen_random_uuid()",
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "groups"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "discord_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "groups"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "discord_channel_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "groups"
-    },
-    {
-      "type": "jsonb",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "'[\"en\"]'",
-      "generated": null,
-      "identity": null,
-      "name": "languages",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "groups"
-    },
-    {
-      "type": "bot_tone",
-      "typeSchema": "public",
-      "notNull": true,
-      "dimensions": 0,
-      "default": "'normal'",
-      "generated": null,
-      "identity": null,
-      "name": "tone",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "groups"
-    },
-    {
-      "type": "timestamp(3) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "groups"
-    },
-    {
-      "type": "timestamp(3) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "groups"
     },
     {
       "type": "uuid",
@@ -810,84 +694,6 @@
       "table": "scraped_movies"
     },
     {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "gen_random_uuid()",
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "discord_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "movie_language",
-      "typeSchema": "public",
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "language",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "bot_tone",
-      "typeSchema": "public",
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "tone",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "timestamp(3) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "timestamp(3) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
       "nameExplicit": false,
       "columns": [
         {
@@ -1134,16 +940,6 @@
         "id"
       ],
       "nameExplicit": false,
-      "name": "groups_pkey",
-      "schema": "public",
-      "table": "groups",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
       "name": "movie_performances_pkey",
       "schema": "public",
       "table": "movie_performances",
@@ -1167,16 +963,6 @@
       "name": "scraped_movies_pkey",
       "schema": "public",
       "table": "scraped_movies",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "users_pkey",
-      "schema": "public",
-      "table": "users",
       "entityType": "pks"
     },
     {
@@ -1206,17 +992,6 @@
     {
       "nameExplicit": false,
       "columns": [
-        "discord_id"
-      ],
-      "nullsNotDistinct": false,
-      "name": "groups_discord_id_key",
-      "schema": "public",
-      "table": "groups",
-      "entityType": "uniques"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
         "scraped_performance_id"
       ],
       "nullsNotDistinct": false,
@@ -1234,17 +1009,6 @@
       "name": "scraped_movies_scraped_movie_id_key",
       "schema": "public",
       "table": "scraped_movies",
-      "entityType": "uniques"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "discord_id"
-      ],
-      "nullsNotDistinct": false,
-      "name": "users_discord_id_key",
-      "schema": "public",
-      "table": "users",
       "entityType": "uniques"
     }
   ],

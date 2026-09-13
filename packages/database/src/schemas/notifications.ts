@@ -1,9 +1,20 @@
 import { isNotNull, sql } from 'drizzle-orm';
-import { index, integer, snakeCase, timestamp, unique, uuid, varchar } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  check,
+  decimal,
+  index,
+  integer,
+  snakeCase,
+  timestamp,
+  unique,
+  uuid,
+  varchar,
+} from 'drizzle-orm/pg-core';
 
 import { createdAtTimestamp, updatedAtTimestamp } from '../utils/timestamp';
 import { uuidPk } from '../utils/uuid';
-import { movieLanguageEnum, notificationRecurrencePatternEnum } from './enums';
+import { notificationRecurrencePatternEnum } from './enums';
 import { groupsTable } from './groups';
 
 export const notificationsTable = snakeCase.table(
@@ -12,15 +23,24 @@ export const notificationsTable = snakeCase.table(
     ...uuidPk,
     /** A user-defined name for this notification. */
     name: varchar({ length: 250 }).notNull(),
-    /** The search key used to do a movie lookup. */
-    key: varchar({ length: 250 }),
     /**
-     * The preferred language in which the notification will be send. If not defined, the
-     * default language of the related client will be used.
+     * The search key a movie title must match (fuzzy search) to be considered for this
+     * notification.
      *
-     * For groups this will be ignored as groups can define multiple languages.
+     * _Note_: This value will be matched against the localized titles of the movie. This
+     * prevents matches for english titles if the group does not have english enabled as a
+     * language.
      */
-    language: movieLanguageEnum(),
+    searchKey: varchar({ length: 250 }),
+    /** The genre a movie must have to be considered for this notification. */
+    genre: varchar(),
+    /** The minimal vote score a movie must have to be considered for this notification. */
+    minVoteAverage: decimal({ precision: 3, scale: 1, mode: 'number' }).$type<number>(),
+    /**
+     * Whether the movie must have at least one performance (in the future) available to
+     * be considered for this notification.
+     */
+    ensurePerformancesAvailable: boolean(),
     /**
      * The recurrence pattern to use.
      *
@@ -56,6 +76,12 @@ export const notificationsTable = snakeCase.table(
     unique().on(table.id, table.name),
     index().on(table.nextTriggerAt).where(isNotNull(table.nextTriggerAt)),
     index('idx_notification_name').using('gin', sql`${table.name} gin_trgm_ops`),
-    index('idx_notification_key_trgm').using('gin', sql`${table.key} gin_trgm_ops`),
+    index('idx_notification_key_trgm').using('gin', sql`${table.searchKey} gin_trgm_ops`),
+    index().on(table.genre).where(isNotNull(table.genre)),
+    index().on(table.minVoteAverage).where(isNotNull(table.minVoteAverage)),
+    check(
+      'check_filters_set',
+      sql`${table.searchKey} IS NOT NULL OR ${table.genre} IS NOT NULL OR ${table.minVoteAverage} IS NOT NULL`,
+    ),
   ],
 );

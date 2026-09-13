@@ -38,3 +38,22 @@ export const botToneEnum = pgEnum('bot_tone', BotTone);
 export const attributeCategoryEnum = pgEnum('attribute_category', AttributeCategory);
 
 export const movieLanguageEnum = pgEnum('movie_language', MovieLanguage);
+
+export const KNOWN_GENRES = [
+  'Abenteuer',
+  'Thriller',
+  'Dokumentarfilm',
+  'Animation',
+  'Action',
+  'Historie',
+  'Krimi',
+  'Familie',
+  'Fantasy',
+  'Komödie',
+  'Horror',
+  'Liebesfilm',
+  'Musik',
+  'Science Fiction',
+  'Mystery',
+  'Drama',
+] as const;

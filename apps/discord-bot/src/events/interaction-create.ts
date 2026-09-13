@@ -41,11 +41,6 @@ export async function execute(interaction: Interaction): Promise<void> {
     ctx[TelemetryIdentifier.CommandId] = interaction.commandId;
   }
 
-  if (interaction.isChatInputCommand()) {
-    ctx[TelemetryIdentifier.SubcommandName] = interaction.options.getSubcommand() ?? undefined;
-    ctx[TelemetryIdentifier.SubcommandGroupName] = interaction.options.getSubcommandGroup() ?? undefined;
-  }
-
   return await withLogContext(ctx, async () => {
     if (interaction.isChatInputCommand()) await onChatInputCommand(interaction);
     if (interaction.isModalSubmit()) await onModalSubmit(interaction);
@@ -56,17 +51,9 @@ export async function execute(interaction: Interaction): Promise<void> {
 async function onChatInputCommand(interaction: ChatInputCommandInteraction): Promise<void> {
   await eventTracer.startActiveSpan(`slash_command /${interaction.commandName}`, async (span) => {
     try {
-      const subcommandGroupName = interaction.options.getSubcommandGroup();
-      const subcommandName = interaction.options.getSubcommand();
-      const commandName = interaction.commandName;
-
-      let commandKey = commandName;
-      if (subcommandGroupName) commandKey = `${commandKey}:${subcommandGroupName}`;
-      if (subcommandName) commandKey = `${commandKey}:${subcommandName}`;
-
-      const command = client.commands.get(commandKey);
+      const command = client.commands.get(interaction.commandName);
       if (!command) {
-        logger.info(`Received unknown command with computed key ${commandKey}, skipping`);
+        logger.info(`Received unknown command with name ${interaction.commandName}, skipping`);
         return;
       }
 
@@ -109,7 +96,7 @@ async function onChatInputCommand(interaction: ChatInputCommandInteraction): Pro
 
         try {
           await interaction.reply({
-            content: t('common.error', { lng: getSupportedLocale(interaction.locale) }),
+            content: t('error', { lng: getSupportedLocale(interaction.locale) }),
             flags: [MessageFlags.Ephemeral],
           });
         } catch (error) {
@@ -144,20 +131,16 @@ async function onModalSubmit(interaction: ModalSubmitInteraction): Promise<void>
     async (span) => {
       try {
         logger.debug(`Received modal submit interaction ${interaction.id}`);
-        const commandId = client.modals.get(customId);
-        if (!commandId) {
+        const command = client.modals.get(customId);
+        if (!command) {
           logger.info(`Received unknown custom ID ${customId}, skipping`);
           return;
         }
 
-        const command = client.commands.get(commandId);
-        if (!command) {
-          logger.error(`No command found for mapped ID ${commandId}, skipping`);
-          return;
-        }
-
         if (!command.onModalSubmit) {
-          logger.error(`No modal function found for command ${commandId}, but registered via custom ID ${customId}`);
+          logger.error(
+            `No modal function found for command ${command.command.name}, but registered via custom ID ${customId}`,
+          );
           process.exit(1);
         }
 
@@ -172,7 +155,7 @@ async function onModalSubmit(interaction: ModalSubmitInteraction): Promise<void>
 
           try {
             await interaction.reply({
-              content: t('common.error', { lng: getSupportedLocale(interaction.locale) }),
+              content: t('error', { lng: getSupportedLocale(interaction.locale) }),
               flags: [MessageFlags.Ephemeral],
             });
           } catch (error) {
@@ -197,17 +180,9 @@ async function onModalSubmit(interaction: ModalSubmitInteraction): Promise<void>
 async function onAutocomplete(interaction: AutocompleteInteraction): Promise<void> {
   await eventTracer.startActiveSpan(`autocomplete /${interaction.commandName}`, async (span) => {
     try {
-      const subcommandGroupName = interaction.options.getSubcommandGroup();
-      const subcommandName = interaction.options.getSubcommand();
-      const commandName = interaction.commandName;
-
-      let commandKey = commandName;
-      if (subcommandGroupName) commandKey = `${commandKey}:${subcommandGroupName}`;
-      if (subcommandName) commandKey = `${commandKey}:${subcommandName}`;
-
-      const command = client.commands.get(commandKey);
+      const command = client.commands.get(interaction.commandName);
       if (!command) {
-        logger.info(`Received autocomplete for unknown command with computed key ${commandKey}, skipping`);
+        logger.info(`Received autocomplete for unknown command with name ${interaction.commandName}, skipping`);
         return;
       }
 

@@ -1,19 +1,10 @@
-import {
-  Routes,
-  SharedSlashCommand,
-  type APIApplicationCommand,
-  type Client,
-  type CommandGroupDefinition,
-  type REST,
-} from 'discord.js';
+import { Routes, type APIApplicationCommand, type Client, type CommandDefinition, type REST } from 'discord.js';
 
 import { logger } from '../telemetry/logging';
-import * as serverCommands from './server';
+import * as configureServerCommand from './server/configure-server';
+import * as notificationCreateCommand from './server/notification-create';
 
-const commands: SharedSlashCommand[] = [serverCommands.command];
-const commandMap: CommandGroupDefinition['map'] = {
-  ...serverCommands.map,
-};
+const commands: CommandDefinition[] = [configureServerCommand, notificationCreateCommand];
 
 /**
  * Registers slash commands with the client.
@@ -46,31 +37,24 @@ export async function registerCommands(rest: REST, client: Client): Promise<void
   }
 
   const registeredCommands = (await rest.put(route, {
-    body: commands.map((command) => command.toJSON()),
+    body: commands.map(({ command }) => command.toJSON()),
   })) as APIApplicationCommand[];
 
   logger.info(`Registering ${registeredCommands.length} command IDs with client`);
   for (const command of registeredCommands) {
     logger.debug(`Registering command ID ${command.id} (${command.name}) with client`);
+    const commandDefinition = commands.find((definition) => definition.command.name === command.name);
+    if (!commandDefinition) {
+      logger.error(`No command definition found for command name ${command.name} after registration`);
+      process.exit(1);
+    }
+
     client.commandIds.set(command.name, command.id);
-  }
+    client.commands.set(command.name, commandDefinition);
 
-  logger.info(`Mapping command definitions for ${Object.keys(commandMap).length} computed command keys`);
-  for (const [computedKey, definition] of Object.entries(commandMap)) {
-    logger.debug(`Registered mapping for computed command key ${computedKey} with client`);
-    client.commands.set(computedKey, definition);
-
-    if (definition.modalCustomId && definition.onModalSubmit) {
-      logger.debug(`Mapping modal ${definition.modalCustomId} to computed command key ${computedKey}`);
-      const existingMapping = client.modals.get(definition.modalCustomId);
-      if (existingMapping) {
-        logger.error(
-          `Duplicate modal custom ID ${definition.modalCustomId} found. Custom ID is defined for computed command keys ${existingMapping} and ${computedKey}`,
-        );
-        process.exit(1);
-      }
-
-      client.modals.set(definition.modalCustomId, computedKey);
+    if (commandDefinition.modalCustomId && commandDefinition.onModalSubmit) {
+      logger.debug(`Registering model ${commandDefinition.modalCustomId} (command ${command.name}) with client`);
+      client.modals.set(commandDefinition.modalCustomId, commandDefinition);
     }
   }
 }

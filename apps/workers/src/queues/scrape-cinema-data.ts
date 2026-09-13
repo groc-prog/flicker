@@ -5,7 +5,7 @@ import { and, eq, gt, inArray, not, sql, type InferInsertModel } from 'drizzle-o
 
 import db from '@flicker/database';
 import { attributesTable } from '@flicker/database/schemas/attributes';
-import { attributeCategoryEnum, type AttributeCategory } from '@flicker/database/schemas/enums';
+import { AttributeCategory, attributeCategoryEnum, KNOWN_GENRES } from '@flicker/database/schemas/enums';
 import { moviePerformancesToAttributesTable } from '@flicker/database/schemas/movie-performance-attributes';
 import { moviePerformancesTable } from '@flicker/database/schemas/movie-performances';
 import { scrapedMoviesToAttributesTable } from '@flicker/database/schemas/scraped-movie-attributes';
@@ -340,6 +340,17 @@ function buildEntityMaps(
             });
           }
         });
+      }
+
+      const genres = extractedAttributes
+        .values()
+        .filter(({ category }) => category === AttributeCategory.Genres)
+        .toArray();
+      if (genres.length !== KNOWN_GENRES.length) {
+        const unknownGenres = genres.filter(({ key }) => !(KNOWN_GENRES as unknown as string[]).includes(key));
+        logger.warn(
+          `Found ${genres.length - KNOWN_GENRES.length} unknown genres: ${unknownGenres.join(', ')}. No translations available, manual adjustments in translation files needed`,
+        );
       }
     } finally {
       span.end();

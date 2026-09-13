@@ -8,3 +8,13 @@ export class ServiceError extends Error {
     this.metadata = metadata;
   }
 }
+
+/**
+ * Custom error class which can be thrown inside a multi-step command execution to
+ * indicate it has either been cancelled by the user or timed out.
+ */
+export class MultiStepCommandCancelledError extends Error {
+  constructor() {
+    super('Multi-step command has been cancelled');
+  }
+}

@@ -1,173 +1,151 @@
 {
-  "server": {
-    "name": "server",
-    "description": "Konfiguriere Server-Benachrichtigungen",
+  "command": {
     "configure-server": {
-      "name": "server-konfigurieren",
-      "description": "Konfiguriere Kanäle, Sprachen und mehr für deine Server-Benachrichtigungen",
+      "name": "configure-server",
+      "description": "Configure channels, languages and more for your server notifications",
       "modal": {
-        "title": "Server-Benachrichtigungen konfigurieren",
+        "title": "Configure server notifications",
         "components": {
           "languages": {
-            "label": "Benachrichtigungssprachen",
-            "description": "Eine oder mehrere Sprachen, in denen die Benachrichtigungen gesendet werden"
+            "label": "Notification Languages",
+            "description": "One or more languages in which the notifications will be posted"
           },
           "tone": {
-            "label": "Bot-Persönlichkeit",
-            "description": "Die Persönlichkeit, die der Bot beim Senden von Nachrichten auf diesem Server verwendet"
+            "label": "Bot Tone",
+            "description": "The tone the bot will use when sending messages in this server"
           },
           "channel": {
-            "label": "Benachrichtigungskanal",
-            "description": "Der Kanal, in den der Bot die Benachrichtigungen postet"
+            "label": "Notification Channel",
+            "description": "The channel to which the bot will post notifications to"
           }
         }
       }
     },
-    "notification-command-group": {
-      "name": "benachrichtigung",
-      "description": "Verwalte deine Server-Benachrichtigungen"
+    "notification-create": {
+      "name": "create-notification",
+      "description": "Create a new server notification",
+      "option": {
+        "name": {
+          "name": "name",
+          "description": "A unique name for this notification"
+        },
+        "ensure-performances-available": {
+          "name": "ensure-performances-available",
+          "description": "Control if movies without any announced performances are included in the search"
+        },
+        "search-key": {
+          "name": "search-key",
+          "description": "A fuzzy-matched movie search key"
+        },
+        "genre": {
+          "name": "genre",
+          "description": "Only movies with the selected genre will be matched"
+        },
+        "min-vote-average": {
+          "name": "min-vote-average",
+          "description": "The min. TMDB vote average to movie must have, from 0 to 10 (decimals included)"
+        },
+        "recurrence-pattern": {
+          "name": "recurrence-pattern",
+          "description": "The pattern after which the notification can be triggered again"
+        },
+        "recurrence-interval": {
+          "name": "recurrence-interval",
+          "description": "The value used for the recurrence pattern"
+        }
+      }
+    }
+  },
+  "validation": {
+    "configure-server": {
+      "validation-failure": "One or more of your provided options are invalid:<% it.issues.forEach(function(issue) { %>\n**<%= issue %>**<% }) %>",
+      "languages": "All provided languages must be one of the following types: <% it.languages.forEach(function(language) { %>\n- **<%= language %>**<% }) %>",
+      "tone": "The provided bot tone must be one of the following types: <% it.tones.forEach(function(tone) { %>\n- **<%= tone %>**<% }) %>",
+      "channel": "A channel is required."
     },
     "notification-create": {
-      "name": "erstellen",
-      "description": "Erstelle eine neue Server-Benachrichtigung",
-      "options": {
-        "name": {
-          "name": "name",
-          "description": "Ein eindeutiger Name für diese Benachrichtigung"
-        },
-        "search-term": {
-          "name": "suchbegriff",
-          "description": "Ein Begriff für die unscharfe Film-Suche"
-        },
-        "recurrence-pattern": {
-          "name": "wiederholungsmuster",
-          "description": "Das Muster, nach dem die Benachrichtigung erneut ausgelöst werden kann"
-        },
-        "recurrence-interval": {
-          "name": "wiederholungsintervall",
-          "description": "Das Intervall für das Wiederholungsmuster"
-        }
-      }
-    },
-    "notification-delete": {
-      "name": "entfernen",
-      "description": "Lösche eine Server-Benachrichtigung",
-      "options": {
-        "notification": {
-          "name": "benachrichtigung",
-          "description": "Die zu löschende Benachrichtigung"
-        }
-      }
-    },
-    "notification-update": {
-      "name": "bearbeiten",
-      "description": "Aktualisiere eine bestehende Server-Benachrichtigung",
-      "options": {
-        "notification": {
-          "name": "benachrichtigung",
-          "description": "Die zu aktualisierende Benachrichtigung"
-        },
-        "name": {
-          "name": "name",
-          "description": "Ein eindeutiger Name für diese Benachrichtigung"
-        },
-        "search-term": {
-          "name": "suchbegriff",
-          "description": "Ein Begriff für die unscharfe Film-Suche"
-        },
-        "recurrence-pattern": {
-          "name": "wiederholungsmuster",
-          "description": "Das Muster, nach dem die Benachrichtigung erneut ausgelöst werden kann"
-        },
-        "recurrence-interval": {
-          "name": "wiederholungsintervall",
-          "description": "Das Intervall für das Wiederholungsmuster. 0 bedeutet keine Änderung"
-        }
-      }
+      "validation-failure": "One or more of your provided options are invalid:<% it.issues.forEach(function(issue) { %>\n**<%= issue %>**<% }) %>",
+      "name": "A unique name between `1` and `255` characters is required",
+      "duplicate-name": "A notification with the name **<%= it.name %>** already exists",
+      "search-key": "The search key must have between `1` and `255` characters",
+      "genre": "The genre must be a valid genre supported by the bot",
+      "min-vote-average": "The min. vote average must be a number between `0` and `10`",
+      "recurrence-pattern": "The provided recurrence pattern must be one of the following types: <% it.recurrencePatterns.forEach(function(pattern) { %>\n- **<%= pattern %>**<% }) %>",
+      "recurrence-interval": "The recurrence interval must be a number greater than `0`",
+      "filter-required": "At least one of the following filters must be defined:\n- `search-key`\n- `genre`\n- `min-vote-average`"
     }
   },
   "enum": {
     "language": {
-      "en": "🇺🇸 Englisch",
-      "de": "🇩🇪 Deutsch"
+      "en": "🇺🇸 English",
+      "de": "🇩🇪 German"
     },
     "tone": {
       "normal": "Normal",
-      "lewd": "Versaut 😈",
+      "lewd": "Lewd 😈",
       "super_hyped": "SUPER HYPED 🔥"
     },
     "recurrence-pattern": {
-      "unchanged": "Unverändert",
-      "hours": "Stündlich",
-      "days": "Täglich",
-      "weeks": "Wöchentlich"
+      "unchanged": "Unchanged",
+      "hours": "Hourly",
+      "days": "Daily",
+      "weeks": "Weekly"
+    },
+    "genre": {
+      "Abenteuer": "Adventure",
+      "Thriller": "Thriller",
+      "Dokumentarfilm": "Documentary",
+      "Animation": "Animation",
+      "Action": "Action",
+      "Historie": "History",
+      "Krimi": "Crime",
+      "Familie": "Family",
+      "Fantasy": "Fantasy",
+      "Komödie": "Comedy",
+      "Horror": "Horror",
+      "Liebesfilm": "Romance",
+      "Musik": "Music",
+      "Science Fiction": "Science Fiction",
+      "Mystery": "Mystery",
+      "Drama": "Drama"
     }
   },
-  "common": {
-    "error": "## ⚠️ Etwas ist schiefgelaufen\n\nBei der Bearbeitung deiner Anfrage ist ein unerwarteter Fehler aufgetreten. Bitte versuche es in wenigen Augenblicken erneut oder wende dich an einen Server-Administrator, falls das Problem weiterhin besteht."
-  },
+  "error": "## ⚠️ Something Went Wrong\n\nAn unexpected error occurred while processing your request. Please try again in a few moments, or reach out to a server administrator if the issue persists.",
   "tone": {
     "normal": {
       "server-configuration": {
-        "validation-failed": "## ⚠️ Validierung fehlgeschlagen\n\nEinige deiner Einstellungen konnten nicht validiert werden. Bitte überprüfe deine Eingaben und versuche es erneut.",
-        "created-or-updated": "## 🎉 Einstellungen gespeichert\n> Die Änderungen werden wirksam, sobald der Bot das nächste Mal postet.\n\nMöchtest du weitere Anpassungen vornehmen? Du kannst deine Einstellungen jederzeit mit </<%= it.commandName %>:<%= it.commandId %>> aktualisieren.",
-        "missing-permission": "## 🛡️ Zugriff verweigert\n\nDu verfügst nicht über die erforderlichen Berechtigungen, um diese Aktion auszuführen. Bitte wende dich an einen Server-Administrator, wenn du glaubst, dass es sich um einen Fehler handelt."
-      },
-      "notification-create": {
-        "created": "## 🎉 Benachrichtigung erstellt\n> Diese Benachrichtigung wird geprüft, sobald der Bot das nächste Mal nach passenden Filmen sucht.\n\nDeine neue Benachrichtigung `<%= it.name %>` wurde erfolgreich erstellt. Du wirst benachrichtigt, sobald ein Film gefunden wird, der auf `<%= it.searchTerm %>` passt.\nMöchtest du Änderungen vornehmen? Du kannst diese Benachrichtigung jederzeit mit </<%= it.updateCommandName %>:<%= it.commandId %>> aktualisieren oder mit </<%= it.deleteCommandName %>:<%= it.commandId %>> löschen."
-      },
-      "notification-delete": {
-        "deleted": "## 🗑️ Benachrichtigung gelöscht\n\nDie Benachrichtigung `<%= it.name %>` wurde erfolgreich gelöscht."
-      },
-      "notification-update": {
-        "updated": "## 🎉 Benachrichtigung aktualisiert\n> Diese Benachrichtigung wird geprüft, sobald der Bot das nächste Mal nach passenden Filmen sucht.\n\nDeine Benachrichtigung `<%= it.name %>` wurde erfolgreich mit den folgenden Einstellungen aktualisiert:\n- **Suchbegriff**: `<%= it.key %>`\n- **Wiederholungsmuster**: `<%= it.recurrencePattern %>`\n- **Wiederholungsintervall**: `<%= it.recurrenceInterval %>`"
+        "created-or-updated": "## 🎉 Settings Saved\n> Changes will take effect the next time the bot posts.\n\nNeed to make adjustments? You can update your settings again anytime with </<%= it.commandName %>:<%= it.commandId %>>.",
+        "missing-permission": "## 🛡️ Permission Denied\n\nYou do not have the required permissions to perform this action. Please contact a server administrator if you believe this is an error."
       },
       "notification": {
-        "name-already-exists": "## ⚠️ Name existiert bereits\n\nDu hast bereits eine Benachrichtigung mit dem Namen `<%= it.name %>`. Bitte wähle einen anderen Namen und versuche es erneut.",
-        "validation-failed": "## ⚠️ Validierung fehlgeschlagen\n\nEinige deiner Benachrichtigungseinstellungen konnten nicht validiert werden. Bitte überprüfe deine Eingaben und versuche es erneut.",
-        "not-found": "## 🔍 Benachrichtigung nicht gefunden\n\nDie gesuchte Benachrichtigung konnte nicht gefunden werden. Bitte überprüfe deine Eingaben und versuche es erneut."
+        "name-already-exists": "notification with the same name already exists",
+        "create": {
+          "success": "notificaiton has been created, include notification details or short overview here"
+        }
       }
     },
     "lewd": {
       "server-configuration": {
-        "validation-failed": "## ⚠️ Ah-ah~ Das kannst du mir doch nicht einfach so reindrücken!\n\nDieser Wert ist viel zu groß und falsch, um flutschig in mich reinzupassen... Ärger mich nicht so und gib mir etwas, das wirklich passt, okay? ~",
-        "created-or-updated": "## 💋 Mmm... Ahh! Berührt, verändert & triefend vor neuen Einstellungen~\n> Ich bebe jetzt schon wegen deiner neuen Konfiguration... warte erst ab, was ich das nächste Mal damit anstelle, wenn ich poste...\n\nHat sich das gut angefühlt? Du kannst meine Einstellungen anpacken und so doll verändern, wie du willst, nutz einfach </<%= it.commandName %>:<%= it.commandId %>>~",
-        "missing-permission": "## ⛔ Ah-ah~ Pfoten weg, du Perversling!\n\nDu hast dir noch gar nicht das Recht verdient, mich so anzufassen... Hol jemanden mit höheren Rechten, der mich für dich aufmacht~ ⛓️"
-      },
-      "notification-create": {
-        "created": "## 💦 Oh jaaa! Ein ganz neues Spielzeug, auf das ich mich stürzen kann~\n> Ich werde so tief nach diesem Film suchen... bis ich völlig außer Atem bin, wenn ich ihn für dich finde~\n\nDeine geile neue Benachrichtigung `<%= it.name %>` wurde tief in mich hineingeschoben! Sobald ein Film auftaucht, der zu `<%= it.searchTerm %>` passt, werde ich euren Kanal so richtig vollstöhnen~\nWillst du sie mir noch mal reinwürgen? Befehle es mir mit </<%= it.updateCommandName %>:<%= it.commandId %>> oder vernichte sie komplett mit </<%= it.deleteCommandName %>:<%= it.commandId %>>~"
-      },
-      "notification-delete": {
-        "deleted": "## 😩 Ahhn~! Du hast sie mir einfach eiskalt herausgerissen!\n\nDie Benachrichtigung `<%= it.name %>` wurde komplett rausgezogen und aus meinem Körper entsorgt~ Jetzt fühle ich mich so leer..."
-      },
-      "notification-update": {
-        "updated": "## 🥵 Ooh~ Du hast mich so richtig hart umprogrammiert!\n> Ich werde schon ganz feucht, wenn ich daran denke, wie ich das nächste Mal nach deinen Filmen suchen darf...\n\nDeine Benachrichtigung `<%= it.name %>` wurde ganz nach deinen feuchten Träumen geformt und gedehnt:\n- **Suchbegriff**: `<%= it.key %>`\n- **Wiederholungsmuster**: `<%= it.recurrencePattern %>`\n- **Wiederholungsintervall**: `<%= it.recurrenceInterval %>`~"
+        "created-or-updated": "## 🎉 Settings Saved\n> Changes will take effect the next time the bot posts.\n\nNeed to make adjustments? You can update your settings again anytime with </<%= it.commandName %>:<%= it.commandId %>>.",
+        "missing-permission": "## 🛡️ Permission Denied\n\nYou do not have the required permissions to perform this action. Please contact a server administrator if you believe this is an error."
       },
       "notification": {
-        "name-already-exists": "## 🚫 Mmm, das Loch ist aber schon besetzt!\n\nIch bin schon völlig ausgefüllt mit einer anderen Benachrichtigung namens `<%= it.name %>`~ Such dir eine unberührte Stelle und drück deinen neuen Namen da rein!",
-        "validation-failed": "## ⚠️ Aua! Das gehört da aber nicht rein!\n\nDeine Eingaben sind mir viel zu dreckig und falsch, die kann ich nicht einfach so schlucken... Bearbeite sie noch mal vorsichtig, damit sie passen~",
-        "not-found": "## 🔍 Ahh~ Ich habe ganz tief in mir gesucht, aber da ist nichts!\n\nDiese Benachrichtigung ist unauffindbar in meinen Öffnungen... Überprüf deinen Namen und taste noch mal nach~"
+        "name-already-exists": "notification with the same name already exists",
+        "create": {
+          "success": "notificaiton has been created, include notification details or short overview here"
+        }
       }
     },
     "super_hyped": {
       "server-configuration": {
-        "validation-failed": "## 💥 UUUPS! DA HAT'S GEKRACHT!\n\nDiese Eingaben reichen noch lange nicht, Chef! Check alles noch mal ab und DANN GEBEN WIR NOCHMAL ALLES!! 🚀 🔥",
-        "created-or-updated": "## 🎉 BOOM! EINSTELLUNGEN BOMBENSEST EINGELOGGT! 🚀\n> ALLES IST VOLL AUFGELADEN! Die Änderungen knallen rein, sobald ich das nächste Mal poste!\n\nNOCH EINE RUNDE?! Bearbeite dein Setup jederzeit mit </<%= it.commandName %>:<%= it.commandId %>>! LET'S GOOOOO!",
-        "missing-permission": "## 🚫 HALT STOPP! KEIN ZUTRITT! ⚡\n\nDIR FEHLT DIE HIGH-VOLTAGE-BERECHTIGUNG DAFÜR! Hol dir 'nen Admin mit ECHTER POWER oder WEICHE ZURÜCK! 💥"
-      },
-      "notification-create": {
-        "created": "## 🔥 JAAAAAA! NEUER RADAR EINGESCHALTET! 🎯\n> DER AUTOMATISCHE FILM-SCANNER IST ZU 1000% AUFGELADEN UND BEREIT FÜR DEN ABFLUG!\n\nWIR HABEN `<%= it.name %>` ERSTELLT UND DAS DING IST EINFACH UNSTOPPBAR! Sobald ein Film namens `<%= it.searchTerm %>` droppt, RASTEN WIR IN DIESEM KANAL VOLLKOMMEN AUS!! 🎉\nDu willst das Biest tunen?! Hammer auf </<%= it.updateCommandName %>:<%= it.commandId %>> oder ZERSTÖRE ES KOMPLETT mit </<%= it.deleteCommandName %>:<%= it.commandId %>>! VOLLGAS!"
-      },
-      "notification-delete": {
-        "deleted": "## 💥 KABOOM! EINFACH WEGGEBLASEN!\n\nDie Benachrichtigung `<%= it.name %>` WURDE IN ATOME ZERLEGT! SIE IST WEG, INS NICHTS VERPUFFT, VERNICHTET! 💨 🔥"
-      },
-      "notification-update": {
-        "updated": "## ⚡ MAXIMUM OVERDRIVE! UPGRADE ERFOLGREICH!\n> BEREIT FÜR DIE ACTION! BEIM NÄCHSTEN SCAN GEHEN WIR MIT VOLLER TURBO-POWER REIN!! 🚀\n\nBENACHRICHTIGUNG `<%= it.name %>` WURDE MIT NEUEN PARAMETERN SUPERCHARGED:\n- **Suchbegriff**: `<%= it.key %>`\n- **Wiederholungsmuster**: `<%= it.recurrencePattern %>`\n- **Wiederholungsintervall**: `<%= it.recurrenceInterval %>` !! BIST DU BEREIT?!"
+        "created-or-updated": "## 🎉 Settings Saved\n> Changes will take effect the next time the bot posts.\n\nNeed to make adjustments? You can update your settings again anytime with </<%= it.commandName %>:<%= it.commandId %>>.",
+        "missing-permission": "## 🛡️ Permission Denied\n\nYou do not have the required permissions to perform this action. Please contact a server administrator if you believe this is an error."
       },
       "notification": {
-        "name-already-exists": "## ⚠️ WARTE MAL! DER NAME IST SCHON VERGEBEN!\n\nDu hast schon eine extrem abgehende Benachrichtigung namens `<%= it.name %>` AM START! Denk dir 'nen noch geileren Namen aus und DANN AB DAFÜR!",
-        "validation-failed": "## ❌ FALSCHE EINGABEN! ALARMSTUFE ROT! 🚨\n\nDeine Benachrichtigungs-Parameter konnten der ENERGIE nicht standhalten! Korrigier das Zeug und DANN DRÜCK WIEDER DRAUF!!",
-        "not-found": "## 🔍 SCAN LÄUFT... SCAN LÄUFT... NICHTS GEFUNDEN!! 🌪️\n\nICH BIN DURCH DIE GANZEN DATEN GESPRINTET UND FINDE DIESE BENACHRICHTIGUNG NIRGENDWO! Check den Namen und DANN NOCHMAL MIT VOLLGAS!"
+        "name-already-exists": "notification with the same name already exists",
+        "create": {
+          "success": "notificaiton has been created, include notification details or short overview here"
+        }
       }
     }
   }
