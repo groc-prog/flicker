@@ -170,18 +170,20 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
 
   const name = interaction.options.getString(t('command.notification-create.option.name.name'), true);
   const ensurePerformancesAvailable = interaction.options.getBoolean(
-    t('command.notification-create.option.ensure-performances-exist.name'),
+    t('command.notification-create.option.ensure-performances-available.name'),
   );
   const searchKey = interaction.options.getString(t('command.notification-create.option.search-key.name'));
-  const genre = interaction.options.getString('command.notification-create.option.genre.name');
-  const minVoteAverage = interaction.options.getNumber('command.notification-create.option.min-vote-average.name');
-  const recurrencePattern = interaction.options.getString('command.notification-create.option.recurrence-pattern.name');
-  const recurrenceInterval = interaction.options.getString(
-    'command.notification-create.option.recurrence-interval.name',
+  const genre = interaction.options.getString(t('command.notification-create.option.genre.name'));
+  const minVoteAverage = interaction.options.getNumber(t('command.notification-create.option.min-vote-average.name'));
+  const recurrencePattern = interaction.options.getString(
+    t('command.notification-create.option.recurrence-pattern.name'),
+  );
+  const recurrenceInterval = interaction.options.getInteger(
+    t('command.notification-create.option.recurrence-interval.name'),
   );
 
   logger.debug('Validating notification properties');
-  const { success, error, data } = createNotificationValidator(group.id).safeParse({
+  const { success, error, data } = await createNotificationValidator(group.id).safeParseAsync({
     name,
     searchKey,
     ensurePerformancesAvailable,
@@ -198,9 +200,24 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
         .map((value) => value.path[0])
         .toArray()}`,
     );
+
+    const validationIssues = error.issues.map(({ message }) =>
+      renderTemplate(message, getSupportedLocale(interaction.locale), {
+        name,
+        recurrencePatterns: notificationRecurrencePatternEnum.enumValues.map((pattern) =>
+          t(`enum.recurrence-pattern.${pattern}`, { lng: interaction.locale }),
+        ),
+      }),
+    );
     await interaction.reply({
       flags: [MessageFlags.Ephemeral],
-      content: t(`tone.${botTone}.notification.validation-failed`, { lng: getSupportedLocale(interaction.locale) }),
+      content: renderTemplate(
+        'validation.notification-create.validation-failure',
+        getSupportedLocale(interaction.locale),
+        {
+          issues: validationIssues,
+        },
+      ),
     });
     return;
   }
@@ -224,13 +241,9 @@ export async function onChatInputCommand(interaction: ChatInputCommandInteractio
   logger.info(`Successfully created notification ${notification.id} for group ${group.id}`);
   await interaction.reply({
     flags: [MessageFlags.Ephemeral],
-    content: renderTemplate(
-      `tone.${botTone}.command.notification-create.created`,
-      getSupportedLocale(interaction.locale),
-      {
-        // TODO: Use proper translations
-      },
-    ),
+    content: renderTemplate(`tone.${botTone}.notification-create.success`, getSupportedLocale(interaction.locale), {
+      name: notification.name,
+    }),
   });
 }
 
@@ -250,11 +263,11 @@ function createNotificationValidator(groupId: InferSelectModel<typeof groupsTabl
               .from(notificationsTable)
               .where(and(eq(notificationsTable.groupId, groupId), eq(notificationsTable.name, name)));
 
-            return duplicateNotification !== null;
+            return duplicateNotification === null;
           },
-          { error: 'validation.notification-create.name' },
+          { error: 'validation.notification-create.duplicate-name' },
         ),
-      ensurePerformancesAvailable: z.boolean().default(true),
+      ensurePerformancesAvailable: z.boolean().nullable().default(true),
       searchKey: z
         .string()
         .trim()
@@ -270,7 +283,7 @@ function createNotificationValidator(groupId: InferSelectModel<typeof groupsTabl
       recurrencePattern: z
         .enum(NotificationRecurrencePattern, { error: 'validation.notification-create.recurrence-pattern' })
         .nullable(),
-      recurrenceInterval: z.int().gt(0, { error: 'validation.notification-create.recurrence-interval' }),
+      recurrenceInterval: z.int().gt(0, { error: 'validation.notification-create.recurrence-interval' }).nullable(),
     })
     .superRefine((data, ctx) => {
       if (!data.searchKey && !data.genre && !data.minVoteAverage)

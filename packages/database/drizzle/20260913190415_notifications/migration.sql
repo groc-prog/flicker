@@ -7,12 +7,12 @@ CREATE TABLE "notifications" (
 	"ensure_performances_available" boolean,
 	"recurrence_pattern" "notification_recurrence_pattern",
 	"recurrence_interval" integer,
-	"group_id" uuid,
+	"group_id" uuid NOT NULL,
 	"next_trigger_at" timestamp(3) with time zone,
 	"last_trigger_at" timestamp(3) with time zone,
 	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "notifications_id_name_unique" UNIQUE("id","name"),
+	CONSTRAINT "notifications_group_id_name_unique" UNIQUE("group_id","name"),
 	CONSTRAINT "check_filters_set" CHECK ("search_key" IS NOT NULL OR "genre" IS NOT NULL OR "min_vote_average" IS NOT NULL)
 );
 --> statement-breakpoint

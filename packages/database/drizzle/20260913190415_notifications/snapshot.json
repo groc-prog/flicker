@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "be39b0e1-fcff-4468-b3ce-f6345b6b21c6",
+  "id": "0dd096f1-84fa-42d6-a842-a6e90d39c22e",
   "prevIds": [
     "65a9368a-8c3a-4b40-934b-c1e6a718cc9a"
   ],
@@ -747,7 +747,7 @@
     {
       "type": "uuid",
       "typeSchema": null,
-      "notNull": false,
+      "notNull": true,
       "dimensions": 0,
       "default": null,
       "generated": null,
@@ -1406,11 +1406,11 @@
     {
       "nameExplicit": false,
       "columns": [
-        "id",
+        "group_id",
         "name"
       ],
       "nullsNotDistinct": false,
-      "name": "notifications_id_name_unique",
+      "name": "notifications_group_id_name_unique",
       "entityType": "uniques",
       "schema": "public",
       "table": "notifications"

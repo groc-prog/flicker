@@ -56,7 +56,9 @@ export const notificationsTable = snakeCase.table(
      */
     recurrenceInterval: integer(),
     /** The group who should receive the notification. */
-    groupId: uuid().references(() => groupsTable.id),
+    groupId: uuid()
+      .notNull()
+      .references(() => groupsTable.id),
     /** The date after which the notification can be triggered again. */
     nextTriggerAt: timestamp({
       mode: 'date',
@@ -73,7 +75,7 @@ export const notificationsTable = snakeCase.table(
     ...updatedAtTimestamp,
   },
   (table) => [
-    unique().on(table.id, table.name),
+    unique().on(table.groupId, table.name),
     index().on(table.nextTriggerAt).where(isNotNull(table.nextTriggerAt)),
     index('idx_notification_name').using('gin', sql`${table.name} gin_trgm_ops`),
     index('idx_notification_key_trgm').using('gin', sql`${table.searchKey} gin_trgm_ops`),
