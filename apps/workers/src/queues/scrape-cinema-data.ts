@@ -373,7 +373,12 @@ async function storeAttributes(extractedAttributes: ExtractedAttributes): Promis
   const insertedOrUpdated = await db
     .insert(attributesTable)
     .values(extractedAttributes)
-    .onConflictDoNothing()
+    .onConflictDoUpdate({
+      target: [attributesTable.category, attributesTable.key],
+      set: {
+        updatedAt: sql`NOW()`,
+      },
+    })
     .returning({
       id: attributesTable.id,
       category: attributesTable.category,
