@@ -251,7 +251,7 @@ function buildEntityMaps(
 
       // Each attribute and performance defines which movie it belongs to on it's own data
       // We build a map for all movies so we can later insert all movies and it's relations to
-      // attributes/performances in on transaction per movie
+      // attributes/performances in one transaction per movie
       logger.info(`Building lookup map for ${Object.keys(movies).length} movies`);
       for (const movieRefId of Object.keys(movies)) {
         movieRelations.set(movieRefId, {

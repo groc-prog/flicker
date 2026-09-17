@@ -1,80 +1,6 @@
 {
-  "command": {
-    "configure-server": {
-      "name": "server-konfigurieren",
-      "description": "Konfiguriere Kanäle, Sprachen und mehr für deine Server-Benachrichtigungen",
-      "modal": {
-        "title": "Server-Benachrichtigungen konfigurieren",
-        "components": {
-          "languages": {
-            "label": "Benachrichtigungssprachen",
-            "description": "Eine oder mehrere Sprachen, in denen die Benachrichtigungen gesendet werden"
-          },
-          "tone": {
-            "label": "Bot-Ton",
-            "description": "Die Persönlichkeit und der Tonfall, den der Bot auf diesem Server verwendet"
-          },
-          "channel": {
-            "label": "Benachrichtigungskanal",
-            "description": "Der Zielkanal, in dem der Bot die Benachrichtigungen postet"
-          }
-        }
-      }
-    },
-    "notification-create": {
-      "name": "benachrichtigung-erstellen",
-      "description": "Erstelle eine neue automatisierte Server-Benachrichtigung",
-      "option": {
-        "name": {
-          "name": "name",
-          "description": "Ein eindeutiger Name zur Identifizierung dieser Benachrichtigung"
-        },
-        "ensure-performances-available": {
-          "name": "spielzeiten-erzwingen",
-          "description": "Steuert, ob Filme ohne angekündigte Kino-Spielzeiten einbezogen werden"
-        },
-        "search-key": {
-          "name": "suchbegriff",
-          "description": "Ein abgeglichenes Suchwort oder ein Filmtitel"
-        },
-        "genre": {
-          "name": "genre",
-          "description": "Filtert Treffer auf Filme mit dem ausgewählten Genre"
-        },
-        "min-vote-average": {
-          "name": "min-bewertung",
-          "description": "Mindest-TMDB-Durchschnittsbewertung von 0 bis 10 (inklusive Dezimalstellen)"
-        },
-        "recurrence-pattern": {
-          "name": "wiederholungs-muster",
-          "description": "Der Rhythmus, der festlegt, wie oft die Benachrichtigung ausgelöst wird"
-        },
-        "recurrence-interval": {
-          "name": "wiederholungs-intervall",
-          "description": "Der Multiplikator-Wert, der auf den Rhythmus angewendet wird"
-        }
-      }
-    }
-  },
-  "validation": {
-    "configure-server": {
-      "validation-failure": "## ⚠️ Validierungsfehler\nEine oder mehrere deiner Konfigurationsoptionen sind ungültig:<% it.issues.forEach(function(issue) { %> \n- <%= issue %><% }) %>",
-      "languages": "Alle angegebenen Sprachen müssen einen der folgenden gültigen Typen darstellen: <% it.languages.forEach(function(language, index) { %><% if (index !== 0) { %>, <% } %>**<%= language %>** <% }) %>",
-      "tone": "Der ausgewählte Bot-Ton muss einer der folgenden gültigen Typen sein: <% it.tones.forEach(function(tone, index) { %><% if (index !== 0) { %>, <% } %>**<%= tone %>**<% }) %>",
-      "channel": "Ein gültiger Zielkanal für Benachrichtigungen ist erforderlich"
-    },
-    "notification-create": {
-      "validation-failure": "## ⚠️ Validierungsfehler\nEine oder mehrere deiner Benachrichtigungsoptionen sind ungültig:<% it.issues.forEach(function(issue) { %> \n- <%= issue %><% }) %>",
-      "name": "Ein eindeutiger Name zwischen `1` und `255` Zeichen ist erforderlich",
-      "duplicate-name": "Eine Benachrichtigung mit dem Namen `<%= it.name %>` existiert auf diesem Server bereits",
-      "search-key": "Der Suchbegriff muss zwischen `1` und `255` Zeichen lang sein",
-      "genre": "Das ausgewählte Genre muss ein vom System unterstütztes Genre sein",
-      "min-vote-average": "Die Mindestbewertung muss eine Zahl zwischen `0` und `10` sein",
-      "recurrence-pattern": "Das Wiederholungsmuster muss einen der folgenden Typen aufweisen: <% it.recurrencePatterns.forEach(function(pattern) { %><% if (index !== 0) { %>, <% } %>**<%= pattern %>**<% }) %>",
-      "recurrence-interval": "Das Wiederholungsintervall muss eine positive Zahl größer als `0` sein",
-      "filter-required": "Mindestens ein aktiver Suchfilter muss definiert sein: `suchbegriff`, `genre` oder `min-bewertung`"
-    }
-  },
+  "command": {},
+  "validation": {},
   "enum": {
     "language": {
       "en": "🇺🇸 Englisch",
@@ -112,32 +38,8 @@
   },
   "error": "## ⚠️ Systemfehler\nEin unerwarteter Fehler ist bei der Bearbeitung deiner Anfrage aufgetreten. Bitte versuche es in wenigen Augenblicken erneut oder kontaktiere einen Server-Administrator, falls das Problem bestehen bleibt.",
   "tone": {
-    "normal": {
-      "server-configuration": {
-        "created-or-updated": "## 🎉 Einstellungen erfolgreich gespeichert\nDeine Serverkonfiguration wurde aktualisiert. Möchtest du Anpassungen vornehmen? Nutze jederzeit </<%= it.commandName %>:<%= it.commandId %>>.\n> Die Änderungen werden ab dem nächsten geplanten Bot-Beitrag wirksam.",
-        "missing-permission": "## 🛡️ Zugriff verweigert\nDu verfügst nicht über die erforderlichen Berechtigungen, um Serverkonfigurationen zu verwalten. Bitte wende dich an einen Administrator, wenn du glaubst, dass es sich hierbei um einen Fehler handelt."
-      },
-      "notification-create": {
-        "success": "## 🎉 Benachrichtigung erstellt\nDein neues Benachrichtigungsprofil `<%= it.name %>` wurde erfolgreich gespeichert und benachrichtigt dich, sobald ein passender Titel gefunden wird."
-      }
-    },
-    "lewd": {
-      "server-configuration": {
-        "created-or-updated": "## 🥵 Oh ja, fest und sicher eingestellt~!\nMmm, deine verbotenen Konfigurationen sind abgespeichert und triefen nur so vor Potenzial. Willst du wieder an den Reglern rumspielen? Rutsch einfach rüber in </<%= it.commandName %>:<%= it.commandId %>>.\n> Diese feuchten Änderungen bringen mich beim nächsten Mal garantiert zum Stöhnen-ähm, Posten~",
-        "missing-permission": "## ⛓️ Na, na, du kleiner Frechdachs!\nZugriff verweigert, Schätzchen~ Du bist nicht dominant genug, um ohne Admin-Erlaubnis an meinen Einstellungen zu fummeln. Bettel erst mal einen Admin an!"
-      },
-      "notification-create": {
-        "success": "## 💦 Oh verdammt ja, scharf geschaltet!\nDein versautes neues Benachrichtigungsprofil `<%= it.name %>` steht stramm, ist voll geladen und brennt darauf, dich in der Sekunde zu befriedigen, in der ein heißer Treffer landet~"
-      }
-    },
-    "super_hyped": {
-      "server-configuration": {
-        "created-or-updated": "## 🚀🚀 EINSTELLUNGEN IM MAXIMALEN OVERDRIVE! ⚡🔥\nLET'S GOOO! Deine Konfigs sind EINGELOGGT und explodieren vor purer Energie! Willst du das Chaos anpassen? Zerstör den Befehl </<%= it.commandName %>:<%= it.commandId %>> JETZT SOFORT!\n> Diese brachialen Updates gehen beim ALLernächsten Drop live! HYPE OHNE ENDE!",
-        "missing-permission": "## 🛑 HALT STOP, CHAMP! 🚫⚡\nZUGRIFF GESPERRT! Du hast absolut nicht den obersten Admin-Alpha-Rang, um hier rumzuspielen! Hol dir sofort einen Administrator und komm zurück in den Ring!"
-      },
-      "notification-create": {
-        "success": "## 🚨🔥 BOOM! BENACHRICHTIGUNG ERSTELLT! ⚡🎉\nLET'S F***ING GOOO! Dein hyper-geladenes Benachrichtigungsprofil `<%= it.name %>` ist voll am Start, super-getuned und bereit, dir die Seele aus dem Leib zu schreien, sobald ein epischer Treffer einschlägt! MAXIMALE POWER!"
-      }
-    }
+    "normal": {},
+    "lewd": {},
+    "super_hyped": {}
   }
 }

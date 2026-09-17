@@ -5,6 +5,7 @@ import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import db from '@flicker/database';
 import { attributesTable } from '@flicker/database/schemas/attributes';
 import { groupsTable } from '@flicker/database/schemas/groups';
+import { movieNotificationCooldownTable } from '@flicker/database/schemas/movie-notification-cooldown';
 import { moviePerformancesToAttributesTable } from '@flicker/database/schemas/movie-performance-attributes';
 import { moviePerformancesTable } from '@flicker/database/schemas/movie-performances';
 import { moviesTable } from '@flicker/database/schemas/movies';
@@ -13,6 +14,7 @@ import { scrapedMoviesToAttributesTable } from '@flicker/database/schemas/scrape
 import { scrapedMoviesTable } from '@flicker/database/schemas/scraped-movies';
 
 export async function truncateDatabase(): Promise<void> {
+  await db.delete(movieNotificationCooldownTable);
   await db.delete(notificationsTable);
   await db.delete(groupsTable);
   await db.delete(attributesTable);

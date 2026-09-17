@@ -1,10 +1,8 @@
 import { Routes, type APIApplicationCommand, type Client, type CommandDefinition, type REST } from 'discord.js';
 
 import { logger } from '../telemetry/logging';
-import * as configureServerCommand from './server/configure-server';
-import * as notificationCreateCommand from './server/notification-create';
 
-const commands: CommandDefinition[] = [configureServerCommand, notificationCreateCommand];
+const commands: CommandDefinition[] = [];
 
 /**
  * Registers slash commands with the client.

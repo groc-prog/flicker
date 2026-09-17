@@ -4,6 +4,8 @@ import utcPlugin from 'dayjs/plugin/utc';
 
 import { applyPendingMigrations, truncateDatabase } from '@flicker/test-utils/setup.js';
 
+dayjs.extend(utcPlugin);
+
 mock.module('i18next', () => ({
   default: { init: async () => {} },
   t: (key: string) => key,
@@ -32,16 +34,6 @@ mock.module('@opentelemetry/api', () => ({
   },
 }));
 
-export const mockedClient = {
-  commandIds: new Map(),
-  commands: new Map(),
-  modals: new Map(),
-};
-
-mock.module(`${import.meta.dir}/../src/index.ts`, () => ({ client: mockedClient }));
-
-dayjs.extend(utcPlugin);
-
 beforeEach(async () => {
   await truncateDatabase();
 });
@@ -49,9 +41,6 @@ beforeEach(async () => {
 afterEach(() => {
   vi.restoreAllMocks();
   mockedTraceparent.value = undefined;
-  mockedClient.commandIds.clear();
-  mockedClient.commands.clear();
-  mockedClient.modals.clear();
 });
 
 beforeAll(async () => {

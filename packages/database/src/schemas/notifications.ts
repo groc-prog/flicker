@@ -1,16 +1,5 @@
 import { isNotNull, sql } from 'drizzle-orm';
-import {
-  boolean,
-  check,
-  decimal,
-  index,
-  integer,
-  snakeCase,
-  timestamp,
-  unique,
-  uuid,
-  varchar,
-} from 'drizzle-orm/pg-core';
+import { boolean, check, decimal, index, integer, snakeCase, unique, uuid, varchar } from 'drizzle-orm/pg-core';
 
 import { createdAtTimestamp, updatedAtTimestamp } from '../utils/timestamp';
 import { uuidPk } from '../utils/uuid';
@@ -59,24 +48,11 @@ export const notificationsTable = snakeCase.table(
     groupId: uuid()
       .notNull()
       .references(() => groupsTable.id),
-    /** The date after which the notification can be triggered again. */
-    nextTriggerAt: timestamp({
-      mode: 'date',
-      precision: 3,
-      withTimezone: true,
-    }),
-    /** The date at which the notification was last triggered.  */
-    lastTriggerAt: timestamp({
-      mode: 'date',
-      precision: 3,
-      withTimezone: true,
-    }),
     ...createdAtTimestamp,
     ...updatedAtTimestamp,
   },
   (table) => [
     unique().on(table.groupId, table.name),
-    index().on(table.nextTriggerAt).where(isNotNull(table.nextTriggerAt)),
     index('idx_notification_name').using('gin', sql`${table.name} gin_trgm_ops`),
     index('idx_notification_key_trgm').using('gin', sql`${table.searchKey} gin_trgm_ops`),
     index().on(table.genre).where(isNotNull(table.genre)),

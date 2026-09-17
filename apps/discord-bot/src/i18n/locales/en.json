@@ -1,80 +1,6 @@
 {
-  "command": {
-    "configure-server": {
-      "name": "configure-server",
-      "description": "Configure channels, languages, and more for your server notifications",
-      "modal": {
-        "title": "Configure Server Notifications",
-        "components": {
-          "languages": {
-            "label": "Notification Languages",
-            "description": "One or more languages in which the notifications will be posted"
-          },
-          "tone": {
-            "label": "Bot Tone",
-            "description": "The personality and tone the bot will use when speaking in this server"
-          },
-          "channel": {
-            "label": "Notification Channel",
-            "description": "The destination channel where the bot will post notifications"
-          }
-        }
-      }
-    },
-    "notification-create": {
-      "name": "create-notification",
-      "description": "Create a new automated server notification",
-      "option": {
-        "name": {
-          "name": "name",
-          "description": "A unique name to identify this notification"
-        },
-        "ensure-performances-available": {
-          "name": "ensure-performances-available",
-          "description": "Control if movies without announced theatrical showtimes are included"
-        },
-        "search-key": {
-          "name": "search-key",
-          "description": "A fuzzy-matched keyword or title for movie searches"
-        },
-        "genre": {
-          "name": "genre",
-          "description": "Filter matches to only include movies with the selected genre"
-        },
-        "min-vote-average": {
-          "name": "min-vote-average",
-          "description": "Minimum TMDB vote average required, from 0 to 10 (decimals allowed)"
-        },
-        "recurrence-pattern": {
-          "name": "recurrence-pattern",
-          "description": "The time cycle determining how often the notification triggers"
-        },
-        "recurrence-interval": {
-          "name": "recurrence-interval",
-          "description": "The multiplier value applied to the recurrence pattern"
-        }
-      }
-    }
-  },
-  "validation": {
-    "configure-server": {
-      "validation-failure": "## ⚠️ Validation Error\nOne or more of your provided configuration options are invalid:<% it.issues.forEach(function(issue) { %> \n- <%= issue %><% }) %>",
-      "languages": "All provided languages must be one of the following valid types: <% it.languages.forEach(function(language, index) { %><% if (index !== 0) { %>, <% } %>**<%= language %>** <% }) %>",
-      "tone": "The selected bot tone must be one of the following valid types: <% it.tones.forEach(function(tone, index) { %><% if (index !== 0) { %>, <% } %>**<%= tone %>**<% }) %>",
-      "channel": "A valid target notification channel is required"
-    },
-    "notification-create": {
-      "validation-failure": "## ⚠️ Validation Error\nOne or more of your provided notification options are invalid:<% it.issues.forEach(function(issue) { %> \n- <%= issue %><% }) %>",
-      "name": "A unique notification name between `1` and `255` characters is required",
-      "duplicate-name": "A notification with the name `<%= it.name %>` already exists in this server",
-      "search-key": "The search key must contain between `1` and `255` characters",
-      "genre": "The selected genre must be a valid genre supported by the system",
-      "min-vote-average": "The minimum vote average must be a numeric value between `0` and `10`",
-      "recurrence-pattern": "The recurrence pattern must be one of the following types: <% it.recurrencePatterns.forEach(function(pattern) { %><% if (index !== 0) { %>, <% } %>**<%= pattern %>**<% }) %>",
-      "recurrence-interval": "The recurrence interval must be a positive number greater than `0`",
-      "filter-required": "At least one active search filter must be defined: `search-key`, `genre`, or `min-vote-average`"
-    }
-  },
+  "command": {},
+  "validation": {},
   "enum": {
     "language": {
       "en": "🇺🇸 English",
@@ -112,32 +38,8 @@
   },
   "error": "## ⚠️ System Malfunction\nAn unexpected error occurred while processing your request. Please try again shortly, or ping a server administrator if the issue persists.",
   "tone": {
-    "normal": {
-      "server-configuration": {
-        "created-or-updated": "## 🎉 Settings Saved Successfully\nYour server configuration has been updated. Need to make adjustments? Use </<%= it.commandName %>:<%= it.commandId %>> anytime.\n> Changes will take effect starting with the next scheduled bot dispatch.",
-        "missing-permission": "## 🛡️ Access Denied\nYou do not possess the required permissions to manage server configurations. Please contact an administrator if you believe this is a mistake."
-      },
-      "notification-create": {
-        "success": "## 🎉 Notification Created\nYour new notification profile `<%= it.name %>` has been saved successfully and will alert you as soon as a matching title is found."
-      }
-    },
-    "lewd": {
-      "server-configuration": {
-        "created-or-updated": "## 🥵 Ohh, Settings Locked In Tight~!\nMmm, your naughty configurations are saved and dripping with potential. Want to tweak things again? Just slide into </<%= it.commandName %>:<%= it.commandId %>> whenever you're ready.\n> These juicy changes will make me moan-er, post-on the very next trigger~",
-        "missing-permission": "## ⛓️ Naughty, Naughty!\nAccess denied, sweetheart~ You aren't dominant enough to play with these settings without admin permission. Beg an admin for access first!"
-      },
-      "notification-create": {
-        "success": "## 💦 Oh Fuck Yes, It's Ready!\nYour filthy new notification profile `<%= it.name %>` is locked, loaded, and aching to satisfy you the exact second a hot match drops~"
-      }
-    },
-    "super_hyped": {
-      "server-configuration": {
-        "created-or-updated": "## 🚀🚀 SETTINGS MAXIMUM OVERDRIVE! ⚡️🔥\nLET'S GOOO! Your configs are LOCKED IN and ready to EXPLODE with absolute power! Need to tweak the chaos? Smash </<%= it.commandName %>:<%= it.commandId %>> RIGHT NOW!\n> These beastly updates go live on the absolute NEXT drop! HYPE!",
-        "missing-permission": "## 🛑 WHOA THERE, CHAMP! 🚫⚡️\nACCESS BLOCKED! You don't have the supreme admin alpha rank to touch these settings! Go grab an administrator and get in the game!"
-      },
-      "notification-create": {
-        "success": "## 🚨🔥 BOOM! NOTIFICATION CREATED! ⚡️🎉\nLET'S F***ING GOOO! Your hyper-charged notification profile `<%= it.name %>` is fully loaded, super-charged, and ready to scream the second an epic match hits the system! MAXIMUM ENERGY!"
-      }
-    }
+    "normal": {},
+    "lewd": {},
+    "super_hyped": {}
   }
 }
