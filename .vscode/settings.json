@@ -3,5 +3,17 @@
   "cSpell.words": [
     "deeplink",
     "Tmdb"
-  ]
+  ],
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/.turbo": true,
+    "**/.bunqueue": true,
+    "**/dist": true,
+    "**/node_modules": true,
+    "**/tsconfig.*.tsbuildinfo": true
+  }
 }
