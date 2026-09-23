@@ -53,9 +53,9 @@ jobs:
             echo "tags=$IMAGE:latest,$IMAGE:$VERSION" >> $GITHUB_OUTPUT
             echo "Building and pushing version $VERSION"
           elif [ "$BRANCH" = "develop" ]; then
-            echo "push=true" >> $GITHUB_OUTPUT
+            echo "push=false" >> $GITHUB_OUTPUT
             echo "tags=$IMAGE:latest-dev" >> $GITHUB_OUTPUT
-            echo "Building and pushing latest-dev"
+            echo "Build only, push disabled for $BRANCH"
           else
             echo "push=false" >> $GITHUB_OUTPUT
             echo "tags=$IMAGE:latest-$BRANCH" >> $GITHUB_OUTPUT
