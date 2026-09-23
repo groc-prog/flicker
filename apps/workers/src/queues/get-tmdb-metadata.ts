@@ -54,43 +54,50 @@ export const worker = movieProcessingQueueGroup.getWorker<TmdbMetadataJob>(
       },
       async (span) => {
         try {
-          await withLogContext({ [TelemetryIdentifier.ScrapedMovieId]: job.data.scrapedMovieId }, async () => {
-            if (!process.env.TMDB_API_TOKEN) throw new Error('TMDB_API_TOKEN not defined in environment');
+          await withLogContext(
+            {
+              [TelemetryIdentifier.WorkerJobId]: job.id,
+              [TelemetryIdentifier.WorkerJobName]: job.name,
+              [TelemetryIdentifier.ScrapedMovieId]: job.data.scrapedMovieId,
+            },
+            async () => {
+              if (!process.env.TMDB_API_TOKEN) throw new Error('TMDB_API_TOKEN not defined in environment');
 
-            logger.info(`Getting TMDB metadata for scraped movie ${job.data.scrapedMovieId}`);
-            const [scrapedMovie] = await db
-              .select({
-                id: scrapedMoviesTable.id,
-                title: scrapedMoviesTable.title,
-                originalTitle: scrapedMoviesTable.originalTitle,
-                description: scrapedMoviesTable.description,
-                runtime: scrapedMoviesTable.runtime,
-                posterPath: scrapedMoviesTable.posterPath,
-                availableAt: scrapedMoviesTable.availableAt,
-              })
-              .from(scrapedMoviesTable)
-              .where(eq(scrapedMoviesTable.id, job.data.scrapedMovieId));
+              logger.info(`Getting TMDB metadata for scraped movie ${job.data.scrapedMovieId}`);
+              const [scrapedMovie] = await db
+                .select({
+                  id: scrapedMoviesTable.id,
+                  title: scrapedMoviesTable.title,
+                  originalTitle: scrapedMoviesTable.originalTitle,
+                  description: scrapedMoviesTable.description,
+                  runtime: scrapedMoviesTable.runtime,
+                  posterPath: scrapedMoviesTable.posterPath,
+                  availableAt: scrapedMoviesTable.availableAt,
+                })
+                .from(scrapedMoviesTable)
+                .where(eq(scrapedMoviesTable.id, job.data.scrapedMovieId));
 
-            if (!scrapedMovie) throw new Error(`Scraped movie ${job.data.scrapedMovieId} not found`);
-            if (!scrapedMovie.originalTitle) {
-              logger.warn(`Movies does not have a original title, falling back to scraped values`);
-              await storeFallbackValues(scrapedMovie);
-              return;
-            }
+              if (!scrapedMovie) throw new Error(`Scraped movie ${job.data.scrapedMovieId} not found`);
+              if (!scrapedMovie.originalTitle) {
+                logger.warn(`Movies does not have a original title, falling back to scraped values`);
+                await storeFallbackValues(scrapedMovie);
+                return;
+              }
 
-            const movieMetadata = await getTmdbMetadata(scrapedMovie);
-            if (!movieMetadata) {
-              await storeFallbackValues(scrapedMovie);
-              return;
-            }
+              const movieMetadata = await getTmdbMetadata(scrapedMovie);
+              if (!movieMetadata) {
+                await storeFallbackValues(scrapedMovie);
+                return;
+              }
 
-            logger.info(`Fetching movie details for ${movieLanguageEnum.enumValues.length} languages`);
-            for (const language of movieLanguageEnum.enumValues) {
-              await storeMovieDetailsForLanguage(movieMetadata.id, language as MovieLanguage, scrapedMovie);
-            }
+              logger.info(`Fetching movie details for ${movieLanguageEnum.enumValues.length} languages`);
+              for (const language of movieLanguageEnum.enumValues) {
+                await storeMovieDetailsForLanguage(movieMetadata.id, language as MovieLanguage, scrapedMovie);
+              }
 
-            // TODO: Enqueue follow-up jobs for sending group notifications
-          });
+              // TODO: Enqueue follow-up jobs for sending group notifications
+            },
+          );
         } catch (error) {
           span.recordException(error as Error);
           span.setStatus({

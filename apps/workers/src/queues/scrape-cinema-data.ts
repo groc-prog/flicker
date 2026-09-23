@@ -108,13 +108,21 @@ export const worker = movieProcessingQueueGroup.getWorker(
       },
       async (span) => {
         try {
-          const data = await scrapeHtmlContent();
-          const [movieRelations, performanceRelations, extractedAttributes] = buildEntityMaps(data);
+          await withLogContext(
+            {
+              [TelemetryIdentifier.WorkerJobId]: job.id,
+              [TelemetryIdentifier.WorkerJobName]: job.name,
+            },
+            async () => {
+              const data = await scrapeHtmlContent();
+              const [movieRelations, performanceRelations, extractedAttributes] = buildEntityMaps(data);
 
-          const attributeIdMap = await storeAttributes(extractedAttributes);
-          const storedMovieIds = await storeMovies(data, attributeIdMap, movieRelations, performanceRelations);
+              const attributeIdMap = await storeAttributes(extractedAttributes);
+              const storedMovieIds = await storeMovies(data, attributeIdMap, movieRelations, performanceRelations);
 
-          scheduleFollowUpJobs(storedMovieIds);
+              scheduleFollowUpJobs(storedMovieIds);
+            },
+          );
         } catch (error) {
           span.recordException(error as Error);
           span.setStatus({
